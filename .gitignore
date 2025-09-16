@@ -1,0 +1,28 @@
+## Build results
+bin/
+obj/
+out/
+build/
+
+## User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Visual Studio generated files
+.vs/
+
+## OS generated files
+.DS_Store
+Thumbs.db
+
+## Logs
+*.log
+
+## NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+project.lock.json
