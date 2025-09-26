@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+    db:
+        image: postgres:latest
+        container_name: postgres
+        restart: always
+        environment:
+            POSTGRES_DB: FIAPOficina
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: root
+        ports:
+            - "5432:5432"
+        networks:
+            - FIAPOficina
+        volumes:
+            - db_data:/var/lib/postgresql/data
+
+    pgadmin:
+        image: dpage/pgadmin4
+        container_name: pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: "root@root.com"
+            PGADMIN_DEFAULT_PASSWORD: "root"
+        ports:
+            - "16543:80"
+        networks:
+            - FIAPOficina
+        depends_on:
+            - db
+
+networks:
+    FIAPOficina:
+        driver: "bridge"
+volumes:
+    db_data:
