@@ -1,3 +1,5 @@
+using FIAPOficina.Api.Extensios;
+
 namespace FIAPOficina
 {
     public class Program
@@ -12,6 +14,9 @@ namespace FIAPOficina
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddServices();
+            builder.Services.AddRepositories();
+            builder.AddDbContext();
 
             var app = builder.Build();
 
@@ -23,12 +28,8 @@ namespace FIAPOficina
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
-
             app.MapControllers();
-
             app.Run();
         }
     }
