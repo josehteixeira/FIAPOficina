@@ -2,7 +2,7 @@
 
 namespace FIAPOficina.Domain.Services.Repositories
 {
-    public interface IServicesRepository
+    public interface IServiceRepository
     {
         Task<Service> AddAsync(Service entity);
         Task UpdateAsync(Service entity);
