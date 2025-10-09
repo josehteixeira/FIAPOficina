@@ -10,7 +10,7 @@
         public string Color { get; set; }
         public Guid ClientId { get; set; }
 
-        public Vehicle(string brand, string model, int year, string plate, string color, Guid clientId)
+        public Vehicle(string brand, string model, int year, string plate, string color, Guid clientId, Guid? id = null)
         {
             if (!Utils.VehicleUtils.IsPlateValid(plate))
             {
@@ -23,6 +23,21 @@
             Plate = plate;
             Color = color;
             ClientId = clientId;
+        }
+
+        public Vehicle(Vehicle vehicle, Guid? id = null)
+        {
+            if (!Utils.VehicleUtils.IsPlateValid(vehicle.Plate))
+            {
+                throw new ArgumentException("Invalid plate", nameof(Plate));
+            }
+
+            Brand = vehicle.Brand;
+            Model = vehicle.Model;
+            Year = vehicle.Year;
+            Plate = vehicle.Plate;
+            Color = vehicle.Color;
+            ClientId = vehicle.ClientId;
         }
     }
 }

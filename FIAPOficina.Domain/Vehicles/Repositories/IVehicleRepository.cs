@@ -2,7 +2,7 @@
 
 namespace FIAPOficina.Domain.Vehicles.Repositories
 {
-    internal interface IVehicleRepository
+    public interface IVehicleRepository
     {
         Task<Vehicle> AddAsync(Vehicle vehicle);
         Task UpdateAsync(Vehicle vehicle);
