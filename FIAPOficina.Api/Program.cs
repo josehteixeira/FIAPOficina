@@ -30,6 +30,7 @@ namespace FIAPOficina
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
+            app.ApplyMigrations();
             app.Run();
         }
     }

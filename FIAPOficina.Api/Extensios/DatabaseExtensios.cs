@@ -14,5 +14,12 @@ namespace FIAPOficina.Api.Extensios
                 ServiceLifetime.Singleton
             );
         }
+
+        public static void ApplyMigrations(this IHost app)
+        {
+            using var scope = app.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.Database.Migrate();
+        }
     }
 }
