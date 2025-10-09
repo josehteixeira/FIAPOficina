@@ -44,12 +44,12 @@ namespace FIAPOficina.Infrastructure.Repositories
 
         public async Task DeleteAsync(User user)
         {
-            _context.Users.Remove(new()
+            var userToDelete = _context.Users.FirstOrDefault(c => c.Id == user.Id);
+
+            if (userToDelete is not null)
             {
-                Id = user.Id,
-                Name = user.Name,
-                UserName = user.UserName
-            });
+                _context.Users.Remove(userToDelete);
+            }
 
             await _context.SaveChangesAsync();
         }
