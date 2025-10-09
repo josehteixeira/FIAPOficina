@@ -9,6 +9,7 @@ namespace FIAPOficina.Infrastructure.Database.Context
         public DbSet<Users> Users { get; set; }
         public DbSet<Clients> Clients { get; set; }
         public DbSet<Vehicles> Vehicles { get; set; }
+        public DbSet<Services> Services { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
