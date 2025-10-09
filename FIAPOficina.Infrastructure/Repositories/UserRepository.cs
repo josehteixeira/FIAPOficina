@@ -16,7 +16,6 @@ namespace FIAPOficina.Infrastructure.Repositories
 
         public async Task<User> AddAsync(User user, string passwordHash)
         {
-            // TODO: Create ID and password hash
             Users createUser = new()
             {
                 Id = Guid.NewGuid(),
