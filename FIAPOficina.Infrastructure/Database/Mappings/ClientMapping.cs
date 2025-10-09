@@ -17,6 +17,10 @@ namespace FIAPOficina.Infrastructure.Database.Mappings
             builder.Property(entity => entity.Identifier);
 
             builder.HasIndex(entity => entity.Address).IsUnique();
+
+            builder.HasMany(entity => entity.Vehicles)
+                .WithOne(vehicle => vehicle.Client)
+                .HasForeignKey(vehicle => vehicle.ClientId);
         }
     }
 }
