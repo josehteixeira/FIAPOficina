@@ -5,11 +5,11 @@ using FIAPOficina.Infrastructure.Database.Entities;
 
 namespace FIAPOficina.Infrastructure.Repositories
 {
-    public class ClientsRepository : IClientRepository
+    public class ClientRepository : IClientRepository
     {
         private readonly AppDbContext _context;
 
-        public ClientsRepository(AppDbContext context)
+        public ClientRepository(AppDbContext context)
         {
             _context = context;
         }

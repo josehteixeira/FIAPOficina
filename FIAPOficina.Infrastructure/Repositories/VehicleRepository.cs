@@ -5,11 +5,11 @@ using FIAPOficina.Infrastructure.Database.Entities;
 
 namespace FIAPOficina.Infrastructure.Repositories
 {
-    public class VehiclesRepository : IVehicleRepository
+    public class VehicleRepository : IVehicleRepository
     {
         private readonly AppDbContext _context;
 
-        public VehiclesRepository(AppDbContext context)
+        public VehicleRepository(AppDbContext context)
         {
             _context = context;
         }
