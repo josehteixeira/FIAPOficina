@@ -9,11 +9,11 @@ namespace FIAPOficina.Infrastructure.Database.Mappings
         public void Configure(EntityTypeBuilder<Users> builder)
         {
             builder.ToTable<Users>(nameof(Users));
-            builder.HasKey(user => user.Id);
-            builder.Property(user => user.Name).IsRequired();
-            builder.Property(user => user.UserName).IsRequired();
-            builder.Property(user => user.PasswordHash).IsRequired();
-            builder.HasIndex(user => user.UserName).IsUnique();
+            builder.HasKey(entity => entity.Id);
+            builder.Property(entity => entity.Name).IsRequired();
+            builder.Property(entity => entity.UserName).IsRequired();
+            builder.Property(entity => entity.PasswordHash).IsRequired();
+            builder.HasIndex(entity => entity.UserName).IsUnique();
         }
     }
 }

@@ -9,7 +9,6 @@ namespace FIAPOficina.Infrastructure.Database.Context
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
-            // Connection string para design time (Postgres)
             optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=FIAPOficina;Username=root;Password=root");
 
             return new AppDbContext(optionsBuilder.Options);
