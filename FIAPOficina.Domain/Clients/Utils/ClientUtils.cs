@@ -84,8 +84,10 @@ namespace FIAPOficina.Domain.Clients.Utils
             return ValidateDigit(weight1, 12) && ValidateDigit(weight2, 13);
         }
 
-        public static bool IsValidDocument(string? value)
+        public static bool IsValidDocument(string value)
         {
+            if(string.IsNullOrEmpty(value)) return false;
+
             var digits = Regex.Replace(value ?? "", @"[^0-9]", "");
             if (digits.Length == 11)
                 return IsValidCpf(value);
