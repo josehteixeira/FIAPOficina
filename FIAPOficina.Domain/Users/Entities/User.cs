@@ -28,8 +28,8 @@
 
         private void CheckRequiredFields(string name, string userName)
         {
-            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("The user must have a name.", nameof(name));
-            if (string.IsNullOrWhiteSpace(userName)) throw new ArgumentException("The user must have a user name.", nameof(userName));
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("The user must have a name.", nameof(Name));
+            if (string.IsNullOrWhiteSpace(userName)) throw new ArgumentException("The user must have a user name.", nameof(UserName));
         }
     }
 }
