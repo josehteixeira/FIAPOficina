@@ -1,9 +1,10 @@
 ﻿using FIAPOficina.Infrastructure.Database.Context;
+using FIAPOficina.Infrastructure.Database.Initialization;
 using Microsoft.EntityFrameworkCore;
 
-namespace FIAPOficina.Api.Extensios
+namespace FIAPOficina.Api.Extensions
 {
-    public static class DatabaseExtensios
+    public static class DatabaseExtensions
     {
         public static void AddDbContext(this WebApplicationBuilder builder)
         {
@@ -20,6 +21,16 @@ namespace FIAPOficina.Api.Extensios
             using var scope = app.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             db.Database.Migrate();
+        }
+
+        public static async Task CreateInitialRecords(this IHost app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                await Initializer.InitializeAsync(services);
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-using FIAPOficina.Api.Extensios;
+using FIAPOficina.Api.Extensions;
 
 namespace FIAPOficina
 {
@@ -31,6 +31,7 @@ namespace FIAPOficina
             app.UseAuthorization();
             app.MapControllers();
             app.ApplyMigrations();
+            app.CreateInitialRecords().GetAwaiter().GetResult();
             app.Run();
         }
     }

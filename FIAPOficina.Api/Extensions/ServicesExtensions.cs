@@ -1,9 +1,9 @@
 ﻿using FIAPOficina.Application.Common.Security;
 using FIAPOficina.Application.Users.Services;
 
-namespace FIAPOficina.Api.Extensios
+namespace FIAPOficina.Api.Extensions
 {
-    public static class ServicesExtension
+    public static class ServicesExtensions
     {
         public static void AddServices(this IServiceCollection services)
         {
