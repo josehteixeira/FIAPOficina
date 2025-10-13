@@ -27,9 +27,27 @@ services:
             - FIAPOficina
         depends_on:
             - db
-
+    sonarqube:
+        image: sonarqube:lts-community
+        depends_on:
+            - db
+        environment:
+            - SONARQUBE_JDBC_USERNAME=root
+            - SONARQUBE_JDBC_PASSWORD=root
+            - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
+        ports:
+            - "9000:9000"
+        volumes:
+            - sonarqube_conf:/opt/sonarqube/conf
+            - sonarqube_data:/opt/sonarqube/data
+            - sonarqube_extensions:/opt/sonarqube/extensions
+            - sonarqube_logs:/opt/sonarqube/logs
 networks:
     FIAPOficina:
         driver: "bridge"
 volumes:
     db_data:
+    sonarqube_conf:
+    sonarqube_data:
+    sonarqube_extensions:
+    sonarqube_logs:
