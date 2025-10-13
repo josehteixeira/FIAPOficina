@@ -26,3 +26,4 @@ Thumbs.db
 *.nuspec
 packages/
 project.lock.json
+/.sonarqube/conf
