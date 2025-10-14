@@ -88,7 +88,7 @@ namespace FIAPOficina.Domain.Clients.Utils
         {
             if(string.IsNullOrEmpty(value)) return false;
 
-            var digits = Regex.Replace(value ?? "", @"[^0-9]", "");
+            var digits = Regex.Replace(value, @"[^0-9]", "");
             if (digits.Length == 11)
                 return IsValidCpf(value);
             if (digits.Length == 14)
