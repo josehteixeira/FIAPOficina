@@ -27,3 +27,4 @@ Thumbs.db
 packages/
 project.lock.json
 /.sonarqube/conf
+/FIAPOficina.Api/.sonarqube/conf
