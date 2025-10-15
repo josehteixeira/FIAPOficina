@@ -6,6 +6,6 @@ namespace FIAPOficina.Domain.Vehicles.Repositories
     {
         Task<Vehicle> AddAsync(Vehicle vehicle);
         Task UpdateAsync(Vehicle vehicle);
-        Task DeleteAsync(Vehicle vehicle);
+        Task DeleteAsync(Guid id);
     }
 }

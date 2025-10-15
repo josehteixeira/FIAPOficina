@@ -6,6 +6,6 @@ namespace FIAPOficina.Domain.Services.Repositories
     {
         Task<Service> AddAsync(Service entity);
         Task UpdateAsync(Service entity);
-        Task DeleteAsync(Service entity);
+        Task DeleteAsync(Guid id);
     }
 }

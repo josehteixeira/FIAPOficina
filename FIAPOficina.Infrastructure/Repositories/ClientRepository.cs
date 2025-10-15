@@ -34,22 +34,23 @@ namespace FIAPOficina.Infrastructure.Repositories
 
         public async Task UpdateAsync(Client client)
         {
-            _context.Clients.Update(new()
-            {
-                Id = client.Id,
-                Name = client.Name,
-                Address = client.Address,
-                Email = client.Email,
-                Identifier = client.Identifier,
-                Phone = client.Phone,
-            });
+            var clientToUpdate = _context.Clients.FirstOrDefault(c => c.Id == client.Id);
 
-            await _context.SaveChangesAsync();
+            if (clientToUpdate is not null)
+            {
+                clientToUpdate.Name = client.Name;
+                clientToUpdate.Address = client.Address;
+                clientToUpdate.Email = client.Email;
+                clientToUpdate.Identifier = client.Identifier; 
+                clientToUpdate.Phone = client.Phone;
+
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public async Task DeleteAsync(Client client)
+        public async Task DeleteAsync(Guid id)
         {
-            var clientToDelete = _context.Clients.FirstOrDefault(c => c.Id == client.Id);
+            var clientToDelete = _context.Clients.FirstOrDefault(c => c.Id == id);
 
             if (clientToDelete is not null)
             {

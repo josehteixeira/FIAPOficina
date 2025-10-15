@@ -6,6 +6,6 @@ namespace FIAPOficina.Domain.Clients.Repositories
     {
         Task<Client> AddAsync(Client client);
         Task UpdateAsync(Client client);
-        Task DeleteAsync(Client client);
+        Task DeleteAsync(Guid id);
     }
 }

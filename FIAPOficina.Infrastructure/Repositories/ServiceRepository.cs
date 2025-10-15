@@ -32,20 +32,21 @@ namespace FIAPOficina.Infrastructure.Repositories
 
         public async Task UpdateAsync(Service service)
         {
-            _context.Services.Update(new()
-            {
-                Id = service.Id,
-                Name = service.Name,
-                Description = service.Description,
-                Value = service.Value
-            });
+            var serviceToUpdate = _context.Services.FirstOrDefault(s => s.Id == service.Id);
 
-            await _context.SaveChangesAsync();
+            if (serviceToUpdate is not null)
+            {
+                serviceToUpdate.Name = service.Name;
+                serviceToUpdate.Description = service.Description;
+                serviceToUpdate.Value = service.Value;
+
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public async Task DeleteAsync(Service service)
+        public async Task DeleteAsync(Guid id)
         {
-            var clientToDelete = _context.Services.FirstOrDefault(c => c.Id == service.Id);
+            var clientToDelete = _context.Services.FirstOrDefault(c => c.Id == id);
 
             if (clientToDelete is not null)
             {

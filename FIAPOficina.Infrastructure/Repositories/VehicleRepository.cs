@@ -35,23 +35,23 @@ namespace FIAPOficina.Infrastructure.Repositories
 
         public async Task UpdateAsync(Vehicle vehicle)
         {
-            _context.Vehicles.Update(new()
-            {
-                Id = vehicle.Id,
-                Brand = vehicle.Brand,
-                Model = vehicle.Model,
-                Year = vehicle.Year,
-                Plate = vehicle.Plate,
-                Color = vehicle.Color,
-                ClientId = vehicle.ClientId,
-            });
+            var vehicleToUpdate = _context.Vehicles.FirstOrDefault(v => v.Id == vehicle.Id);
 
-            await _context.SaveChangesAsync();
+            if (vehicleToUpdate is not null)
+            {
+                vehicleToUpdate.Brand = vehicle.Brand;
+                vehicleToUpdate.Model = vehicle.Model;
+                vehicleToUpdate.Year = vehicle.Year;
+                vehicleToUpdate.Plate = vehicle.Plate;
+                vehicleToUpdate.Color = vehicle.Color;
+
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public async Task DeleteAsync(Vehicle vehicle)
+        public async Task DeleteAsync(Guid id)
         {
-            var clientToDelete = _context.Vehicles.FirstOrDefault(c => c.Id == vehicle.Id);
+            var clientToDelete = _context.Vehicles.FirstOrDefault(c => c.Id == id);
 
             if (clientToDelete is not null)
             {
