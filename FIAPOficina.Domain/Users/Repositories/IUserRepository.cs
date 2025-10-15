@@ -6,6 +6,6 @@ namespace FIAPOficina.Domain.Users.Repositories
     {
         Task<User> AddAsync(User user, string passwordHash);
         Task UpdateAsync(User user);
-        Task DeleteAsync(User user);
+        Task DeleteAsync(Guid id);
     }
 }
