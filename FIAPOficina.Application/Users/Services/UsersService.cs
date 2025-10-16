@@ -1,6 +1,8 @@
 ﻿using FIAPOficina.Application.Common.Security;
 using FIAPOficina.Application.Users.Commands.CreateUser;
-using FIAPOficina.Application.Users.Commands.DeteleUser;
+using FIAPOficina.Application.Users.Commands.DeleteUser;
+using FIAPOficina.Application.Users.Commands.GetAllUsers;
+using FIAPOficina.Application.Users.Commands.GetSingleUser;
 using FIAPOficina.Application.Users.Commands.UpdateUser;
 using FIAPOficina.Domain.Users.Entities;
 using FIAPOficina.Domain.Users.Repositories;
@@ -12,12 +14,16 @@ namespace FIAPOficina.Application.Users.Services
         private readonly CreateUserCommandHandler _createHandler;
         private readonly UpdateUserCommandHandler _updateHandler;
         private readonly DeleteUserCommandHandler _deleteHandler;
+        private readonly GetSingleUserCommandHandler _querySingleHandler;
+        private readonly GetAllUsersCommandHandler _queryAllHandler;
 
         public UsersService(IUserRepository repository, IPasswordHasherService passwordHasher)
         {
             _createHandler = new CreateUserCommandHandler(repository, passwordHasher);
             _updateHandler = new UpdateUserCommandHandler(repository);
             _deleteHandler = new DeleteUserCommandHandler(repository);
+            _querySingleHandler = new GetSingleUserCommandHandler(repository);
+            _queryAllHandler = new GetAllUsersCommandHandler(repository);
         }
 
         public async Task<User> AddAsync(CreateUserCommand command)
@@ -33,6 +39,16 @@ namespace FIAPOficina.Application.Users.Services
         public async Task DeleteAsync(DeleteUserCommand command)
         {
             await _deleteHandler.Handle(command);
+        }
+
+        public async Task<User?> GetSingleAsync(GetSingleUserCommand command)
+        {
+            return await _querySingleHandler.Handle(command).ConfigureAwait(false);
+        }
+
+        public User[] GetAll(GetAllUsersCommand command)
+        {
+            return _queryAllHandler.Handle(command);
         }
     }
 }

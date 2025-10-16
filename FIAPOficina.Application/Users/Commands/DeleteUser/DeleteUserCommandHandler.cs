@@ -1,6 +1,6 @@
 ﻿using FIAPOficina.Domain.Users.Repositories;
 
-namespace FIAPOficina.Application.Users.Commands.DeteleUser
+namespace FIAPOficina.Application.Users.Commands.DeleteUser
 {
     internal class DeleteUserCommandHandler
     {
