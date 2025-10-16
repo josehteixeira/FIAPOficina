@@ -14,9 +14,9 @@ namespace FIAPOficina.Infrastructure.Database.Mappings
             builder.Property(entity => entity.Identifier);
             builder.Property(entity => entity.Phone);
             builder.Property(entity => entity.Email);
-            builder.Property(entity => entity.Identifier);
+            builder.Property(entity => entity.Address);
 
-            builder.HasIndex(entity => entity.Address).IsUnique();
+            builder.HasIndex(entity => entity.Identifier).IsUnique();
 
             builder.HasMany(entity => entity.Vehicles)
                 .WithOne(vehicle => vehicle.Client)
