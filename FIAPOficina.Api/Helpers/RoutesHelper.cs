@@ -8,6 +8,38 @@
             public const string Create = "/api/v1/users";
             public const string Update = "/api/v1/users/{id}";
             public const string Delete = "/api/v1/users/{id}";
+            public const string GetSingle = "/api/v1/users/{id}";
+            public const string GetAll = "/api/v1/users";
+        }
+
+        public static class Clients
+        {
+            public const string Controller = "/api/v1/clients";
+            public const string Create = "/api/v1/clients";
+            public const string Update = "/api/v1/clients/{id}";
+            public const string Delete = "/api/v1/clients/{id}";
+            public const string GetSingle = "/api/v1/clients/{id}";
+            public const string GetAll = "/api/v1/clients";
+        }
+
+        public static class Vehicles
+        {
+            public const string Controller = "/api/v1/vehicles";
+            public const string Create = "/api/v1/vehicles";
+            public const string Update = "/api/v1/vehicles/{id}";
+            public const string Delete = "/api/v1/vehicles/{id}";
+            public const string GetSingle = "/api/v1/vehicles/{id}";
+            public const string GetAll = "/api/v1/vehicles";
+        }
+
+        public static class Services
+        {
+            public const string Controller = "/api/v1/services";
+            public const string Create = "/api/v1/services";
+            public const string Update = "/api/v1/services/{id}";
+            public const string Delete = "/api/v1/services/{id}";
+            public const string GetSingle = "/api/v1/services/{id}";
+            public const string GetAll = "/api/v1/services";
         }
     }
 }
