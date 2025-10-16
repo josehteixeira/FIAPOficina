@@ -2,6 +2,7 @@
 using FIAPOficina.Domain.Vehicles.Repositories;
 using FIAPOficina.Infrastructure.Database.Context;
 using FIAPOficina.Infrastructure.Database.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace FIAPOficina.Infrastructure.Repositories
 {
@@ -16,7 +17,7 @@ namespace FIAPOficina.Infrastructure.Repositories
 
         public async Task<Vehicle> AddAsync(Vehicle vehicle)
         {
-            Vehicles createVehicles = new()
+            Vehicles createVehicle = new()
             {
                 Id = Guid.NewGuid(),
                 Brand = vehicle.Brand,
@@ -27,10 +28,10 @@ namespace FIAPOficina.Infrastructure.Repositories
                 ClientId = vehicle.ClientId,
             };
 
-            _context.Vehicles.Add(createVehicles);
+            _context.Vehicles.Add(createVehicle);
             await _context.SaveChangesAsync();
 
-            return new Vehicle(vehicle, createVehicles.Id);
+            return new Vehicle(vehicle, createVehicle.Id);
         }
 
         public async Task UpdateAsync(Vehicle vehicle)
@@ -51,14 +52,73 @@ namespace FIAPOficina.Infrastructure.Repositories
 
         public async Task DeleteAsync(Guid id)
         {
-            var clientToDelete = _context.Vehicles.FirstOrDefault(c => c.Id == id);
+            var vehicleToDelete = _context.Vehicles.FirstOrDefault(c => c.Id == id);
 
-            if (clientToDelete is not null)
+            if (vehicleToDelete is not null)
             {
-                _context.Vehicles.Remove(clientToDelete);
+                _context.Vehicles.Remove(vehicleToDelete);
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Vehicle?> FirstOrDefaultAsync(Guid id)
+        {
+            var vehicle = await _context.Vehicles.FirstOrDefaultAsync(v => v.Id == id).ConfigureAwait(false);
+
+            if (vehicle is not null)
+            {
+                return new Vehicle
+                (
+                    brand: vehicle.Brand,
+                    model: vehicle.Model,
+                    year: vehicle.Year,
+                    plate: vehicle.Plate,
+                    color: vehicle.Color,
+                    clientId: vehicle.ClientId,
+                    id: vehicle.Id
+                );
+            }
+
+            return null;
+        }
+
+        public async Task<Vehicle?> FirstOrDefaultAsync(string plate)
+        {
+            var vehicle = await _context.Vehicles.FirstOrDefaultAsync(v => v.Plate == plate).ConfigureAwait(false);
+
+            if (vehicle is not null)
+            {
+                return new Vehicle
+                (
+                    brand: vehicle.Brand,
+                    model: vehicle.Model,
+                    year: vehicle.Year,
+                    plate: vehicle.Plate,
+                    color: vehicle.Color,
+                    clientId: vehicle.ClientId,
+                    id: vehicle.Id
+                );
+            }
+
+            return null;
+        }
+
+        public Vehicle[] GetAll(Guid? clientId)
+        {
+            var vehicles = _context.Vehicles.Where(v => !clientId.HasValue ? true : v.ClientId == clientId);
+
+            return vehicles.Select(vehicle =>
+                new Vehicle
+                (
+                    vehicle.Brand,
+                    vehicle.Model,
+                    vehicle.Year,
+                    vehicle.Plate,
+                    vehicle.Color,
+                    vehicle.ClientId,
+                    vehicle.Id
+                )).ToArray();
         }
     }
 }

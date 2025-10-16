@@ -12,7 +12,7 @@
 
         public Vehicle(string brand, string model, int year, string plate, string color, Guid clientId, Guid? id = null)
         {
-            if (!Utils.VehicleUtils.IsPlateValid(plate))
+            if (!Utils.VehicleUtils.IsPlateValid(plate.ToUpper()))
             {
                 throw new ArgumentException("Invalid plate", nameof(Plate));
             }
@@ -23,11 +23,13 @@
             Plate = plate;
             Color = color;
             ClientId = clientId;
+
+            if (id.HasValue) Id = id.Value;
         }
 
         public Vehicle(Vehicle vehicle, Guid? id = null)
         {
-            if (!Utils.VehicleUtils.IsPlateValid(vehicle.Plate))
+            if (!Utils.VehicleUtils.IsPlateValid(vehicle.Plate.ToUpper()))
             {
                 throw new ArgumentException("Invalid plate", nameof(Plate));
             }
@@ -38,6 +40,8 @@
             Plate = vehicle.Plate;
             Color = vehicle.Color;
             ClientId = vehicle.ClientId;
+
+            if (id.HasValue) Id = id.Value;
         }
     }
 }
