@@ -12,7 +12,7 @@ namespace FIAPOficina.Api.Extensions
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
                 .EnableSensitiveDataLogging()
                 .LogTo(Console.WriteLine),
-                ServiceLifetime.Singleton
+                ServiceLifetime.Scoped
             );
         }
 
