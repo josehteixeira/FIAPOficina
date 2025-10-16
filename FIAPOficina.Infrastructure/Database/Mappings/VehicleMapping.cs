@@ -17,7 +17,7 @@ namespace FIAPOficina.Infrastructure.Database.Mappings
             builder.Property(entity => entity.Color);
             builder.Property(entity => entity.ClientId);
 
-            builder.HasIndex(entity => entity.Plate);
+            builder.HasIndex(entity => entity.Plate).IsUnique();
 
             builder.HasOne(entity => entity.Client)
                 .WithMany(client => client.Vehicles)
