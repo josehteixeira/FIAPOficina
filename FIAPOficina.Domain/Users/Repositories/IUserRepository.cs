@@ -7,5 +7,8 @@ namespace FIAPOficina.Domain.Users.Repositories
         Task<User> AddAsync(User user, string passwordHash);
         Task UpdateAsync(User user);
         Task DeleteAsync(Guid id);
+        Task<User?> FirstOrDefaultAsync(Guid id);
+        Task<User?> FirstOrDefaultAsync(string userName);
+        User[] GetAll();
     }
 }

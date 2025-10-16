@@ -2,6 +2,7 @@
 using FIAPOficina.Domain.Users.Repositories;
 using FIAPOficina.Infrastructure.Database.Context;
 using FIAPOficina.Infrastructure.Database.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace FIAPOficina.Infrastructure.Repositories
 {
@@ -54,6 +55,53 @@ namespace FIAPOficina.Infrastructure.Repositories
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<User?> FirstOrDefaultAsync(Guid id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id).ConfigureAwait(false);
+
+            if (user is not null)
+            {
+                return new User
+                (
+                    name: user.Name,
+                    userName: user.UserName,
+                    id: user.Id
+                );
+            }
+
+            return null;
+        }
+
+        public async Task<User?> FirstOrDefaultAsync(string username)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username).ConfigureAwait(false);
+
+            if (user is not null)
+            {
+                return new User
+                (
+                    name: user.Name,
+                    userName: user.UserName,
+                    id: user.Id
+                );
+            }
+
+            return null;
+        }
+
+        public User[] GetAll()
+        {
+            var users = _context.Users.ToArray();
+
+            return users.Select(user =>
+                new User
+                (
+                    user.Name,
+                    user.UserName,
+                    user.Id
+                )).ToArray();
         }
     }
 }
