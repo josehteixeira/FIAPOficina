@@ -1,4 +1,10 @@
-﻿namespace FIAPOficina.Api.Models.Users.Requests
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FIAPOficina.Api.Models.Users.Requests
 {
-    public record CreateUserRequest(string Name, string UserName, string Password);
+    public record CreateUserRequest(
+        [Required] string Name,
+        [Required] string UserName,
+        [Required] string Password
+    );
 }

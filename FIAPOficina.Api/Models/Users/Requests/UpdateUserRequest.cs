@@ -1,4 +1,9 @@
-﻿namespace FIAPOficina.Api.Models.Users.Requests
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FIAPOficina.Api.Models.Users.Requests
 {
-    public record UpdateUserRequest(string Name, string UserName);
+    public record UpdateUserRequest(
+        [Required] string Name,
+        [Required] string UserName
+    );
 }
