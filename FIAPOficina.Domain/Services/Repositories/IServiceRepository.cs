@@ -7,5 +7,7 @@ namespace FIAPOficina.Domain.Services.Repositories
         Task<Service> AddAsync(Service entity);
         Task UpdateAsync(Service entity);
         Task DeleteAsync(Guid id);
+        Task<Service?> FirstOrDefaultAsync(Guid id);
+        Service[] GetAll();
     }
 }

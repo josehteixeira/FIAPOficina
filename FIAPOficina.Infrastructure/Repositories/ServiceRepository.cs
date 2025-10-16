@@ -2,6 +2,7 @@
 using FIAPOficina.Domain.Services.Repositories;
 using FIAPOficina.Infrastructure.Database.Context;
 using FIAPOficina.Infrastructure.Database.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace FIAPOficina.Infrastructure.Repositories
 {
@@ -54,6 +55,38 @@ namespace FIAPOficina.Infrastructure.Repositories
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Service?> FirstOrDefaultAsync(Guid id)
+        {
+            var service = await _context.Services.FirstOrDefaultAsync(u => u.Id == id).ConfigureAwait(false);
+
+            if (service is not null)
+            {
+                return new Service
+                (
+                    name: service.Name,
+                    description: service.Description,
+                    value: service.Value,
+                    id: service.Id
+                );
+            }
+
+            return null;
+        }
+
+        public Service[] GetAll()
+        {
+            var services = _context.Services.ToArray();
+
+            return services.Select(service =>
+                new Service
+                (
+                    service.Name,
+                    service.Description,
+                    service.Value,
+                    service.Id
+                )).ToArray();
         }
     }
 }
