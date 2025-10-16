@@ -2,6 +2,7 @@
 using FIAPOficina.Domain.Clients.Repositories;
 using FIAPOficina.Infrastructure.Database.Context;
 using FIAPOficina.Infrastructure.Database.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace FIAPOficina.Infrastructure.Repositories
 {
@@ -41,7 +42,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                 clientToUpdate.Name = client.Name;
                 clientToUpdate.Address = client.Address;
                 clientToUpdate.Email = client.Email;
-                clientToUpdate.Identifier = client.Identifier; 
+                clientToUpdate.Identifier = client.Identifier;
                 clientToUpdate.Phone = client.Phone;
 
                 await _context.SaveChangesAsync();
@@ -58,6 +59,62 @@ namespace FIAPOficina.Infrastructure.Repositories
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Client?> FirstOrDefaultAsync(Guid id)
+        {
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.Id == id).ConfigureAwait(false);
+
+            if (client is not null)
+            {
+                return new Client
+                (
+                    name: client.Name,
+                    identifier: client.Identifier,
+                    phone: client.Phone,
+                    email: client.Email,
+                    address: client.Address,
+                    id: client.Id
+                );
+            }
+
+            return null;
+        }
+
+        public async Task<Client?> FirstOrDefaultAsync(string identifider)
+        {
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.Identifier == identifider).ConfigureAwait(false);
+
+            if (client is not null)
+            {
+                return new Client
+                (
+                    name: client.Name,
+                    identifier: client.Identifier,
+                    phone: client.Phone,
+                    email: client.Email,
+                    address: client.Address,
+                    id: client.Id
+                );
+            }
+
+            return null;
+        }
+
+        public Client[] GetAll()
+        {
+            var clients = _context.Clients.ToArray();
+
+            return clients.Select(client =>
+                new Client
+                (
+                    client.Name,
+                    client.Identifier,
+                    client.Phone,
+                    client.Email,
+                    client.Address,
+                    client.Id
+                )).ToArray();
         }
     }
 }
