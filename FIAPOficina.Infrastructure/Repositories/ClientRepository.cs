@@ -17,7 +17,7 @@ namespace FIAPOficina.Infrastructure.Repositories
 
         public async Task<Client> AddAsync(Client client)
         {
-            Clients createClient = new()
+            ServiceOrderServices createClient = new()
             {
                 Id = Guid.NewGuid(),
                 Address = client.Address,

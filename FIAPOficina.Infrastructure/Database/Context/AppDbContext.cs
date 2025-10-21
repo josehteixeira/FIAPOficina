@@ -7,7 +7,7 @@ namespace FIAPOficina.Infrastructure.Database.Context
     public class AppDbContext : DbContext
     {
         public DbSet<Users> Users { get; set; }
-        public DbSet<Clients> Clients { get; set; }
+        public DbSet<ServiceOrderServices> Clients { get; set; }
         public DbSet<Vehicles> Vehicles { get; set; }
         public DbSet<Services> Services { get; set; }
 
