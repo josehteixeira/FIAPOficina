@@ -3,6 +3,7 @@ using System;
 using FIAPOficina.Infrastructure.Database.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FIAPOficina.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251023013738_CreateMaterialsTable")]
+    partial class CreateMaterialsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,81 +83,6 @@ namespace FIAPOficina.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Materials", (string)null);
-                });
-
-            modelBuilder.Entity("FIAPOficina.Infrastructure.Database.Entities.ServiceOrderMaterials", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("MaterialId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("ServiceOrderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<decimal>("Value")
-                        .HasColumnType("numeric");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MaterialId");
-
-                    b.HasIndex("ServiceOrderId", "MaterialId")
-                        .IsUnique();
-
-                    b.ToTable("ServiceOrderMaterials", (string)null);
-                });
-
-            modelBuilder.Entity("FIAPOficina.Infrastructure.Database.Entities.ServiceOrderServices", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("ServiceId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ServiceOrderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<decimal>("Value")
-                        .HasColumnType("numeric");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ServiceId");
-
-                    b.HasIndex("ServiceOrderId", "ServiceId")
-                        .IsUnique();
-
-                    b.ToTable("ServiceOrderServices", (string)null);
-                });
-
-            modelBuilder.Entity("FIAPOficina.Infrastructure.Database.Entities.ServiceOrders", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("VehicleId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("ServiceOrders", (string)null);
                 });
 
             modelBuilder.Entity("FIAPOficina.Infrastructure.Database.Entities.Services", b =>
@@ -243,55 +171,6 @@ namespace FIAPOficina.Infrastructure.Migrations
                     b.ToTable("Vehicles", (string)null);
                 });
 
-            modelBuilder.Entity("FIAPOficina.Infrastructure.Database.Entities.ServiceOrderMaterials", b =>
-                {
-                    b.HasOne("FIAPOficina.Infrastructure.Database.Entities.Materials", "Material")
-                        .WithMany("ServiceOrderMaterials")
-                        .HasForeignKey("MaterialId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FIAPOficina.Infrastructure.Database.Entities.ServiceOrders", "ServiceOrder")
-                        .WithMany("Materials")
-                        .HasForeignKey("ServiceOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Material");
-
-                    b.Navigation("ServiceOrder");
-                });
-
-            modelBuilder.Entity("FIAPOficina.Infrastructure.Database.Entities.ServiceOrderServices", b =>
-                {
-                    b.HasOne("FIAPOficina.Infrastructure.Database.Entities.Services", "Service")
-                        .WithMany("ServiceOrderServices")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FIAPOficina.Infrastructure.Database.Entities.ServiceOrders", "ServiceOrder")
-                        .WithMany("Services")
-                        .HasForeignKey("ServiceOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Service");
-
-                    b.Navigation("ServiceOrder");
-                });
-
-            modelBuilder.Entity("FIAPOficina.Infrastructure.Database.Entities.ServiceOrders", b =>
-                {
-                    b.HasOne("FIAPOficina.Infrastructure.Database.Entities.Vehicles", "Vehicle")
-                        .WithMany("ServiceOrders")
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Vehicle");
-                });
-
             modelBuilder.Entity("FIAPOficina.Infrastructure.Database.Entities.Vehicles", b =>
                 {
                     b.HasOne("FIAPOficina.Infrastructure.Database.Entities.Clients", "Client")
@@ -306,28 +185,6 @@ namespace FIAPOficina.Infrastructure.Migrations
             modelBuilder.Entity("FIAPOficina.Infrastructure.Database.Entities.Clients", b =>
                 {
                     b.Navigation("Vehicles");
-                });
-
-            modelBuilder.Entity("FIAPOficina.Infrastructure.Database.Entities.Materials", b =>
-                {
-                    b.Navigation("ServiceOrderMaterials");
-                });
-
-            modelBuilder.Entity("FIAPOficina.Infrastructure.Database.Entities.ServiceOrders", b =>
-                {
-                    b.Navigation("Materials");
-
-                    b.Navigation("Services");
-                });
-
-            modelBuilder.Entity("FIAPOficina.Infrastructure.Database.Entities.Services", b =>
-                {
-                    b.Navigation("ServiceOrderServices");
-                });
-
-            modelBuilder.Entity("FIAPOficina.Infrastructure.Database.Entities.Vehicles", b =>
-                {
-                    b.Navigation("ServiceOrders");
                 });
 #pragma warning restore 612, 618
         }

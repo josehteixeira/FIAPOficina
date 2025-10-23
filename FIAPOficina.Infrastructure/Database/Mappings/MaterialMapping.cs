@@ -1,11 +1,6 @@
 ﻿using FIAPOficina.Infrastructure.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FIAPOficina.Infrastructure.Database.Mappings
 {
@@ -21,9 +16,8 @@ namespace FIAPOficina.Infrastructure.Database.Mappings
             builder.Property(entity => entity.Description);
             
             builder.HasMany(entity => entity.ServiceOrderMaterials)
-                .WithOne(serviceOrderMaterials => serviceOrderMaterials.Materials)
+                .WithOne(serviceOrderMaterials => serviceOrderMaterials.Material)
                 .HasForeignKey(serviceOrderMaterials => serviceOrderMaterials.MaterialId);
-
         }
     }
 }

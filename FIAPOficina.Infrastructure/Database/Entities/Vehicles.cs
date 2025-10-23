@@ -10,6 +10,6 @@
         public string Color { get; set; }
         public Guid ClientId { get; set; }
         public Clients Client { get; set; }
-        public ICollection<ServiceOrders> ServiceOrders { get; set; }
+        public ICollection<ServiceOrders> ServiceOrders { get; set; } = null!;
     }
 }

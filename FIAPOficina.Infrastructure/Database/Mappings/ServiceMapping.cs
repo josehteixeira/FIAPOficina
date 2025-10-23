@@ -13,6 +13,10 @@ namespace FIAPOficina.Infrastructure.Database.Mappings
             builder.Property(entity => entity.Name);
             builder.Property(entity => entity.Description);
             builder.Property(entity => entity.Value);
+
+            builder.HasMany(entity => entity.ServiceOrderServices)
+                .WithOne(serviceOrderMaterials => serviceOrderMaterials.Service)
+                .HasForeignKey(serviceOrderMaterials => serviceOrderMaterials.ServiceId);
         }
     }
 }
