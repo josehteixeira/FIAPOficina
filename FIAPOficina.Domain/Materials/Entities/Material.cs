@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FIAPOficina.Domain.Materials.Entities
+﻿namespace FIAPOficina.Domain.Materials.Entities
 {
     public class Material
     {

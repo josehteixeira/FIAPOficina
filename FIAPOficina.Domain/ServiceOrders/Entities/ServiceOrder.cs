@@ -1,7 +1,4 @@
-﻿using FIAPOficina.Domain.Materials.Entities;
-using FIAPOficina.Domain.Services.Entities;
-
-namespace FIAPOficina.Domain.ServiceOrders.Entities
+﻿namespace FIAPOficina.Domain.ServiceOrders.Entities
 {
     public class ServiceOrder
     {

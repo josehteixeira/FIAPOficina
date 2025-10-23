@@ -1,11 +1,6 @@
 ﻿using FIAPOficina.Domain.Materials.Entities;
 using FIAPOficina.Domain.Materials.Repositories;
 using FIAPOficina.Infrastructure.Database.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FIAPOficina.Infrastructure.Repositories
 {
