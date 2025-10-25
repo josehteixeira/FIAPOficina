@@ -1,13 +1,15 @@
-﻿namespace FIAPOficina.Domain.ServiceOrders.Entities
+﻿using FIAPOficina.Domain.ServiceOrders.Utils;
+
+namespace FIAPOficina.Domain.ServiceOrders.Entities
 {
     public class ServiceOrderMaterial
     {
         public Guid MaterialId { get; private set; }
-        public Guid ServiceOrderId {  get; private set; }
+        public Guid ServiceOrderId { get; private set; }
         public int Quantity { get; private set; }
-        public decimal TotalValue{ get; private set; }
-        public decimal UnitValue{ get; private set; }
-        
+        public decimal TotalValue { get; private set; }
+        public decimal UnitValue { get; private set; }
+
         public ServiceOrderMaterial(Guid materialId, Guid serviceOrderId, int quanity, decimal unitValue)
         {
             MaterialId = materialId;
@@ -16,10 +18,14 @@
             UnitValue = unitValue;
             TotalValue = unitValue * quanity;
         }
-        public ServiceOrderMaterial(ServiceOrderMaterial serviceOrderMaterial, Guid? materalID,Guid? serviceOrderId)
+        public ServiceOrderMaterial(ServiceOrderMaterial serviceOrderMaterial, Guid? materalID, Guid? serviceOrderId)
         {
-            Quantity = serviceOrderMaterial.Quantity;
-            UnitValue = serviceOrderMaterial.UnitValue;
+            if (ServiceOrderUtils.ValidQuantity(serviceOrderMaterial.Quantity))
+                Quantity = serviceOrderMaterial.Quantity;
+
+            if (ServiceOrderUtils.ValidValue(serviceOrderMaterial.UnitValue))
+                UnitValue = serviceOrderMaterial.UnitValue;
+            
             TotalValue = serviceOrderMaterial.TotalValue;
 
             if (materalID.HasValue) MaterialId = materalID.Value;
