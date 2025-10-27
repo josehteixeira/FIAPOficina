@@ -6,6 +6,7 @@ namespace FIAPOficina.Domain.Materials.Repositories
     {
         Task<Material> AddAsync(Material material);
         Task UpdateAsync(Material material);
+        Task ChangeQuantity(Guid? materialId, int quantity);
         Task DeleteAsync(Guid id);
         Task<Material?> FirstOrDefaultAsync(Guid id);
         Material[] GetAll();

@@ -47,11 +47,11 @@ namespace FIAPOficina.Infrastructure.Repositories
 
         public async Task DeleteAsync(Guid id)
         {
-            var clientToDelete = _context.Services.FirstOrDefault(c => c.Id == id);
+            var serviceToDelete = _context.Services.FirstOrDefault(c => c.Id == id);
 
-            if (clientToDelete is not null)
+            if (serviceToDelete is not null)
             {
-                _context.Services.Remove(clientToDelete);
+                _context.Services.Remove(serviceToDelete);
             }
 
             await _context.SaveChangesAsync();

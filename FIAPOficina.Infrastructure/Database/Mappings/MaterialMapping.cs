@@ -14,6 +14,7 @@ namespace FIAPOficina.Infrastructure.Database.Mappings
             builder.Property(entity => entity.Value);
             builder.Property(entity => entity.Brand);
             builder.Property(entity => entity.Description);
+            builder.Property(entity => entity.Quantity);
             
             builder.HasMany(entity => entity.ServiceOrderMaterials)
                 .WithOne(serviceOrderMaterials => serviceOrderMaterials.Material)
