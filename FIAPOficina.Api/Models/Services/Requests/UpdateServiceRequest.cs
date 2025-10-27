@@ -6,6 +6,6 @@ namespace FIAPOficina.Api.Models.Services.Requests
     (
         [Required] string Name,
         [Required] string Description,
-        [Required] double Value
+        [Required] decimal Value
     );
 }

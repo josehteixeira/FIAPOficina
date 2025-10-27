@@ -5,6 +5,6 @@
         Guid Id,
         string Name,
         string Description,
-        double Value
+        decimal Value
     );
 }

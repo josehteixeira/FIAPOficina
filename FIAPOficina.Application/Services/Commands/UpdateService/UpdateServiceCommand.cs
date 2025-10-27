@@ -1,4 +1,4 @@
 ﻿namespace FIAPOficina.Application.Services.Commands.UpdateService
 {
-    public record UpdateServiceCommand(Guid Id, string Name, string Description, double Value);
+    public record UpdateServiceCommand(Guid Id, string Name, string Description, decimal Value);
 }

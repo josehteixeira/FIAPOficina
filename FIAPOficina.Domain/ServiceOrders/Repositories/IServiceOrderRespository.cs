@@ -13,11 +13,11 @@ namespace FIAPOficina.Domain.ServiceOrders.Repositories
         Task<Vehicle?> FirstOrDefaultAsync(Guid id);
         Task<ServiceOrder?> FirstOrDefaultAsync(string plate);
         ServiceOrder[] GetAll(Guid? vehicle);
-        Task AddMaterial(Material material, int quantity);
-        Task UpdateMaterial(Guid materialId, int quantity);
-        Task RemoveMaterial(Guid materialId);
-        Task AddService(Service service, int quantity);
-        Task UpdateService(Guid serviceId, int quantity);
-        Task DeleteService(Guid serviceId);
+        Task AddMaterial(Guid serviceOrderId,Material material, int quantity);
+        Task UpdateMaterial(Guid serviceOrderId, Guid materialId, int quantity);
+        Task RemoveMaterial(Guid serviceOrderId,Guid materialId);
+        Task AddService( Guid serviceOrderId, Service service, int quantity);
+        Task UpdateService(Guid serviceOrderId, Guid serviceId, int quantity);
+        Task DeleteService(Guid serviceOrderId, Guid serviceId);
     }
 }
