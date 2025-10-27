@@ -1,10 +1,12 @@
 ﻿using FIAPOficina.Domain.Materials.Entities;
+using FIAPOficina.Domain.Materials.Repositories;
 using FIAPOficina.Domain.ServiceOrders.Entities;
 using FIAPOficina.Domain.ServiceOrders.Repositories;
 using FIAPOficina.Domain.Services.Entities;
 using FIAPOficina.Domain.Vehicles.Entities;
 using FIAPOficina.Infrastructure.Database.Context;
 using FIAPOficina.Infrastructure.Database.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +18,12 @@ namespace FIAPOficina.Infrastructure.Repositories
     internal class ServiceOrderRepository : IServiceOrderRespository
     {
         private readonly AppDbContext _context;
+        private readonly IMaterialRepository _materialRepository;
 
-        public ServiceOrderRepository(AppDbContext context)
+        public ServiceOrderRepository(AppDbContext context, IMaterialRepository materialRepository)
         {
             _context = context;
+            _materialRepository = materialRepository;
         }
 
 
@@ -66,44 +70,144 @@ namespace FIAPOficina.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var serviceOrderToDelete = _context.ServiceOrders
+                .Include(s => s.Materials)
+                .Include(s => s.Services).FirstOrDefault();
+
+            if (serviceOrderToDelete is not null)
+            {
+                using var transaction = _context.Database.BeginTransaction();
+                try
+                {
+                    if (serviceOrderToDelete.Materials is not null && serviceOrderToDelete.Materials.Any())
+                        foreach (var serviceOrderMaterial in serviceOrderToDelete.Materials)
+                            _context.ServiceOrderMaterials.Remove(serviceOrderMaterial);
+
+                    if (serviceOrderToDelete.Services is not null && serviceOrderToDelete.Services.Any())
+                        foreach (var serviceOrderService in serviceOrderToDelete.Services)
+                            _context.ServiceOrderServices.Remove(serviceOrderService);
+
+                    _context.ServiceOrders.Remove(serviceOrderToDelete);
+                }
+                catch
+                {
+                    transaction.Rollback();
+                }
+                transaction.Commit();
+            }
+
+            await _context.SaveChangesAsync();
         }
 
-        public Task DeleteService(Guid serviceOrderId, Guid serviceId)
+        public async Task<ServiceOrder?> FirstOrDefaultAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var serviceOrder = await _context.ServiceOrders
+                .Include(s => s.Services)
+                .Include(m => m.Materials)
+                .Include(v => v.Vehicle)
+                .FirstOrDefaultAsync(u => u.Id == id).ConfigureAwait(false);
+
+            if (serviceOrder is not null)
+            {
+                return new ServiceOrder
+                (
+                    vehicleId: serviceOrder.VehicleId,
+                    id: serviceOrder.Id
+                )
+                {
+                    Materials = (List<ServiceOrderMaterial>)serviceOrder.Materials,
+                    Services = (List<ServiceOrderService>)serviceOrder.Services,
+                    Status = (ServiceOrderStatus)serviceOrder.Status
+
+                };
+            }
+
+            return null;
         }
 
-        public Task<Vehicle?> FirstOrDefaultAsync(Guid id)
+        public async Task<ServiceOrder?> FirstOrDefaultAsync(string plate)
         {
-            throw new NotImplementedException();
-        }
+            var serviceOrder = await _context.ServiceOrders
+               .Include(s => s.Services)
+               .Include(m => m.Materials)
+               .Include(v => v.Vehicle)
+               .FirstOrDefaultAsync(u => u.Vehicle.Plate == plate).ConfigureAwait(false);
 
-        public Task<ServiceOrder?> FirstOrDefaultAsync(string plate)
-        {
-            throw new NotImplementedException();
+            if (serviceOrder is not null)
+            {
+                return new ServiceOrder
+                (
+                    vehicleId: serviceOrder.VehicleId,
+                    id: serviceOrder.Id
+                )
+                {
+                    Materials = (List<ServiceOrderMaterial>)serviceOrder.Materials,
+                    Services = (List<ServiceOrderService>)serviceOrder.Services,
+                    Status = (ServiceOrderStatus)serviceOrder.Status
+
+                };
+            }
+            return null;
         }
 
         public ServiceOrder[] GetAll(Guid? vehicle)
         {
-            throw new NotImplementedException();
+            var serviceOrders = _context.ServiceOrders.Where(s => s.VehicleId == vehicle).ToArray();
+            return serviceOrders.Select(serviceOrder =>
+                new ServiceOrder(serviceOrder.VehicleId)
+                {
+                    Id = serviceOrder.Id,
+                    Materials = (List<ServiceOrderMaterial>)serviceOrder.Materials,
+                    Services = (List<ServiceOrderService>)serviceOrder.Services,
+                    Status = (ServiceOrderStatus)serviceOrder.Status
+                }).ToArray();
         }
 
-        public Task RemoveMaterial(Guid serviceOrderId, Guid materialId)
+        public async Task RemoveMaterial(Guid serviceOrderId, Guid materialId)
         {
-            throw new NotImplementedException();
+            var materialToDelete = _context.ServiceOrderMaterials.FirstOrDefault(c => c.MaterialId == materialId && c.ServiceOrderId == serviceOrderId);
+
+            if (materialToDelete is not null)
+            {
+                _context.ServiceOrderMaterials.Remove(materialToDelete);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+        public async Task RemoveService(Guid serviceOrderId, Guid serviceId)
+        {
+            var serviceToDelete = _context.ServiceOrderServices.FirstOrDefault(c => c.ServiceId == serviceId && c.ServiceOrderId == serviceOrderId);
+
+            if (serviceToDelete is not null)
+            {
+                _context.ServiceOrderServices.Remove(serviceToDelete);
+            }
+
+            await _context.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(ServiceOrder serviceOrder)
+        public async Task UpdateAsync(ServiceOrder serviceOrder)
         {
-            throw new NotImplementedException();
+            var serviceOrderToUpdate = _context.ServiceOrders.FirstOrDefault(s => s.Id == serviceOrder.Id);
+            if (serviceOrderToUpdate is not null)
+            {
+                serviceOrderToUpdate.Status = (int)serviceOrder.Status;
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task UpdateMaterial(Guid serviceOrderId, Guid materialId, int quantity)
+        public async Task UpdateMaterial(Guid serviceOrderId, Guid materialId, int quantity)
         {
-            throw new NotImplementedException();
+            var serviceOrderMaterialToUpdate = _context.ServiceOrderMaterials.FirstOrDefault(s => s.MaterialId == materialId && s.ServiceOrderId == serviceOrderId);
+
+            if (serviceOrderMaterialToUpdate is not null)
+            {
+                serviceOrderMaterialToUpdate.Quantity = quantity;
+                await _context.SaveChangesAsync();
+            }
+
         }
 
         public Task UpdateService(Guid serviceOrderId, Guid serviceId, int quantity)

@@ -10,7 +10,7 @@ namespace FIAPOficina.Domain.ServiceOrders.Repositories
         Task<ServiceOrder> AddAsync(ServiceOrder serviceOrder);
         Task UpdateAsync(ServiceOrder serviceOrder);
         Task DeleteAsync(Guid id);
-        Task<Vehicle?> FirstOrDefaultAsync(Guid id);
+        Task<ServiceOrder?> FirstOrDefaultAsync(Guid id);
         Task<ServiceOrder?> FirstOrDefaultAsync(string plate);
         ServiceOrder[] GetAll(Guid? vehicle);
         Task AddMaterial(Guid serviceOrderId,Material material, int quantity);
@@ -18,6 +18,6 @@ namespace FIAPOficina.Domain.ServiceOrders.Repositories
         Task RemoveMaterial(Guid serviceOrderId,Guid materialId);
         Task AddService( Guid serviceOrderId, Service service, int quantity);
         Task UpdateService(Guid serviceOrderId, Guid serviceId, int quantity);
-        Task DeleteService(Guid serviceOrderId, Guid serviceId);
+        Task RemoveService(Guid serviceOrderId, Guid serviceId);
     }
 }
