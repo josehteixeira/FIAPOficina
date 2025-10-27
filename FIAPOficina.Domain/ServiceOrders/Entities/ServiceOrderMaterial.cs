@@ -10,22 +10,18 @@ namespace FIAPOficina.Domain.ServiceOrders.Entities
         public decimal TotalValue { get; private set; }
         public decimal UnitValue { get; private set; }
 
-        public ServiceOrderMaterial(Guid materialId, Guid serviceOrderId, int quanity, decimal unitValue)
+        public ServiceOrderMaterial(Guid materialId, Guid serviceOrderId, int quantity, decimal unitValue)
         {
+            Quantity = ServiceOrderUtils.ValidQuantity(quantity);
+            UnitValue = ServiceOrderUtils.ValidValue(unitValue);
             MaterialId = materialId;
             ServiceOrderId = serviceOrderId;
-            Quantity = quanity;
-            UnitValue = unitValue;
-            TotalValue = unitValue * quanity;
+            TotalValue = Quantity * UnitValue;
         }
         public ServiceOrderMaterial(ServiceOrderMaterial serviceOrderMaterial, Guid? materalID, Guid? serviceOrderId)
         {
-            if (ServiceOrderUtils.ValidQuantity(serviceOrderMaterial.Quantity))
-                Quantity = serviceOrderMaterial.Quantity;
-
-            if (ServiceOrderUtils.ValidValue(serviceOrderMaterial.UnitValue))
-                UnitValue = serviceOrderMaterial.UnitValue;
-            
+            Quantity = ServiceOrderUtils.ValidQuantity(serviceOrderMaterial.Quantity);
+            UnitValue = ServiceOrderUtils.ValidValue(serviceOrderMaterial.UnitValue);
             TotalValue = serviceOrderMaterial.TotalValue;
 
             if (materalID.HasValue) MaterialId = materalID.Value;
