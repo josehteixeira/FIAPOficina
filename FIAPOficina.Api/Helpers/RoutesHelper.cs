@@ -41,5 +41,15 @@
             public const string GetSingle = "/api/v1/services/{id}";
             public const string GetAll = "/api/v1/services";
         }
+
+        public static class Materials
+        {
+            public const string Controller = "/api/v1/materials";
+            public const string Create = "/api/v1/materials";
+            public const string Update = "/api/v1/materials/{id}";
+            public const string Delete = "/api/v1/materials/{id}";
+            public const string GetSingle = "/api/v1/materials/{id}";
+            public const string GetAll = "/api/v1/materials";
+        }
     }
 }

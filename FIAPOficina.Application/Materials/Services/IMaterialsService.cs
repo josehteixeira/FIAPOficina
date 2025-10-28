@@ -7,7 +7,7 @@ using FIAPOficina.Domain.Materials.Entities;
 
 namespace FIAPOficina.Application.Materials.Services
 {
-    internal interface IMaterialsService
+    public interface IMaterialsService
     {
         public Task<Material> AddAsync(CreateMaterialCommand command);
         public Task<Material> UpdateAsync(UpdateMaterialCommand command);

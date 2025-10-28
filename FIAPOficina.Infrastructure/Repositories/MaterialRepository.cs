@@ -1,13 +1,12 @@
 ﻿using FIAPOficina.Domain.Materials.Entities;
 using FIAPOficina.Domain.Materials.Repositories;
-using FIAPOficina.Domain.Services.Entities;
 using FIAPOficina.Infrastructure.Database.Context;
 using FIAPOficina.Infrastructure.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FIAPOficina.Infrastructure.Repositories
 {
-    internal class MaterialRepository : IMaterialRepository
+    public class MaterialRepository : IMaterialRepository
     {
         private readonly AppDbContext _context;
 
@@ -63,7 +62,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                     brand: material.Brand,
                     value: material.Value,
                     id: material.Id,
-                    quantity:material.Quantity
+                    quantity: material.Quantity
                 );
             }
 

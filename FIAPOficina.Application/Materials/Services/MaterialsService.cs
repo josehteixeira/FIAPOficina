@@ -8,7 +8,7 @@ using FIAPOficina.Domain.Materials.Repositories;
 
 namespace FIAPOficina.Application.Materials.Services
 {
-    internal class MaterialsService : IMaterialsService
+    public class MaterialsService : IMaterialsService
     {
         private readonly CreateMaterialCommandHandler _createHandler;
         private readonly UpdateMaterialCommandHandler _updateHandler;
