@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace FIAPOficina.Domain.Materials.Entities
+﻿namespace FIAPOficina.Domain.Materials.Entities
 {
     public class Material
     {
