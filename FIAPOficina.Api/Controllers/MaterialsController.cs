@@ -94,12 +94,12 @@ namespace FIAPOficina.Api.Controllers
             if (materials is not null && materials.Length > 0)
             {
                 return Ok(materials.Select(material => new MaterialResponse(
-                Id: material.Id,
-                Name: material.Name,
-                Description: material.Description,
-                Brand: material.Brand,
-                Value: material.Value,
-                Quantity: material.Quantity)
+                    Id: material.Id,
+                    Name: material.Name,
+                    Description: material.Description,
+                    Brand: material.Brand,
+                    Value: material.Value,
+                    Quantity: material.Quantity)
                 ).ToArray());
             }
 
