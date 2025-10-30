@@ -1,104 +1,118 @@
-﻿using FIAPOficina.Domain.Materials.Entities;
-using FIAPOficina.Domain.Materials.Repositories;
-using FIAPOficina.Domain.ServiceOrders.Entities;
+﻿using FIAPOficina.Domain.ServiceOrders.Entities;
 using FIAPOficina.Domain.ServiceOrders.Repositories;
-using FIAPOficina.Domain.Services.Entities;
-using FIAPOficina.Domain.Vehicles.Entities;
 using FIAPOficina.Infrastructure.Database.Context;
 using FIAPOficina.Infrastructure.Database.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FIAPOficina.Infrastructure.Repositories
 {
-    internal class ServiceOrderRepository : IServiceOrderRespository
+    public class ServiceOrderRepository : IServiceOrderRepository
     {
         private readonly AppDbContext _context;
-        private readonly IMaterialRepository _materialRepository;
 
-        public ServiceOrderRepository(AppDbContext context, IMaterialRepository materialRepository)
+        public ServiceOrderRepository(AppDbContext context)
         {
             _context = context;
-            _materialRepository = materialRepository;
         }
-
 
         public async Task<ServiceOrder> AddAsync(ServiceOrder serviceOrder)
         {
             ServiceOrders createServiceOrder = new()
             {
-                Id = Guid.NewGuid(),
+                Id = serviceOrder.Id == Guid.Empty ? Guid.NewGuid() : serviceOrder.Id,
                 VehicleId = serviceOrder.VehicleId,
-                Status = (int)serviceOrder.Status
+                Status = (int)serviceOrder.Status,
             };
 
-            _context.ServiceOrders.Add(createServiceOrder);
-            await _context.SaveChangesAsync();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    AddMaterials(serviceOrder.Materials, createServiceOrder.Id);
+                    AddAllServices(serviceOrder.Services, createServiceOrder.Id);
+
+                    _context.ServiceOrders.Add(createServiceOrder);
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
 
             return new ServiceOrder(serviceOrder, createServiceOrder.Id);
         }
 
-        public async Task AddMaterial(Guid serviceOrderId, Material material, int quantity)
+        private void AddMaterials(List<ServiceOrderMaterial> serviceOrderMaterials, Guid id)
         {
-            ServiceOrderMaterials createdServiceOrderMaterials = new()
+            if (serviceOrderMaterials is not null && serviceOrderMaterials.Any())
             {
-                Id = Guid.NewGuid(),
-                MaterialId = material.Id,
-                Quantity = quantity,
-                ServiceOrderId = serviceOrderId,
-                Value = material.Value
-            };
-            _context.ServiceOrderMaterials.Add(createdServiceOrderMaterials);
-            await _context.SaveChangesAsync();
+                foreach (var material in serviceOrderMaterials)
+                {
+                    _context.ServiceOrderMaterials.Add(new()
+                    {
+                        Id = material.Id == Guid.Empty ? Guid.NewGuid() : material.Id,
+                        ServiceOrderId = id,
+                        MaterialId = material.MaterialId,
+                        Quantity = material.Quantity,
+                        Value = material.UnitValue,
+                    });
+                }
+            }
         }
 
-        public async Task AddService(Guid serviceOrderId, Service service, int quantity)
+        private void AddAllServices(List<ServiceOrderService> serviceOrderServices, Guid id)
         {
-            ServiceOrderServices createdServiceOrderServices = new()
+            if (serviceOrderServices is not null && serviceOrderServices.Any())
             {
-                Id = Guid.NewGuid(),
-                ServiceId = service.Id,
-                Quantity = quantity,
-                ServiceOrderId = serviceOrderId,
-                Value = service.Value
-            };
-            _context.ServiceOrderServices.Add(createdServiceOrderServices);
-            await _context.SaveChangesAsync();
+                foreach (var service in serviceOrderServices)
+                {
+                    _context.ServiceOrderServices.Add(new()
+                    {
+                        Id = service.Id == Guid.Empty ? Guid.NewGuid() : service.Id,
+                        ServiceOrderId = id,
+                        ServiceId = service.ServiceId,
+                        Quantity = service.Quantity,
+                        Value = service.UnitValue,
+                    });
+                }
+            }
         }
 
         public async Task DeleteAsync(Guid id)
         {
             var serviceOrderToDelete = _context.ServiceOrders
                 .Include(s => s.Materials)
-                .Include(s => s.Services).FirstOrDefault();
+                .Include(s => s.Services)
+                .FirstOrDefault();
 
             if (serviceOrderToDelete is not null)
             {
-                using var transaction = _context.Database.BeginTransaction();
-                try
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    if (serviceOrderToDelete.Materials is not null && serviceOrderToDelete.Materials.Any())
-                        foreach (var serviceOrderMaterial in serviceOrderToDelete.Materials)
-                            _context.ServiceOrderMaterials.Remove(serviceOrderMaterial);
+                    try
+                    {
+                        if (serviceOrderToDelete.Materials is not null && serviceOrderToDelete.Materials.Any())
+                            foreach (var serviceOrderMaterial in serviceOrderToDelete.Materials)
+                                _context.ServiceOrderMaterials.Remove(serviceOrderMaterial);
 
-                    if (serviceOrderToDelete.Services is not null && serviceOrderToDelete.Services.Any())
-                        foreach (var serviceOrderService in serviceOrderToDelete.Services)
-                            _context.ServiceOrderServices.Remove(serviceOrderService);
+                        if (serviceOrderToDelete.Services is not null && serviceOrderToDelete.Services.Any())
+                            foreach (var serviceOrderService in serviceOrderToDelete.Services)
+                                _context.ServiceOrderServices.Remove(serviceOrderService);
 
-                    _context.ServiceOrders.Remove(serviceOrderToDelete);
+                        _context.ServiceOrders.Remove(serviceOrderToDelete);
+                        await _context.SaveChangesAsync();
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
-                catch
-                {
-                    transaction.Rollback();
-                }
-                transaction.Commit();
             }
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task<ServiceOrder?> FirstOrDefaultAsync(Guid id)
@@ -111,16 +125,11 @@ namespace FIAPOficina.Infrastructure.Repositories
 
             if (serviceOrder is not null)
             {
-                return new ServiceOrder
-                (
-                    vehicleId: serviceOrder.VehicleId,
-                    id: serviceOrder.Id
-                )
+                return new ServiceOrder(serviceOrder.VehicleId, serviceOrder.Id)
                 {
-                    Materials = (List<ServiceOrderMaterial>)serviceOrder.Materials,
-                    Services = (List<ServiceOrderService>)serviceOrder.Services,
+                    Materials = serviceOrder.Materials.Select(m => new ServiceOrderMaterial(m.MaterialId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
+                    Services = serviceOrder.Services.Select(m => new ServiceOrderService(m.ServiceId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Status = (ServiceOrderStatus)serviceOrder.Status
-
                 };
             }
 
@@ -130,89 +139,195 @@ namespace FIAPOficina.Infrastructure.Repositories
         public async Task<ServiceOrder?> FirstOrDefaultAsync(string plate)
         {
             var serviceOrder = await _context.ServiceOrders
-               .Include(s => s.Services)
-               .Include(m => m.Materials)
-               .Include(v => v.Vehicle)
+               .Include(so => so.Services)
+               .Include(so => so.Materials)
+               .Include(so => so.Vehicle)
                .FirstOrDefaultAsync(u => u.Vehicle.Plate == plate).ConfigureAwait(false);
 
             if (serviceOrder is not null)
             {
-                return new ServiceOrder
-                (
-                    vehicleId: serviceOrder.VehicleId,
-                    id: serviceOrder.Id
-                )
+                return new ServiceOrder(serviceOrder.VehicleId, serviceOrder.Id)
                 {
-                    Materials = (List<ServiceOrderMaterial>)serviceOrder.Materials,
-                    Services = (List<ServiceOrderService>)serviceOrder.Services,
+                    Materials = serviceOrder.Materials.Select(m => new ServiceOrderMaterial(m.MaterialId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
+                    Services = serviceOrder.Services.Select(m => new ServiceOrderService(m.ServiceId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Status = (ServiceOrderStatus)serviceOrder.Status
-
                 };
             }
             return null;
         }
 
-        public ServiceOrder[] GetAll(Guid? vehicle)
+        public ServiceOrder[] GetAll(Guid? vehicleId = null, Guid? clientId = null)
         {
-            var serviceOrders = _context.ServiceOrders.Where(s => s.VehicleId == vehicle).ToArray();
+            var serviceOrders = _context.ServiceOrders
+                .Include(so => so.Materials)
+                .Include(so => so.Services)
+                .Where(so => !vehicleId.HasValue || so.VehicleId == vehicleId)
+                .Where(so => !clientId.HasValue || so.Vehicle.ClientId == clientId)
+                .ToArray();
+
             return serviceOrders.Select(serviceOrder =>
                 new ServiceOrder(serviceOrder.VehicleId)
                 {
                     Id = serviceOrder.Id,
-                    Materials = (List<ServiceOrderMaterial>)serviceOrder.Materials,
-                    Services = (List<ServiceOrderService>)serviceOrder.Services,
+                    Materials = serviceOrder.Materials.Select(m => new ServiceOrderMaterial(m.MaterialId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
+                    Services = serviceOrder.Services.Select(m => new ServiceOrderService(m.ServiceId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Status = (ServiceOrderStatus)serviceOrder.Status
                 }).ToArray();
         }
 
-        public async Task RemoveMaterial(Guid serviceOrderId, Guid materialId)
-        {
-            var materialToDelete = _context.ServiceOrderMaterials.FirstOrDefault(c => c.MaterialId == materialId && c.ServiceOrderId == serviceOrderId);
-
-            if (materialToDelete is not null)
-            {
-                _context.ServiceOrderMaterials.Remove(materialToDelete);
-            }
-
-            await _context.SaveChangesAsync();
-        }
-        public async Task RemoveService(Guid serviceOrderId, Guid serviceId)
-        {
-            var serviceToDelete = _context.ServiceOrderServices.FirstOrDefault(c => c.ServiceId == serviceId && c.ServiceOrderId == serviceOrderId);
-
-            if (serviceToDelete is not null)
-            {
-                _context.ServiceOrderServices.Remove(serviceToDelete);
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
         public async Task UpdateAsync(ServiceOrder serviceOrder)
         {
-            var serviceOrderToUpdate = _context.ServiceOrders.FirstOrDefault(s => s.Id == serviceOrder.Id);
+            var serviceOrderToUpdate = _context.ServiceOrders
+                .Include(so => so.Materials)
+                .Include(so => so.Services)
+                .FirstOrDefault(s => s.Id == serviceOrder.Id);
+
             if (serviceOrderToUpdate is not null)
             {
-                serviceOrderToUpdate.Status = (int)serviceOrder.Status;
-                await _context.SaveChangesAsync();
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        serviceOrderToUpdate.Status = (int)serviceOrder.Status;
+                        serviceOrderToUpdate.VehicleId = serviceOrder.VehicleId;
+
+                        UpdateServiceOrderMaterials(serviceOrderToUpdate, serviceOrder);
+                        UpdateServiceOrderServices(serviceOrderToUpdate, serviceOrder);
+
+                        await _context.SaveChangesAsync();
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
             }
         }
 
-        public async Task UpdateMaterial(Guid serviceOrderId, Guid materialId, int quantity)
+        private void UpdateServiceOrderMaterials(ServiceOrders oldServiceOrder, ServiceOrder newServiceOrder)
         {
-            var serviceOrderMaterialToUpdate = _context.ServiceOrderMaterials.FirstOrDefault(s => s.MaterialId == materialId && s.ServiceOrderId == serviceOrderId);
+            var oldMaterialsList = oldServiceOrder.ToDomain().Materials.AsEnumerable();
+            var newMaterialsList = newServiceOrder.Materials.AsEnumerable();
 
-            if (serviceOrderMaterialToUpdate is not null)
+            var materialsToAdd = newMaterialsList.Where(n => !oldMaterialsList.Any(o => o.Id == n.Id));
+            var materialsToDelete = oldMaterialsList.Where(o => !newMaterialsList.Any(n => n.Id == o.Id));
+            var materialsToUpdate = newMaterialsList.Where(o => oldMaterialsList.Any(n => n.Id == o.Id));
+
+            AddMaterials(materialsToAdd.ToList(), newServiceOrder.Id);
+            DeleteMaterials(materialsToDelete);
+            UpdateMaterials(materialsToUpdate);
+        }
+
+        private void UpdateMaterials(IEnumerable<ServiceOrderMaterial> materialsToUpdate)
+        {
+
+            foreach (var materialToUpdate in materialsToUpdate)
             {
-                serviceOrderMaterialToUpdate.Quantity = quantity;
-                await _context.SaveChangesAsync();
-            }
+                var material = _context.ServiceOrderMaterials.FirstOrDefault(m => m.Id == materialToUpdate.Id);
 
+                if (material is not null)
+                {
+                    material.Value = materialToUpdate.UnitValue;
+                    material.Quantity = materialToUpdate.Quantity;
+                    material.MaterialId = materialToUpdate.MaterialId;
+                    _context.ServiceOrderMaterials.Update(material);
+                }
+            }
         }
 
-        public Task UpdateService(Guid serviceOrderId, Guid serviceId, int quantity)
+        private void DeleteMaterials(IEnumerable<ServiceOrderMaterial> materialsToDelete)
         {
-            throw new NotImplementedException();
+            foreach (var materialToDelete in materialsToDelete)
+            {
+                var material = _context.ServiceOrderMaterials.FirstOrDefault(m => m.Id == materialToDelete.Id);
+
+                if (material is not null)
+                {
+                    _context.ServiceOrderMaterials.Remove(material);
+                }
+            }
+        }
+
+        private void UpdateServiceOrderServices(ServiceOrders oldServiceOrder, ServiceOrder newServiceOrder)
+        {
+            var oldServicesList = oldServiceOrder.ToDomain().Services.AsEnumerable();
+            var newServicesList = newServiceOrder.Services.AsEnumerable();
+
+            var servicesToAdd = newServicesList.Where(n => !oldServicesList.Any(o => o.Id == n.Id));
+            var servicesToDelete = oldServicesList.Where(o => !newServicesList.Any(n => n.Id == o.Id));
+            var servicesToUpdate = newServicesList.Where(o => oldServicesList.Any(n => n.Id == o.Id));
+
+            AddAllServices(servicesToAdd.ToList(), newServiceOrder.Id);
+            DeleteAllServices(servicesToDelete);
+            UpdateAllServices(servicesToUpdate);
+        }
+
+        private void DeleteAllServices(IEnumerable<ServiceOrderService> servicesToDelete)
+        {
+            foreach (var serviceToDelete in servicesToDelete)
+            {
+                var service = _context.ServiceOrderServices.FirstOrDefault(m => m.Id == serviceToDelete.Id);
+
+                if (service is not null)
+                {
+                    _context.ServiceOrderServices.Remove(service);
+                }
+            }
+        }
+
+        private void UpdateAllServices(IEnumerable<ServiceOrderService> servicesToUpdate)
+        {
+
+            foreach (var serviceToUpdate in servicesToUpdate)
+            {
+                var service = _context.ServiceOrderServices.FirstOrDefault(m => m.Id == serviceToUpdate.Id);
+
+                if (service is not null)
+                {
+                    service.Value = serviceToUpdate.UnitValue;
+                    service.Quantity = serviceToUpdate.Quantity;
+                    service.ServiceId = serviceToUpdate.ServiceId;
+                    _context.ServiceOrderServices.Update(service);
+                }
+            }
+        }
+
+    }
+
+    static class Extensions
+    {
+        public static ServiceOrder ToDomain(this ServiceOrders serviceOrder)
+        {
+            return new ServiceOrder(serviceOrder.VehicleId, serviceOrder.Id)
+            {
+                Materials = serviceOrder.Materials.Select(m => m.ToDomain()).ToList(),
+                Services = serviceOrder.Services.Select(s => s.ToDomain()).ToList(),
+                Status = (ServiceOrderStatus)serviceOrder.Status,
+            };
+        }
+
+        public static ServiceOrderMaterial ToDomain(this ServiceOrderMaterials serviceOrderMaterial)
+        {
+            return new(
+                id: serviceOrderMaterial.Id,
+                materialId: serviceOrderMaterial.MaterialId,
+                serviceOrderId: serviceOrderMaterial.ServiceOrderId,
+                unitValue: serviceOrderMaterial.Value,
+                quantity: serviceOrderMaterial.Quantity
+            );
+        }
+
+        public static ServiceOrderService ToDomain(this ServiceOrderServices serviceOrderService)
+        {
+            return new(
+                id: serviceOrderService.Id,
+                serviceId: serviceOrderService.ServiceId,
+                serviceOrderId: serviceOrderService.ServiceOrderId,
+                unitValue: serviceOrderService.Value,
+                quantity: serviceOrderService.Quantity
+            );
         }
     }
 }
