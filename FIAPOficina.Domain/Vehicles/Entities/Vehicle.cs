@@ -17,31 +17,29 @@
                 throw new ArgumentException("Invalid plate", nameof(Plate));
             }
 
+            Id = id.HasValue ? id.Value : Guid.NewGuid();
             Brand = brand;
             Model = model;
             Year = year;
             Plate = plate;
             Color = color;
             ClientId = clientId;
-
-            if (id.HasValue) Id = id.Value;
         }
 
-        public Vehicle(Vehicle vehicle, Guid? id = null)
+        public Vehicle(Vehicle vehicle, Guid id)
         {
             if (!Utils.VehicleUtils.IsPlateValid(vehicle.Plate.ToUpper()))
             {
                 throw new ArgumentException("Invalid plate", nameof(Plate));
             }
 
+            Id = id;
             Brand = vehicle.Brand;
             Model = vehicle.Model;
             Year = vehicle.Year;
             Plate = vehicle.Plate;
             Color = vehicle.Color;
             ClientId = vehicle.ClientId;
-
-            if (id.HasValue) Id = id.Value;
         }
     }
 }

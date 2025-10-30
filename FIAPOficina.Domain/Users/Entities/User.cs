@@ -10,18 +10,16 @@
         {
             CheckRequiredFields(name, userName);
 
-            if (id.HasValue) Id = id.Value;
-
+            Id = id.HasValue ? id.Value : Guid.NewGuid();
             Name = name;
             UserName = userName;
         }
 
-        public User(User user, Guid? id = null)
+        public User(User user, Guid id)
         {
             CheckRequiredFields(user.Name, user.UserName);
 
-            if (id.HasValue) Id = id.Value;
-
+            Id = id;
             Name = user.Name;
             UserName = user.UserName;
         }

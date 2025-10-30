@@ -8,6 +8,6 @@ namespace FIAPOficina.Domain.Services.Repositories
         Task UpdateAsync(Service entity);
         Task DeleteAsync(Guid id);
         Task<Service?> FirstOrDefaultAsync(Guid id);
-        Service[] GetAll();
+        Service[] GetAll(Guid[] ids);
     }
 }

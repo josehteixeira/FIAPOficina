@@ -9,7 +9,7 @@ namespace FIAPOficina.Domain.Materials.Repositories
         Task ChangeQuantity(Guid? materialId, int quantity);
         Task DeleteAsync(Guid id);
         Task<Material?> FirstOrDefaultAsync(Guid id);
-        Material[] GetAll();
+        Material[] GetAll(Guid[] ids);
         Task<bool> CheckAvailability(Guid? materialId, int quantity);
     }
 }

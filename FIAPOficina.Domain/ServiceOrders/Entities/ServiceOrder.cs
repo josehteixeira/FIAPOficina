@@ -7,24 +7,22 @@
         public List<ServiceOrderService> Services { get; set; }
         public List<ServiceOrderMaterial> Materials { get; set; }
         public ServiceOrderStatus Status { get; set; }
+
         public ServiceOrder(Guid vehicleId, Guid? id = null)
         {
-            Status = ServiceOrderStatus.Received;
+            Id = id.HasValue ? id.Value : Guid.NewGuid();
+            VehicleId = vehicleId;
             Services = new List<ServiceOrderService> { };
             Materials = new List<ServiceOrderMaterial> { };
-            VehicleId = vehicleId;
-
-            if (id.HasValue) Id = id.Value;
         }
 
-        public ServiceOrder(ServiceOrder serviceOrder, Guid? id)
+        public ServiceOrder(ServiceOrder serviceOrder, Guid id)
         {
+            Id = id;
             VehicleId = serviceOrder.VehicleId;
             Services = serviceOrder.Services;
             Materials = serviceOrder.Materials;
             Status = serviceOrder.Status;
-
-            if (id.HasValue) Id = id.Value;
         }
     }
 }

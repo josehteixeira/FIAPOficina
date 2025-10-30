@@ -9,20 +9,18 @@
 
         public Service(string name, string description, decimal value, Guid? id = null)
         {
+            Id = id.HasValue ? id.Value : Guid.NewGuid();
             Name = name;
             Description = description;
             Value = value;
-
-            if (id.HasValue) Id = id.Value;
         }
 
-        public Service(Service service, Guid? id = null)
+        public Service(Service service, Guid id)
         {
+            Id = id;
             Name = service.Name;
             Description = service.Description;
             Value = service.Value;
-
-            if (id.HasValue) Id = id.Value;
         }
     }
 }

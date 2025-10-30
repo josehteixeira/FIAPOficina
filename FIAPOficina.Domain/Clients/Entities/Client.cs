@@ -25,16 +25,15 @@
                 throw new ArgumentException("Invalid email", nameof(Email));
             }
 
+            Id = id.HasValue ? id.Value : Guid.NewGuid();
             Name = name;
             Identifier = identifier;
             Phone = phone;
             Email = email;
             Address = address;
-
-            if (id.HasValue) Id = id.Value;
         }
 
-        public Client(Client client, Guid? id = null)
+        public Client(Client client, Guid id)
         {
             if (!Utils.ClientUtils.IsValidDocument(client.Identifier))
             {
@@ -46,13 +45,12 @@
                 throw new ArgumentException("Invalid email", nameof(Email));
             }
 
+            Id = id;
             Name = client.Name;
             Identifier = client.Identifier;
             Phone = client.Phone;
             Email = client.Email;
             Address = client.Address;
-
-            if (id.HasValue) Id = id.Value;
         }
     }
 }
