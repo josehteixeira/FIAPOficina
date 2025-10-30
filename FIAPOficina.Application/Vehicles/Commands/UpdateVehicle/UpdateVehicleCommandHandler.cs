@@ -18,7 +18,7 @@ namespace FIAPOficina.Application.Vehicles.Commands.UpdateVehicle
 
             if (vehicle is null)
             {
-                throw new Exception("Vehicle not found.");
+                throw new Exception("Vehicle not found!");
             }
 
             vehicle.Brand = command.Brand;

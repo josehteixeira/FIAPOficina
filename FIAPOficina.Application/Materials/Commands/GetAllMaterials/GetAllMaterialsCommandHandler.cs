@@ -15,7 +15,7 @@ namespace FIAPOficina.Application.Materials.Commands.GetAllMaterials
 
         public Material[] Handle(GetAllMaterialsCommand command)
         {
-            return _repository.GetAll();
+            return _repository.GetAll(command.Ids);
         }
     }
 }

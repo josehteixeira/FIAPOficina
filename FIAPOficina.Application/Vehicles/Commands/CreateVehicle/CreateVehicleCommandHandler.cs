@@ -21,7 +21,7 @@ namespace FIAPOficina.Application.Vehicles.Commands.CreateVehicle
 
             if (client is null)
             {
-                throw new Exception("Client not found");
+                throw new Exception("Client not found!");
             }
 
             var vehicle = await _repository.AddAsync(

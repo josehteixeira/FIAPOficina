@@ -14,7 +14,7 @@ namespace FIAPOficina.Application.Services.Commands.GetAllServices
 
         public Service[] Handle(GetAllServicesCommand command)
         {
-            return _repository.GetAll();
+            return _repository.GetAll(command.Ids);
         }
     }
 }
