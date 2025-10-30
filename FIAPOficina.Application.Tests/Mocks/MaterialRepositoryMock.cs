@@ -1,0 +1,62 @@
+﻿using FIAPOficina.Domain.Materials.Entities;
+using FIAPOficina.Domain.Materials.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FIAPOficina.Application.Tests.Mocks
+{
+    internal class MaterialRepositoryMock : IMaterialRepository
+    {
+        private List<Material> _materials = new List<Material>();
+        public async Task<Material> AddAsync(Material material)
+        {
+            material.Id = Guid.NewGuid();
+            _materials.Add(material);
+            return material;
+        }
+
+        public Task ChangeQuantity(Guid? materialId, int quantity)
+        {
+            var material = _materials.FirstOrDefault(m => m.Id == materialId);
+            if (material != null)
+                material.Quantity = quantity;
+
+            return Task.CompletedTask;
+
+        }
+
+        public Task<bool> CheckAvailability(Guid? materialId, int quantity)
+        {
+            var material = _materials.FirstOrDefault(m => m.Id == materialId);
+            return Task.FromResult(material != null && material.Quantity >= quantity);
+
+        }
+
+        public Task DeleteAsync(Guid id)
+        {
+            var material = _materials.FirstOrDefault(m => m.Id == id);
+            if (material != null)
+                _materials.Remove(material);
+
+            return Task.CompletedTask;
+        }
+
+        public Task<Material?> FirstOrDefaultAsync(Guid id)
+        {
+            return Task.FromResult(_materials.FirstOrDefault(m => m.Id == id));
+        }
+
+        public Material[] GetAll()
+        {
+            return _materials.ToArray();
+        }
+
+        public Task UpdateAsync(Material material)
+        {
+            return Task.CompletedTask;
+        }
+    }
+}
