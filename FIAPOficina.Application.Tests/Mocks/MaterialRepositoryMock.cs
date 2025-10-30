@@ -49,9 +49,9 @@ namespace FIAPOficina.Application.Tests.Mocks
             return Task.FromResult(_materials.FirstOrDefault(m => m.Id == id));
         }
 
-        public Material[] GetAll()
+        public Material[] GetAll(Guid[] ids)
         {
-            return _materials.ToArray();
+            return _materials.Where(m => ids.Contains(m.Id)).ToArray();
         }
 
         public Task UpdateAsync(Material material)
