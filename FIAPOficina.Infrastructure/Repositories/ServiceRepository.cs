@@ -19,7 +19,7 @@ namespace FIAPOficina.Infrastructure.Repositories
         {
             Services createServices = new()
             {
-                Id = Guid.NewGuid(),
+                Id = service.Id == Guid.Empty ? Guid.NewGuid() : service.Id,
                 Name = service.Name,
                 Description = service.Description,
                 Value = service.Value
@@ -75,9 +75,12 @@ namespace FIAPOficina.Infrastructure.Repositories
             return null;
         }
 
-        public Service[] GetAll()
+        public Service[] GetAll(Guid[] ids)
         {
-            var services = _context.Services.ToArray();
+            var services = ids is null || ids.Length == 0 ?
+                _context.Services.ToArray()
+                : _context.Services.Where(s => ids.Contains(s.Id)).ToArray();
+
 
             return services.Select(service =>
                 new Service

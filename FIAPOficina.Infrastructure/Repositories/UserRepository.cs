@@ -19,7 +19,7 @@ namespace FIAPOficina.Infrastructure.Repositories
         {
             Users createUser = new()
             {
-                Id = Guid.NewGuid(),
+                Id = user.Id == Guid.Empty ? Guid.NewGuid() : user.Id,
                 Name = user.Name,
                 UserName = user.UserName,
                 PasswordHash = passwordHash,

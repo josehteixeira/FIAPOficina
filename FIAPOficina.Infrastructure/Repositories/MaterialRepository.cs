@@ -18,7 +18,7 @@ namespace FIAPOficina.Infrastructure.Repositories
         {
             Materials createMaterial = new()
             {
-                Id = Guid.NewGuid(),
+                Id = material.Id == Guid.Empty ? Guid.NewGuid() : material.Id,
                 Name = material.Name,
                 Description = material.Description,
                 Value = material.Value,
@@ -69,9 +69,11 @@ namespace FIAPOficina.Infrastructure.Repositories
             return null;
         }
 
-        public Material[] GetAll()
+        public Material[] GetAll(Guid[] ids)
         {
-            var materials = _context.Materials.ToArray();
+            var materials = ids is null || ids.Length == 0 ?
+                _context.Materials.ToArray()
+                : _context.Materials.Where(m => ids.Contains(m.Id)).ToArray();
 
             return materials.Select(material =>
                 new Material
@@ -80,8 +82,8 @@ namespace FIAPOficina.Infrastructure.Repositories
                     material.Description,
                     material.Brand,
                     material.Value,
-                    material.Id,
-                    material.Quantity
+                    material.Quantity,
+                    material.Id
                 )).ToArray();
         }
 

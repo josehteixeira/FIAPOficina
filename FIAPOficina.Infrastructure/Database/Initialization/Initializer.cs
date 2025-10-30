@@ -12,9 +12,8 @@ namespace FIAPOficina.Infrastructure.Database.Initialization
         {
             using var scope = services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasherService>(); // o seu serviço de hash
+            var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasherService>();
 
-            // verifica se já existe um usuário admin
             if (!await context.Users.AnyAsync(u => u.UserName == "admin"))
             {
                 var admin = new Users

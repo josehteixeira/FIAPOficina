@@ -8,7 +8,7 @@ namespace FIAPOficina.Infrastructure.Database.Mappings
     {
         public void Configure(EntityTypeBuilder<Users> builder)
         {
-            builder.ToTable<Users>(nameof(Users));
+            builder.ToTable(nameof(Users));
             builder.HasKey(entity => entity.Id);
             builder.Property(entity => entity.Name).IsRequired();
             builder.Property(entity => entity.UserName).IsRequired();

@@ -19,7 +19,7 @@ namespace FIAPOficina.Infrastructure.Repositories
         {
             Vehicles createVehicle = new()
             {
-                Id = Guid.NewGuid(),
+                Id = vehicle.Id == Guid.Empty ? Guid.NewGuid() : vehicle.Id,
                 Brand = vehicle.Brand,
                 Model = vehicle.Model,
                 Year = vehicle.Year,

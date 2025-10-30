@@ -19,7 +19,7 @@ namespace FIAPOficina.Infrastructure.Repositories
         {
             Clients createClient = new()
             {
-                Id = Guid.NewGuid(),
+                Id = client.Id == Guid.Empty ? Guid.NewGuid() : client.Id,
                 Address = client.Address,
                 Email = client.Email,
                 Identifier = client.Identifier,

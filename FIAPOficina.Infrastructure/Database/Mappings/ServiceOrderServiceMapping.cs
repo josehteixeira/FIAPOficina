@@ -8,7 +8,7 @@ namespace FIAPOficina.Infrastructure.Database.Mappings
     {
         public void Configure(EntityTypeBuilder<ServiceOrderServices> builder)
         {
-            builder.ToTable<ServiceOrderServices>(nameof(ServiceOrderServices));
+            builder.ToTable(nameof(ServiceOrderServices));
             builder.HasKey(entity => entity.Id);
             builder.Property(entity => entity.Quantity);
             builder.Property(entity => entity.Value);
