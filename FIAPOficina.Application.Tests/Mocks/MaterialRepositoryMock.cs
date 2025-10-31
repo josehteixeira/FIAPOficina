@@ -54,9 +54,17 @@ namespace FIAPOficina.Application.Tests.Mocks
             return _materials.Where(m => ids.Contains(m.Id)).ToArray();
         }
 
-        public Task UpdateAsync(Material material)
+        public async Task UpdateAsync(Material material)
         {
-            return Task.CompletedTask;
+            var materiadb = FirstOrDefaultAsync(material.Id).GetAwaiter().GetResult();
+            if (materiadb is not null)
+            {
+                materiadb.Quantity = material.Quantity;
+                materiadb.Brand = material.Brand;
+                materiadb.Value = material.Value;
+                materiadb.Description = material.Description;
+                materiadb.Name = material.Name;
+            }
         }
     }
 }
