@@ -1,4 +1,6 @@
-﻿namespace FIAPOficina.Domain.Materials.Entities
+﻿using FIAPOficina.Domain.Utils;
+
+namespace FIAPOficina.Domain.Materials.Entities
 {
     public class Material
     {
@@ -15,8 +17,8 @@
             Name = name;
             Description = description;
             Brand = brand;
-            Value = value;
-            Quantity = quantity;
+            Quantity = UtilsCommon.ValidQuantity(quantity);
+            Value = UtilsCommon.ValidValue(value);
         }
 
         public Material(Material material, Guid id)
@@ -25,8 +27,8 @@
             Name = material.Name;
             Description = material.Description;
             Brand = material.Brand;
-            Value = material.Value;
-            Quantity = material.Quantity;
+            Quantity = UtilsCommon.ValidQuantity(material.Quantity);
+            Value = UtilsCommon.ValidValue(material.Value);
         }
     }
 }

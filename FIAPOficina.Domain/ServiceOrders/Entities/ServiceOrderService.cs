@@ -1,4 +1,4 @@
-﻿using FIAPOficina.Domain.ServiceOrders.Utils;
+﻿using FIAPOficina.Domain.Utils;
 
 namespace FIAPOficina.Domain.ServiceOrders.Entities
 {
@@ -15,8 +15,8 @@ namespace FIAPOficina.Domain.ServiceOrders.Entities
         public ServiceOrderService(Guid serviceId, Guid serviceOrderId, int quantity, decimal unitValue, Guid? id = null)
         {
             Id = id.HasValue ? id.Value : Guid.NewGuid();
-            Quantity = ServiceOrderUtils.ValidQuantity(quantity);
-            UnitValue = ServiceOrderUtils.ValidValue(unitValue);
+            Quantity = UtilsCommon.ValidQuantity(quantity);
+            UnitValue = UtilsCommon.ValidValue(unitValue);
             ServiceId = serviceId;
             ServiceOrderId = serviceOrderId;
         }
@@ -24,8 +24,8 @@ namespace FIAPOficina.Domain.ServiceOrders.Entities
         public ServiceOrderService(ServiceOrderService serviceOrderService, Guid serviceId, Guid serviceOrderId)
         {
             Id = serviceOrderService.Id;
-            Quantity = ServiceOrderUtils.ValidQuantity(serviceOrderService.Quantity);
-            UnitValue = ServiceOrderUtils.ValidValue(serviceOrderService.UnitValue);
+            Quantity = UtilsCommon.ValidQuantity(serviceOrderService.Quantity);
+            UnitValue = UtilsCommon.ValidValue(serviceOrderService.UnitValue);
             ServiceId = serviceId;
             ServiceOrderId = serviceOrderId;
         }

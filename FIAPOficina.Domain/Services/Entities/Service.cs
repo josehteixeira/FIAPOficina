@@ -1,4 +1,6 @@
-﻿namespace FIAPOficina.Domain.Services.Entities
+﻿using FIAPOficina.Domain.Utils;
+
+namespace FIAPOficina.Domain.Services.Entities
 {
     public class Service
     {
@@ -13,6 +15,7 @@
             Name = name;
             Description = description;
             Value = value;
+            Value = UtilsCommon.ValidValue(value);
         }
 
         public Service(Service service, Guid id)
@@ -20,7 +23,7 @@
             Id = id;
             Name = service.Name;
             Description = service.Description;
-            Value = service.Value;
+            Value = UtilsCommon.ValidValue(service.Value);
         }
     }
 }
