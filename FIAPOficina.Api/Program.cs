@@ -7,7 +7,6 @@ namespace FIAPOficina
     {
         public static void Main(string[] args)
         {
-            sendEmailTeste();
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
@@ -31,12 +30,6 @@ namespace FIAPOficina
             app.ApplyMigrations();
             app.CreateInitialRecords().GetAwaiter().GetResult();
             app.Run();
-        }
-
-        private static void sendEmailTeste()
-        {
-            var mailSv = new MailService("","");
-            mailSv.SendMail( mailSv.CreateMailMessage("", "", true));
         }
     }
 }
