@@ -21,8 +21,6 @@ namespace FIAPOficina.Infrastructure.Mail
         private readonly string _sourceMail;
         private readonly string _subject;
 
-
-        private SmtpClient _smtpClient;
         public MailService(string sourceMail, string subject)
         {
             _smtpServer = Environment.GetEnvironmentVariable("SMTPSERVER") ?? throw new ArgumentNullException("Invalid SMTP Server");
