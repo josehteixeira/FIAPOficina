@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MailKit.Security;
+using MimeKit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -21,7 +23,7 @@ namespace FIAPOficina.Infrastructure.Mail
 
 
         private SmtpClient _smtpClient;
-        public MailService(string sourceMail,string subject)
+        public MailService(string sourceMail, string subject)
         {
             _smtpServer = Environment.GetEnvironmentVariable("SMTPSERVER") ?? throw new ArgumentNullException("Invalid SMTP Server");
             Int32.TryParse(Environment.GetEnvironmentVariable("SMTPPORT"), out _smtpPort);
@@ -30,44 +32,44 @@ namespace FIAPOficina.Infrastructure.Mail
             _smtpSsl = bool.Parse(Environment.GetEnvironmentVariable("SMTPSSL") ?? throw new ArgumentNullException("Invalid SMTP Password"));
             _sourceMail = sourceMail;
             _subject = subject;
-            Initialize();
-        }
-        private void Initialize()
-        {
-            _smtpClient = new SmtpClient(_smtpServer)
-            {
-                Port = _smtpPort,
-                Credentials = new NetworkCredential(_smtpUser, _smtpPassword),
-                EnableSsl = _smtpSsl
-            };
         }
 
-        public MailMessage CreateMailMessage(string destinationMail,string body, bool isHTML)
+        public MimeMessage CreateMailMessage(string destinationMail, string body)
         {
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress(_sourceMail),
-                Subject = _subject,
-                Body = body,
-                IsBodyHtml = true
-            };
-            mailMessage.To.Add(destinationMail);
+
+            var mailMessage = new MimeMessage();
+            mailMessage.From.Add(new MailboxAddress(_sourceMail, _sourceMail));
+            mailMessage.To.Add(new MailboxAddress(destinationMail, destinationMail));
+            mailMessage.Subject = _subject;
+
+            var bodyBuilder = new BodyBuilder();
+            bodyBuilder.HtmlBody = body;
+            mailMessage.Body = bodyBuilder.ToMessageBody();
 
             return mailMessage;
         }
 
-        public bool SendMail(MailMessage message)
+        public bool SendMail(MimeMessage message)
         {
             try
             {
-                _smtpClient.Send(message);
+
+                using (var client = new MailKit.Net.Smtp.SmtpClient())
+                {
+                    
+                    client.Connect(_smtpServer, _smtpPort);
+
+                    client.Authenticate(_smtpUser, _smtpPassword);
+
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
                 return true;
             }
-            catch (SmtpException ex)
+            catch (Exception ex)
             {
                 throw new Exception("Fail to send mail", ex);
             }
         }
-
     }
 }
