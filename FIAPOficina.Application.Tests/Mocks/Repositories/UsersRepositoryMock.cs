@@ -11,7 +11,8 @@ namespace FIAPOficina.Application.Tests.Mocks.Repositories
     internal class UsersRepositoryMock : IUserRepository
     {
         private List<User> _users = new List<User>();
-        public async Task<User> AddAsync(User user, string passwordHash)
+        
+        public async Task<User> AddAsync(User user)
         {
             _users.Add(user);
             return user;
