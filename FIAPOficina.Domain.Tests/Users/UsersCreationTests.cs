@@ -8,7 +8,7 @@ namespace FIAPOficina.Domain.Tests.Users
         public void Should_Create_Valid_User_With_Valid_Name_Username_Id()
         {
             Guid id = Guid.NewGuid();
-            User user = new User("Name", "username", id);
+            User user = new User("Name", "username", id: id);
             Assert.NotNull(user);
             Assert.Equal("Name", user.Name);
             Assert.Equal("username", user.UserName);
@@ -19,7 +19,7 @@ namespace FIAPOficina.Domain.Tests.Users
         public void Should_Create_Valid_User_With_Valid_User_Id()
         {
             Guid baseUserId = Guid.NewGuid();
-            User baseUser = new User("Name", "username", baseUserId);
+            User baseUser = new User("Name", "username", id: baseUserId);
 
             Guid id = Guid.NewGuid();
             User user = new(baseUser, id);

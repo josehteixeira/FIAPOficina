@@ -5,6 +5,17 @@
         public Guid Id { get; private set; }
         public string Name { get; private set; }
         public string UserName { get; private set; }
+        public string? PasswordHash { get; private set; }
+
+        public User(string name, string userName, string passwordHash, Guid? id = null)
+        {
+            CheckRequiredFields(name, userName);
+
+            Id = id.HasValue ? id.Value : Guid.NewGuid();
+            Name = name;
+            UserName = userName;
+            PasswordHash = passwordHash;
+        }
 
         public User(string name, string userName, Guid? id = null)
         {
@@ -22,6 +33,7 @@
             Id = id;
             Name = user.Name;
             UserName = user.UserName;
+            PasswordHash = user.PasswordHash;
         }
 
         private void CheckRequiredFields(string name, string userName)

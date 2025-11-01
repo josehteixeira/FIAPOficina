@@ -20,8 +20,7 @@ namespace FIAPOficina.Application.Users.Commands.CreateUser
             string passwordHash = _hasher.Hash(command.Password);
 
             var user = await _repository.AddAsync(
-                user: new User(command.Name, command.UserName),
-                passwordHash: passwordHash
+                new(command.Name, command.UserName, passwordHash)
             );
 
             return user;
