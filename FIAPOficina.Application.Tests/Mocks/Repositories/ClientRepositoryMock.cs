@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FIAPOficina.Application.Tests.Mocks
+namespace FIAPOficina.Application.Tests.Mocks.Repositories
 {
     internal class ClientRepositoryMock : IClientRepository
     {

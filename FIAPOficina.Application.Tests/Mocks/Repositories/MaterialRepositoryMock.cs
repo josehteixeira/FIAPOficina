@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FIAPOficina.Application.Tests.Mocks
+namespace FIAPOficina.Application.Tests.Mocks.Repositories
 {
     internal class MaterialRepositoryMock : IMaterialRepository
     {

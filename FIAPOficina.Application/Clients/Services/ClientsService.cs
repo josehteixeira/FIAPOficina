@@ -17,7 +17,7 @@ namespace FIAPOficina.Application.Clients.Services
         private readonly GetSingleClientCommandHandler _querySingleHandler;
         private readonly GetAllClientsCommandHandler _queryAllHandler;
 
-        public ClientsService(IClientRepository repository, IPasswordHasherService passwordHasher)
+        public ClientsService(IClientRepository repository)
         {
             _createHandler = new CreateClientCommandHandler(repository);
             _updateHandler = new UpdateClientCommandHandler(repository);

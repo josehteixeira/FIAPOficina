@@ -17,7 +17,7 @@ namespace FIAPOficina.Application.Services.Services
         private readonly GetSingleServiceCommandHandler _querySingleHandler;
         private readonly GetAllServicesCommandHandler _queryAllHandler;
 
-        public ServicesService(IServiceRepository repository, IPasswordHasherService passwordHasher)
+        public ServicesService(IServiceRepository repository)
         {
             _createHandler = new CreateServiceCommandHandler(repository);
             _updateHandler = new UpdateServiceCommandHandler(repository);

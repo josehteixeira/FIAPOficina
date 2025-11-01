@@ -5,13 +5,13 @@ using FIAPOficina.Application.Clients.Commands.GetAllClients;
 using FIAPOficina.Application.Clients.Commands.UpdateClient;
 using FIAPOficina.Application.Clients.Services;
 using FIAPOficina.Domain.Clients.Entities;
-using FIAPOficina.Application.Tests.Mocks;
 using FIAPOficina.Application.Common.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FIAPOficina.Application.Tests.Mocks.Repositories;
 
 namespace FIAPOficina.Application.Tests.Clients
 {
@@ -27,7 +27,7 @@ namespace FIAPOficina.Application.Tests.Clients
         [Fact]
         public void Should_Create_Client_Valid()
         {
-            ClientsService clientsService = new ClientsService(_mock, null);
+            ClientsService clientsService = new ClientsService(_mock);
 
             var client = clientsService.AddAsync(new CreateClientCommand("Emanuel Fontes", "96202913010", "47 999828521", "teste@teste.com", "Rua das couves")).GetAwaiter().GetResult();
 
@@ -51,9 +51,7 @@ namespace FIAPOficina.Application.Tests.Clients
         [Fact]
         public void Should_Update_Client_Valid()
         {
-
-
-            ClientsService clientsService = new ClientsService(_mock, null);
+            ClientsService clientsService = new ClientsService(_mock);
             var clientsDb = clientsService.GetAll(new GetAllClientsCommand());
             Client client;
             if (clientsDb is not null && clientsDb.Any())
@@ -74,7 +72,7 @@ namespace FIAPOficina.Application.Tests.Clients
         [Fact]
         public void Should_Delete_All_Client()
         {
-            ClientsService clientsService = new ClientsService(_mock, null);
+            ClientsService clientsService = new ClientsService(_mock);
             var clientsDb = clientsService.GetAll(new GetAllClientsCommand());
 
             foreach (var client in clientsDb)
