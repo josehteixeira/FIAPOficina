@@ -2,6 +2,7 @@
 using FIAPOficina.Api.Models.Users.Requests;
 using FIAPOficina.Api.Models.Users.Responses;
 using FIAPOficina.Application.Users.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FIAPOficina.Api.Controllers
@@ -17,6 +18,7 @@ namespace FIAPOficina.Api.Controllers
             _usersService = usersService;
         }
 
+        [Authorize]
         [HttpPost(RoutesHelper.Users.Create)]
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -37,6 +39,7 @@ namespace FIAPOficina.Api.Controllers
         }
 
 
+        [Authorize]
         [HttpPut(RoutesHelper.Users.Update)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -54,6 +57,7 @@ namespace FIAPOficina.Api.Controllers
         }
 
 
+        [Authorize]
         [HttpDelete(RoutesHelper.Users.Delete)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -66,6 +70,7 @@ namespace FIAPOficina.Api.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpGet(RoutesHelper.Users.GetSingle)]
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -77,6 +82,7 @@ namespace FIAPOficina.Api.Controllers
             return Ok(user);
         }
 
+        [Authorize]
         [HttpGet(RoutesHelper.Users.GetAll)]
         [ProducesResponseType(typeof(UserResponse[]), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -2,6 +2,7 @@
 using FIAPOficina.Api.Models.Materials.Requests;
 using FIAPOficina.Api.Models.Materials.Responses;
 using FIAPOficina.Application.Materials.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FIAPOficina.Api.Controllers
@@ -15,6 +16,7 @@ namespace FIAPOficina.Api.Controllers
             _materialsService = materialsService;
         }
 
+        [Authorize]
         [HttpPost(RoutesHelper.Materials.Create)]
         [ProducesResponseType(typeof(MaterialResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -40,6 +42,7 @@ namespace FIAPOficina.Api.Controllers
         }
 
 
+        [Authorize]
         [HttpPut(RoutesHelper.Materials.Update)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -60,6 +63,7 @@ namespace FIAPOficina.Api.Controllers
         }
 
 
+        [Authorize]
         [HttpDelete(RoutesHelper.Materials.Delete)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -72,6 +76,7 @@ namespace FIAPOficina.Api.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpGet(RoutesHelper.Materials.GetSingle)]
         [ProducesResponseType(typeof(MaterialResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -83,6 +88,7 @@ namespace FIAPOficina.Api.Controllers
             return Ok(material);
         }
 
+        [Authorize]
         [HttpGet(RoutesHelper.Materials.GetAll)]
         [ProducesResponseType(typeof(MaterialResponse[]), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

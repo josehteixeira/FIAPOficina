@@ -15,14 +15,14 @@ namespace FIAPOficina.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<User> AddAsync(User user, string passwordHash)
+        public async Task<User> AddAsync(User user)
         {
             Users createUser = new()
             {
                 Id = user.Id == Guid.Empty ? Guid.NewGuid() : user.Id,
                 Name = user.Name,
                 UserName = user.UserName,
-                PasswordHash = passwordHash,
+                PasswordHash = user.PasswordHash!,
             };
 
             _context.Users.Add(createUser);
@@ -65,9 +65,10 @@ namespace FIAPOficina.Infrastructure.Repositories
             {
                 return new User
                 (
+                    id: user.Id,
                     name: user.Name,
                     userName: user.UserName,
-                    id: user.Id
+                    passwordHash: user.PasswordHash
                 );
             }
 
@@ -82,9 +83,10 @@ namespace FIAPOficina.Infrastructure.Repositories
             {
                 return new User
                 (
+                    id: user.Id,
                     name: user.Name,
                     userName: user.UserName,
-                    id: user.Id
+                    passwordHash: user.PasswordHash
                 );
             }
 
@@ -98,9 +100,10 @@ namespace FIAPOficina.Infrastructure.Repositories
             return users.Select(user =>
                 new User
                 (
-                    user.Name,
-                    user.UserName,
-                    user.Id
+                    id: user.Id,
+                    name: user.Name,
+                    userName: user.UserName,
+                    passwordHash: user.PasswordHash
                 )).ToArray();
         }
     }
