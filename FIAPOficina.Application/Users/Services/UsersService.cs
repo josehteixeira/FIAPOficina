@@ -1,4 +1,5 @@
 ﻿using FIAPOficina.Application.Common.Security;
+using FIAPOficina.Application.Users.Commands.AuthenticateUser;
 using FIAPOficina.Application.Users.Commands.CreateUser;
 using FIAPOficina.Application.Users.Commands.DeleteUser;
 using FIAPOficina.Application.Users.Commands.GetAllUsers;
@@ -16,6 +17,7 @@ namespace FIAPOficina.Application.Users.Services
         private readonly DeleteUserCommandHandler _deleteHandler;
         private readonly GetSingleUserCommandHandler _querySingleHandler;
         private readonly GetAllUsersCommandHandler _queryAllHandler;
+        private readonly ValidateUserPasswordCommandHandler _validateUserPasswordHandler;
 
         public UsersService(IUserRepository repository, IPasswordHasherService passwordHasher)
         {
@@ -24,6 +26,7 @@ namespace FIAPOficina.Application.Users.Services
             _deleteHandler = new DeleteUserCommandHandler(repository);
             _querySingleHandler = new GetSingleUserCommandHandler(repository);
             _queryAllHandler = new GetAllUsersCommandHandler(repository);
+            _validateUserPasswordHandler = new ValidateUserPasswordCommandHandler(repository, passwordHasher);
         }
 
         public async Task<User> AddAsync(CreateUserCommand command)
@@ -49,6 +52,11 @@ namespace FIAPOficina.Application.Users.Services
         public User[] GetAll(GetAllUsersCommand command)
         {
             return _queryAllHandler.Handle(command);
+        }
+
+        public async Task<bool> ValidateUserPassword(ValidateUserPasswordCommand command)
+        {
+            return await _validateUserPasswordHandler.Handle(command);
         }
     }
 }
