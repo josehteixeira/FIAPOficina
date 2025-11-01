@@ -5,6 +5,7 @@ using FIAPOficina.Application.ServiceOrders.Services;
 using FIAPOficina.Domain.ServiceOrders.Entities;
 using FIAPOficina.Api.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FIAPOficina.Api.Controllers
 {
@@ -17,6 +18,7 @@ namespace FIAPOficina.Api.Controllers
             _serviceOrdersService = materialsService;
         }
 
+        [Authorize]
         [HttpPost(RoutesHelper.ServiceOrders.Create)]
         [ProducesResponseType(typeof(ServiceOrderResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -40,6 +42,7 @@ namespace FIAPOficina.Api.Controllers
         }
 
 
+        [Authorize]
         [HttpPut(RoutesHelper.ServiceOrders.Update)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -59,6 +62,7 @@ namespace FIAPOficina.Api.Controllers
         }
 
 
+        [Authorize]
         [HttpDelete(RoutesHelper.ServiceOrders.Delete)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -71,6 +75,7 @@ namespace FIAPOficina.Api.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpGet(RoutesHelper.ServiceOrders.GetSingle)]
         [ProducesResponseType(typeof(ServiceOrderResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -82,6 +87,7 @@ namespace FIAPOficina.Api.Controllers
             return Ok(material);
         }
 
+        [Authorize]
         [HttpGet(RoutesHelper.ServiceOrders.GetAll)]
         [ProducesResponseType(typeof(ServiceOrderResponse[]), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
