@@ -1,4 +1,5 @@
-﻿using FIAPOficina.Application.Clients.Services;
+﻿using FIAPOficina.Application.Authentication.Services;
+using FIAPOficina.Application.Clients.Services;
 using FIAPOficina.Application.Common.Security;
 using FIAPOficina.Application.Materials.Services;
 using FIAPOficina.Application.ServiceOrders.Services;
@@ -18,7 +19,8 @@ namespace FIAPOficina.Api.Extensions
             services.AddScoped<IVehiclesService, VehiclesService>();
             services.AddScoped<IServicesService, ServicesService>();
             services.AddScoped<IMaterialsService, MaterialsService>();
-            services.AddScoped<IServiceOrderService, ServiceOrderService>();            
+            services.AddScoped<IServiceOrderService, ServiceOrderService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
         }
     }
 }
