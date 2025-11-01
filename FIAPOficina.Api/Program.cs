@@ -25,6 +25,7 @@ namespace FIAPOficina
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.AddMiddlewares();
             app.MapControllers();
             app.ApplyMigrations();
             app.CreateInitialRecords().GetAwaiter().GetResult();
