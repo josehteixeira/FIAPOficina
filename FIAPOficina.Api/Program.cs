@@ -1,5 +1,4 @@
-using FIAPOficina.Api.Extensions;
-using FIAPOficina.Infrastructure.Mail;
+﻿using FIAPOficina.Api.Extensions;
 
 namespace FIAPOficina
 {
@@ -10,8 +9,7 @@ namespace FIAPOficina
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.AddAuthenticationConfig();
             builder.Services.AddServices();
             builder.Services.AddRepositories();
             builder.AddDbContext();
@@ -25,10 +23,12 @@ namespace FIAPOficina
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
             app.ApplyMigrations();
             app.CreateInitialRecords().GetAwaiter().GetResult();
+
             app.Run();
         }
     }
