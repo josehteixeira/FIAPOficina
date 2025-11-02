@@ -2,6 +2,7 @@
 using FIAPOficina.Domain.ServiceOrders.Repositories;
 using FIAPOficina.Infrastructure.Database.Context;
 using FIAPOficina.Infrastructure.Database.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace FIAPOficina.Infrastructure.Repositories
@@ -22,6 +23,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                 Id = serviceOrder.Id == Guid.Empty ? Guid.NewGuid() : serviceOrder.Id,
                 VehicleId = serviceOrder.VehicleId,
                 Status = (int)serviceOrder.Status,
+                CreatedOn = serviceOrder.CreatedOn,
             };
 
             using (var transaction = _context.Database.BeginTransaction())
@@ -127,6 +129,9 @@ namespace FIAPOficina.Infrastructure.Repositories
             {
                 return new ServiceOrder(serviceOrder.VehicleId, id: serviceOrder.Id)
                 {
+                    CreatedOn = serviceOrder.CreatedOn,
+                    ApprovedOn = serviceOrder.ApprovedOn,
+                    FinishedOn = serviceOrder.FinishedOn,
                     Materials = serviceOrder.Materials.Select(m => new ServiceOrderMaterial(m.MaterialId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Services = serviceOrder.Services.Select(m => new ServiceOrderService(m.ServiceId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Status = (ServiceOrderStatus)serviceOrder.Status
@@ -148,6 +153,9 @@ namespace FIAPOficina.Infrastructure.Repositories
             {
                 return new ServiceOrder(serviceOrder.VehicleId, id: serviceOrder.Id)
                 {
+                    CreatedOn = serviceOrder.CreatedOn,
+                    ApprovedOn = serviceOrder.ApprovedOn,
+                    FinishedOn = serviceOrder.FinishedOn,
                     Materials = serviceOrder.Materials.Select(m => new ServiceOrderMaterial(m.MaterialId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Services = serviceOrder.Services.Select(m => new ServiceOrderService(m.ServiceId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Status = (ServiceOrderStatus)serviceOrder.Status
@@ -169,6 +177,9 @@ namespace FIAPOficina.Infrastructure.Repositories
                 new ServiceOrder(serviceOrder.VehicleId)
                 {
                     Id = serviceOrder.Id,
+                    CreatedOn = serviceOrder.CreatedOn,
+                    ApprovedOn = serviceOrder.ApprovedOn,
+                    FinishedOn = serviceOrder.FinishedOn,
                     Materials = serviceOrder.Materials.Select(m => new ServiceOrderMaterial(m.MaterialId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Services = serviceOrder.Services.Select(m => new ServiceOrderService(m.ServiceId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Status = (ServiceOrderStatus)serviceOrder.Status
@@ -190,6 +201,9 @@ namespace FIAPOficina.Infrastructure.Repositories
                     {
                         serviceOrderToUpdate.Status = (int)serviceOrder.Status;
                         serviceOrderToUpdate.VehicleId = serviceOrder.VehicleId;
+                        serviceOrderToUpdate.CreatedOn = serviceOrder.CreatedOn;
+                        serviceOrderToUpdate.ApprovedOn = serviceOrder.ApprovedOn;
+                        serviceOrderToUpdate.FinishedOn = serviceOrder.FinishedOn;
 
                         UpdateServiceOrderMaterials(serviceOrderToUpdate, serviceOrder);
                         UpdateServiceOrderServices(serviceOrderToUpdate, serviceOrder);
