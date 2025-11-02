@@ -7,10 +7,16 @@
         public List<ServiceOrderService> Services { get; set; }
         public List<ServiceOrderMaterial> Materials { get; set; }
         public ServiceOrderStatus Status { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime? ApprovedOn { get; set; }
+        public DateTime? FinishedOn { get; set; }
 
-        public ServiceOrder(Guid vehicleId, Guid? id = null)
+        public ServiceOrder(Guid vehicleId, DateTime? createdOn = null, DateTime? approvedOn = null, DateTime? finishedOn = null, Guid? id = null)
         {
             Id = id.HasValue ? id.Value : Guid.NewGuid();
+            CreatedOn = createdOn.HasValue ? createdOn.Value : DateTime.Now;
+            ApprovedOn = approvedOn;
+            FinishedOn = finishedOn;
             VehicleId = vehicleId;
             Services = new List<ServiceOrderService> { };
             Materials = new List<ServiceOrderMaterial> { };

@@ -10,7 +10,7 @@ namespace FIAPOficina.Domain.Tests.ServiceOrders
             Guid id = Guid.NewGuid();
             Guid vehicleId = Guid.NewGuid();
 
-            ServiceOrder serviceOrder = new ServiceOrder(vehicleId, id);
+            ServiceOrder serviceOrder = new ServiceOrder(vehicleId, id: id);
             Assert.NotNull(serviceOrder);
             Assert.NotNull(serviceOrder.Materials);
             Assert.NotNull(serviceOrder.Services);
@@ -24,7 +24,7 @@ namespace FIAPOficina.Domain.Tests.ServiceOrders
             Guid id = Guid.NewGuid();
             Guid vehicleId = Guid.NewGuid();
 
-            ServiceOrder serviceOrderBase = new ServiceOrder(vehicleId, id);
+            ServiceOrder serviceOrderBase = new ServiceOrder(vehicleId, id: id);
 
             ServiceOrder serviceOrder = new ServiceOrder(serviceOrderBase, id);
             Assert.NotNull(serviceOrder);

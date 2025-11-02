@@ -12,6 +12,9 @@ namespace FIAPOficina.Infrastructure.Database.Mappings
             builder.HasKey(entity => entity.Id);
             builder.Property(entity => entity.Status);
             builder.Property(entity => entity.VehicleId);
+            builder.Property(entity => entity.CreatedOn).IsRequired(true);
+            builder.Property(entity => entity.ApprovedOn).IsRequired(false);
+            builder.Property(entity => entity.FinishedOn).IsRequired(false);
 
             builder.HasOne(entity => entity.Vehicle)
                 .WithMany(vehicle => vehicle.ServiceOrders)
@@ -20,7 +23,7 @@ namespace FIAPOficina.Infrastructure.Database.Mappings
             builder.HasMany(entity => entity.Services)
                 .WithOne(serviceOrderServices => serviceOrderServices.ServiceOrder)
                 .HasForeignKey(serviceOrder => serviceOrder.ServiceOrderId);
-            
+
             builder.HasMany(entity => entity.Materials)
                 .WithOne(serviceOrderMaterial => serviceOrderMaterial.ServiceOrder)
                 .HasForeignKey(serviceOrder => serviceOrder.ServiceOrderId);

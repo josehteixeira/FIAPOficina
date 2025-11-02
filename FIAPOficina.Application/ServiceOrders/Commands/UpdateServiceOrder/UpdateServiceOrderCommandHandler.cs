@@ -27,7 +27,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.UpdateServiceOrder
             var materials = GetServiceOrderMaterials(command.Materials, command.Id);
             var services = GetServiceOrderServices(command.Services, command.Id);
 
-            var serviceOrder = new ServiceOrder(command.VehicleId, command.Id)
+            var serviceOrder = new ServiceOrder(command.VehicleId, id: command.Id)
             {
                 Materials = materials,
                 Services = services,
