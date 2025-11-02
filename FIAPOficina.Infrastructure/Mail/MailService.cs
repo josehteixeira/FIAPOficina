@@ -1,9 +1,9 @@
-﻿using MailKit;
+﻿using FIAPOficina.Application.Common.Mail;
 using MimeKit;
 
 namespace FIAPOficina.Infrastructure.Mail
 {
-    public class MailService : FIAPOficina.Application.Common.Mail.IMailService
+    public class MailService : IMailService
     {
         private readonly string _smtpServer;
         private readonly int _smtpPort;
