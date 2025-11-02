@@ -21,7 +21,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.RequestServiceOrderAppr
                 throw new Exception("Only service orders with status \"In diagnosis\" can request approval!");
             }
 
-            serviceOrder.Status = ServiceOrderStatus.Delivered;
+            serviceOrder.Status = ServiceOrderStatus.WaitingApproval;
             await _repository.UpdateAsync(serviceOrder).ConfigureAwait(false);
 
             SendMail(serviceOrder);

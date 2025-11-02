@@ -7,7 +7,7 @@ namespace FIAPOficina.Application.Tests.Users
 {
     public class UserTests
     {
-        private UsersRepositoryMock _mock = new UsersRepositoryMock();
+        private UserRepositoryMock _mock = new UserRepositoryMock();
         private PasswordHasherMock _pwMock = new PasswordHasherMock();
 
         [Fact]

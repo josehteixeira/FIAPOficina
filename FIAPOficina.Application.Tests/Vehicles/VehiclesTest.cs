@@ -13,7 +13,7 @@ namespace FIAPOficina.Application.Tests.Vehicles
     public class VehiclesTest
     {
         private VehicleRepositoryMock _vehicleRepositoryMock = new VehicleRepositoryMock();
-        private ClientServerMock _clientServerMock = new ClientServerMock();
+        private ClientsServiceMock _clientServerMock = new ClientsServiceMock();
 
         [Fact]
         public void Should_Create_Vehicle()

@@ -3,7 +3,7 @@ using FIAPOficina.Domain.Users.Repositories;
 
 namespace FIAPOficina.Application.Tests.Mocks.Repositories
 {
-    internal class UsersRepositoryMock : IUserRepository
+    internal class UserRepositoryMock : IUserRepository
     {
         private List<User> _users = new List<User>();
         public async Task<User> AddAsync(User user)

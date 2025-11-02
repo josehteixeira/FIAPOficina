@@ -11,11 +11,11 @@ namespace FIAPOficina.Application.Tests.Services
 {
     public class ServiceTests
     {
-        private ServicesRepositoryMock _mock;
+        private ServiceRepositoryMock _mock;
 
         public ServiceTests()
         {
-            _mock = new ServicesRepositoryMock();
+            _mock = new ServiceRepositoryMock();
         }
 
         [Fact]

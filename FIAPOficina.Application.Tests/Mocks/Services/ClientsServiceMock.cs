@@ -8,7 +8,7 @@ using FIAPOficina.Domain.Clients.Entities;
 
 namespace FIAPOficina.Application.Tests.Mocks.Services
 {
-    internal class ClientServerMock : IClientsService
+    internal class ClientsServiceMock : IClientsService
     {
         public Task<Client> AddAsync(CreateClientCommand command)
         {

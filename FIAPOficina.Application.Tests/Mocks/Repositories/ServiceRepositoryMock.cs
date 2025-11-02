@@ -3,7 +3,7 @@ using FIAPOficina.Domain.Services.Repositories;
 
 namespace FIAPOficina.Application.Tests.Mocks.Repositories
 {
-    internal class ServicesRepositoryMock : IServiceRepository
+    internal class ServiceRepositoryMock : IServiceRepository
     {
         private List<Service> _services = new List<Service>();
 

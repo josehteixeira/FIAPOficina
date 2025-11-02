@@ -1,29 +1,29 @@
-﻿using MimeKit;
+﻿using MailKit;
+using MimeKit;
 
 namespace FIAPOficina.Infrastructure.Mail
 {
-    public class MailService
+    public class MailService : FIAPOficina.Application.Common.Mail.IMailService
     {
         private readonly string _smtpServer;
         private readonly int _smtpPort;
         private readonly string _smtpUser;
         private readonly string _smtpPassword;
         private readonly bool _smtpSsl;
-        private readonly string _sourceMail;
-        private readonly string _subject;
+        private string _sourceMail;
+        private string _subject;
 
-        public MailService(string sourceMail, string subject)
+        public MailService()
         {
             _smtpServer = Environment.GetEnvironmentVariable("SMTPSERVER") ?? throw new ArgumentNullException("Invalid SMTP Server");
             Int32.TryParse(Environment.GetEnvironmentVariable("SMTPPORT"), out _smtpPort);
             _smtpUser = Environment.GetEnvironmentVariable("SMTPUSER") ?? throw new ArgumentNullException("Invalid SMTP User");
             _smtpPassword = Environment.GetEnvironmentVariable("SMTPPASSWORD") ?? throw new ArgumentNullException("Invalid SMTP Password");
             _smtpSsl = bool.Parse(Environment.GetEnvironmentVariable("SMTPSSL") ?? throw new ArgumentNullException("Invalid SMTP Password"));
-            _sourceMail = sourceMail;
-            _subject = subject;
+            
         }
 
-        public MimeMessage CreateMailMessage(string destinationMail, string body)
+        private MimeMessage CreateMailMessage(string destinationMail, string body)
         {
 
             var mailMessage = new MimeMessage();
@@ -38,14 +38,14 @@ namespace FIAPOficina.Infrastructure.Mail
             return mailMessage;
         }
 
-        public bool SendMail(MimeMessage message)
+        private bool SendMail(MimeMessage message)
         {
             try
             {
 
                 using (var client = new MailKit.Net.Smtp.SmtpClient())
                 {
-                    
+
                     client.Connect(_smtpServer, _smtpPort);
 
                     client.Authenticate(_smtpUser, _smtpPassword);
@@ -59,6 +59,14 @@ namespace FIAPOficina.Infrastructure.Mail
             {
                 throw new Exception("Fail to send mail", ex);
             }
+        }
+
+        public bool SendMail(string sourceMail, string subject, string destinationMail, string body)
+        {
+            _sourceMail = sourceMail;
+            _subject = subject;
+           var mail = CreateMailMessage(destinationMail, body);
+            return SendMail(mail);
         }
     }
 }

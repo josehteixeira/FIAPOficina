@@ -8,7 +8,7 @@ using FIAPOficina.Domain.Vehicles.Entities;
 
 namespace FIAPOficina.Application.Tests.Mocks.Services
 {
-    internal class VehicleServiceMock : IVehiclesService
+    internal class VehiclesServiceMock : IVehiclesService
     {
         public Task<Vehicle> AddAsync(CreateVehicleCommand command)
         {
