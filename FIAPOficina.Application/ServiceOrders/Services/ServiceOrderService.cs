@@ -1,4 +1,5 @@
 ﻿using FIAPOficina.Application.Clients.Services;
+using FIAPOficina.Application.Common.Mail;
 using FIAPOficina.Application.Materials.Services;
 using FIAPOficina.Application.ServiceOrders.Commands.ApproveServiceOrder;
 using FIAPOficina.Application.ServiceOrders.Commands.CompleteServiceOrder;
@@ -39,7 +40,8 @@ namespace FIAPOficina.Application.ServiceOrders.Services
             IVehiclesService vehiclesService,
             IMaterialsService materialsService,
             IClientsService clientsService,
-            IServicesService servicesService)
+            IServicesService servicesService,
+            IMailService mailService)
         {
             _createHandler = new(repository, vehiclesService, materialsService, servicesService);
             _updateHandler = new(repository, materialsService, servicesService);
@@ -50,7 +52,7 @@ namespace FIAPOficina.Application.ServiceOrders.Services
             _completeHandler = new(repository);
             _deliverHandler = new(repository);
             _rejectHandler = new(repository, vehiclesService, clientsService);
-            _requestApprovalHandler = new(repository);
+            _requestApprovalHandler = new(repository,mailService,vehiclesService,clientsService);
             _startHandler = new(repository);
             _startDiagnosisHandler = new(repository);
         }

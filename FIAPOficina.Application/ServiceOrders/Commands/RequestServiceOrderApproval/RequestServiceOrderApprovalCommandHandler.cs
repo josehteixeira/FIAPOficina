@@ -1,4 +1,9 @@
-﻿using FIAPOficina.Domain.ServiceOrders.Entities;
+﻿using FIAPOficina.Application.Clients.Commands.GetSingleClient;
+using FIAPOficina.Application.Clients.Services;
+using FIAPOficina.Application.Common.Mail;
+using FIAPOficina.Application.Vehicles.Commands.GetSingleVehicle;
+using FIAPOficina.Application.Vehicles.Services;
+using FIAPOficina.Domain.ServiceOrders.Entities;
 using FIAPOficina.Domain.ServiceOrders.Repositories;
 
 namespace FIAPOficina.Application.ServiceOrders.Commands.RequestServiceOrderApproval
@@ -6,10 +11,16 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.RequestServiceOrderAppr
     internal class RequestServiceOrderApprovalCommandHandler
     {
         private readonly IServiceOrderRepository _repository;
+        private readonly IMailService _mailService;
+        private readonly IVehiclesService _vehiclesService;
+        private readonly IClientsService _clientsService;
 
-        public RequestServiceOrderApprovalCommandHandler(IServiceOrderRepository repository)
+        public RequestServiceOrderApprovalCommandHandler(IServiceOrderRepository repository, IMailService mailService, IVehiclesService vehiclesService, IClientsService clientsService)
         {
             _repository = repository;
+            _mailService = mailService;
+            _vehiclesService = vehiclesService;
+            _clientsService = clientsService;
         }
 
         public async Task Handle(RequestServiceOrderApprovalCommand command)
@@ -30,7 +41,9 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.RequestServiceOrderAppr
         private void SendMail(ServiceOrder serviceOrder)
         {
             string mailHtmlBody = CreateMailHtmlBody(serviceOrder);
-            //send email
+            var vehicle = _vehiclesService.GetSingleAsync(new GetSingleVehicleCommand(serviceOrder.VehicleId)).GetAwaiter().GetResult();
+            var client = _clientsService.GetSingleAsync(new GetSingleClientCommand(vehicle.ClientId)).GetAwaiter().GetResult();
+            _mailService.SendMail("", "Orçamento do seu veiculo", client?.Email, mailHtmlBody);
         }
 
         private string CreateMailHtmlBody(ServiceOrder serviceOrder)

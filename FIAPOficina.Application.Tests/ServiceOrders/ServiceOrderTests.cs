@@ -22,6 +22,7 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
         private ClientsServiceMock _clientsService = new ClientsServiceMock();
         private MaterialsServiceMock _materialsService = new MaterialsServiceMock();
         private VehiclesServiceMock _vehicleService = new VehiclesServiceMock();
+        private MailsServiceMock _mailService = new MailsServiceMock();
 
         [Fact]
         public void Should_Create_ServiceOrder()
@@ -225,7 +226,7 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
 
         private Application.ServiceOrders.Services.ServiceOrderService CreateService()
         {
-            return new Application.ServiceOrders.Services.ServiceOrderService(_repository, _vehicleService, _materialsService, _clientsService, _servicesService);
+            return new Application.ServiceOrders.Services.ServiceOrderService(_repository, _vehicleService, _materialsService, _clientsService, _servicesService, _mailService);
         }
     }
 }
