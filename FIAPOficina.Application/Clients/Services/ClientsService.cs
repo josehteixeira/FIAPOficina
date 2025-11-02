@@ -3,7 +3,6 @@ using FIAPOficina.Application.Clients.Commands.DeleteClient;
 using FIAPOficina.Application.Clients.Commands.GetAllClients;
 using FIAPOficina.Application.Clients.Commands.GetSingleClient;
 using FIAPOficina.Application.Clients.Commands.UpdateClient;
-using FIAPOficina.Application.Common.Security;
 using FIAPOficina.Domain.Clients.Entities;
 using FIAPOficina.Domain.Clients.Repositories;
 

@@ -1,9 +1,4 @@
-﻿using FIAPOficina.Application.Services.Commands.CreateService;
-using FIAPOficina.Application.Services.Commands.DeleteService;
-using FIAPOficina.Application.Services.Commands.GetAllServices;
-using FIAPOficina.Application.Services.Commands.UpdateService;
-using FIAPOficina.Application.Services.Services;
-using FIAPOficina.Application.Tests.Mocks.Repositories;
+﻿using FIAPOficina.Application.Tests.Mocks.Repositories;
 using FIAPOficina.Application.Tests.Mocks.Services;
 using FIAPOficina.Application.Vehicles.Commands.CreateVehicle;
 using FIAPOficina.Application.Vehicles.Commands.DeleteVehicle;
@@ -11,13 +6,7 @@ using FIAPOficina.Application.Vehicles.Commands.GetAllVehicles;
 using FIAPOficina.Application.Vehicles.Commands.GetSingleVehicle;
 using FIAPOficina.Application.Vehicles.Commands.UpdateVehicle;
 using FIAPOficina.Application.Vehicles.Services;
-using FIAPOficina.Domain.Services.Entities;
 using FIAPOficina.Domain.Vehicles.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FIAPOficina.Application.Tests.Vehicles
 {

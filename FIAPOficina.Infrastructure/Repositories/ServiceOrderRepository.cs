@@ -2,7 +2,6 @@
 using FIAPOficina.Domain.ServiceOrders.Repositories;
 using FIAPOficina.Infrastructure.Database.Context;
 using FIAPOficina.Infrastructure.Database.Entities;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace FIAPOficina.Infrastructure.Repositories

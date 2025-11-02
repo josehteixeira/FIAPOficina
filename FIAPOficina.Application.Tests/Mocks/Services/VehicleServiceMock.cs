@@ -5,11 +5,6 @@ using FIAPOficina.Application.Vehicles.Commands.GetSingleVehicle;
 using FIAPOficina.Application.Vehicles.Commands.UpdateVehicle;
 using FIAPOficina.Application.Vehicles.Services;
 using FIAPOficina.Domain.Vehicles.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FIAPOficina.Application.Tests.Mocks.Services
 {

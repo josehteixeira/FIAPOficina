@@ -1,5 +1,4 @@
 ﻿using FIAPOficina.Domain.Materials.Entities;
-using FIAPOficina.Domain.Services.Entities;
 
 namespace FIAPOficina.Domain.Tests.Materials
 {
