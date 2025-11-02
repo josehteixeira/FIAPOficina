@@ -1,6 +1,5 @@
 ﻿using FIAPOficina.Application.Materials.Services;
 using FIAPOficina.Application.Services.Services;
-using FIAPOficina.Application.Vehicles.Services;
 using FIAPOficina.Domain.ServiceOrders.Entities;
 using FIAPOficina.Domain.ServiceOrders.Repositories;
 
@@ -27,16 +26,125 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.UpdateServiceOrder
             var materials = GetServiceOrderMaterials(command.Materials, command.Id);
             var services = GetServiceOrderServices(command.Services, command.Id);
 
-            var serviceOrder = new ServiceOrder(command.VehicleId, id: command.Id)
+            var oldServiceOrder = await GetOldServiceOrder(command.Id);
+
+            if (oldServiceOrder.Status == ServiceOrderStatus.Received || oldServiceOrder.Status == ServiceOrderStatus.WaitingApproval)
             {
-                Materials = materials,
-                Services = services,
-                Status = command.Status,
-            };
+                var serviceOrder = new ServiceOrder(command.VehicleId, id: command.Id)
+                {
+                    Materials = materials,
+                    Services = services,
+                };
 
-            await _repository.UpdateAsync(serviceOrder).ConfigureAwait(false);
+                await _repository.UpdateAsync(serviceOrder).ConfigureAwait(false);
 
-            return serviceOrder;
+                return serviceOrder;
+            }
+            else
+            {
+                throw new Exception("The status of this service order no longer allows any modifications!");
+            }
+        }
+
+        private async Task<ServiceOrder> GetOldServiceOrder(Guid id)
+        {
+            var oldServiceOrder = await _repository.FirstOrDefaultAsync(id).ConfigureAwait(false);
+
+            if (oldServiceOrder is null)
+            {
+                throw new Exception("Service order not found!");
+            }
+
+            return oldServiceOrder;
+        }
+
+        private void CheckServiceOrderStatus(ServiceOrder oldServiceOrder, ServiceOrderStatus newStatus)
+        {
+            switch (oldServiceOrder.Status)
+            {
+                case ServiceOrderStatus.Received:
+                    CheckReceivedStatus(newStatus);
+                    break;
+                case ServiceOrderStatus.InDiagnosis:
+                    CheckInDiagnosisStatus(newStatus);
+                    break;
+                case ServiceOrderStatus.WaitingApproval:
+                    CheckWaitingApprovalStatus(newStatus);
+                    break;
+                case ServiceOrderStatus.Running:
+                    CheckRunningStatus(newStatus);
+                    break;
+                case ServiceOrderStatus.Completed:
+                    CheckCompletedStatus(newStatus);
+                    break;
+                case ServiceOrderStatus.Delivered:
+                    CheckDeliveredStatus(newStatus);
+                    break;
+                case ServiceOrderStatus.Approved:
+                    CheckApprovedStatus(newStatus);
+                    break;
+                case ServiceOrderStatus.Rejected:
+                    CheckRejectedStatus(newStatus);
+                    break;
+            }
+        }
+
+        private void CheckRejectedStatus(ServiceOrderStatus newStatus)
+        {
+            throw new Exception("The status of this service order no longer allows any modifications!");
+        }
+
+        private void CheckDeliveredStatus(ServiceOrderStatus newStatus)
+        {
+            throw new Exception("The status of this service order no longer allows any modifications!");
+        }
+
+        private void CheckApprovedStatus(ServiceOrderStatus newStatus)
+        {
+            if (newStatus != ServiceOrderStatus.Running)
+            {
+                throw new Exception("This servide order can not be set to this status!");
+            }
+        }
+
+        private void CheckCompletedStatus(ServiceOrderStatus newStatus)
+        {
+            if (newStatus != ServiceOrderStatus.Delivered)
+            {
+                throw new Exception("This servide order can not be set to this status!");
+            }
+        }
+
+        private void CheckRunningStatus(ServiceOrderStatus newStatus)
+        {
+            if (newStatus != ServiceOrderStatus.Completed)
+            {
+                throw new Exception("This servide order can not be set to this status!");
+            }
+        }
+
+        private void CheckWaitingApprovalStatus(ServiceOrderStatus newStatus)
+        {
+            if (newStatus != ServiceOrderStatus.Approved || newStatus != ServiceOrderStatus.Rejected)
+            {
+                throw new Exception("This servide order can not be set to this status!");
+            }
+        }
+
+        private void CheckInDiagnosisStatus(ServiceOrderStatus newStatus)
+        {
+            if (newStatus != ServiceOrderStatus.WaitingApproval)
+            {
+                throw new Exception("This servide order can not be set to this status!");
+            }
+        }
+
+        private void CheckReceivedStatus(ServiceOrderStatus newStatus)
+        {
+            if (newStatus != ServiceOrderStatus.InDiagnosis)
+            {
+                throw new Exception("This servide order can not be set to this status!");
+            }
         }
 
         private List<ServiceOrderService> GetServiceOrderServices(List<ServiceOrderServiceToUpdate> services, Guid serviceOrderId)

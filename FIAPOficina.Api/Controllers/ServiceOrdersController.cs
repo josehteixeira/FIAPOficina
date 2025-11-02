@@ -2,7 +2,6 @@
 using FIAPOficina.Api.Models.ServiceOrders.Requests;
 using FIAPOficina.Api.Models.ServiceOrders.Responses;
 using FIAPOficina.Application.ServiceOrders.Services;
-using FIAPOficina.Domain.ServiceOrders.Entities;
 using FIAPOficina.Api.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -53,7 +52,6 @@ namespace FIAPOficina.Api.Controllers
             var material = await _serviceOrdersService.UpdateAsync(new(
                 Id: id,
                 VehicleId: request.VehicleId,
-                Status: (ServiceOrderStatus)request.Status,
                 Services: request.Services.Select(service => service.ToUpdateModel()).ToList(),
                 Materials: request.Materials.Select(material => material.ToUpdateModel()).ToList()
             ));
