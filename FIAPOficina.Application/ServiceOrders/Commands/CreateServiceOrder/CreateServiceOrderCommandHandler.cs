@@ -43,6 +43,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.CreateServiceOrder
                 Materials = materials,
                 Services = services,
                 Status = ServiceOrderStatus.Received,
+                CreatedOn = DateTime.Now,
             };
 
             var createdServiceOrder = await _repository.AddAsync(serviceOrder).ConfigureAwait(false);

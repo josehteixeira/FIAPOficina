@@ -28,7 +28,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.UpdateServiceOrder
 
             var oldServiceOrder = await GetOldServiceOrder(command.Id);
 
-            if (oldServiceOrder.Status == ServiceOrderStatus.Received || oldServiceOrder.Status == ServiceOrderStatus.WaitingApproval)
+            if (oldServiceOrder.Status == ServiceOrderStatus.Received || oldServiceOrder.Status == ServiceOrderStatus.InDiagnosis)
             {
                 var serviceOrder = new ServiceOrder(command.VehicleId, id: command.Id)
                 {
@@ -42,7 +42,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.UpdateServiceOrder
             }
             else
             {
-                throw new Exception("The status of this service order no longer allows any modifications!");
+                throw new Exception("The status of this service order no longer allows any changes!");
             }
         }
 
