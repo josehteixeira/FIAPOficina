@@ -1,12 +1,5 @@
 ﻿using FIAPOficina.Domain.Clients.Entities;
 using FIAPOficina.Domain.Clients.Repositories;
-using FIAPOficina.Domain.Materials.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FIAPOficina.Application.Tests.Mocks.Repositories
 {

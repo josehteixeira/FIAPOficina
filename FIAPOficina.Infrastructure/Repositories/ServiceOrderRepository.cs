@@ -22,6 +22,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                 Id = serviceOrder.Id == Guid.Empty ? Guid.NewGuid() : serviceOrder.Id,
                 VehicleId = serviceOrder.VehicleId,
                 Status = (int)serviceOrder.Status,
+                CreatedOn = serviceOrder.CreatedOn,
             };
 
             using (var transaction = _context.Database.BeginTransaction())
@@ -125,8 +126,11 @@ namespace FIAPOficina.Infrastructure.Repositories
 
             if (serviceOrder is not null)
             {
-                return new ServiceOrder(serviceOrder.VehicleId, serviceOrder.Id)
+                return new ServiceOrder(serviceOrder.VehicleId, id: serviceOrder.Id)
                 {
+                    CreatedOn = serviceOrder.CreatedOn,
+                    ApprovedOn = serviceOrder.ApprovedOn,
+                    FinishedOn = serviceOrder.FinishedOn,
                     Materials = serviceOrder.Materials.Select(m => new ServiceOrderMaterial(m.MaterialId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Services = serviceOrder.Services.Select(m => new ServiceOrderService(m.ServiceId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Status = (ServiceOrderStatus)serviceOrder.Status
@@ -146,8 +150,11 @@ namespace FIAPOficina.Infrastructure.Repositories
 
             if (serviceOrder is not null)
             {
-                return new ServiceOrder(serviceOrder.VehicleId, serviceOrder.Id)
+                return new ServiceOrder(serviceOrder.VehicleId, id: serviceOrder.Id)
                 {
+                    CreatedOn = serviceOrder.CreatedOn,
+                    ApprovedOn = serviceOrder.ApprovedOn,
+                    FinishedOn = serviceOrder.FinishedOn,
                     Materials = serviceOrder.Materials.Select(m => new ServiceOrderMaterial(m.MaterialId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Services = serviceOrder.Services.Select(m => new ServiceOrderService(m.ServiceId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Status = (ServiceOrderStatus)serviceOrder.Status
@@ -169,6 +176,9 @@ namespace FIAPOficina.Infrastructure.Repositories
                 new ServiceOrder(serviceOrder.VehicleId)
                 {
                     Id = serviceOrder.Id,
+                    CreatedOn = serviceOrder.CreatedOn,
+                    ApprovedOn = serviceOrder.ApprovedOn,
+                    FinishedOn = serviceOrder.FinishedOn,
                     Materials = serviceOrder.Materials.Select(m => new ServiceOrderMaterial(m.MaterialId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Services = serviceOrder.Services.Select(m => new ServiceOrderService(m.ServiceId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
                     Status = (ServiceOrderStatus)serviceOrder.Status
@@ -190,6 +200,9 @@ namespace FIAPOficina.Infrastructure.Repositories
                     {
                         serviceOrderToUpdate.Status = (int)serviceOrder.Status;
                         serviceOrderToUpdate.VehicleId = serviceOrder.VehicleId;
+                        serviceOrderToUpdate.CreatedOn = serviceOrder.CreatedOn;
+                        serviceOrderToUpdate.ApprovedOn = serviceOrder.ApprovedOn;
+                        serviceOrderToUpdate.FinishedOn = serviceOrder.FinishedOn;
 
                         UpdateServiceOrderMaterials(serviceOrderToUpdate, serviceOrder);
                         UpdateServiceOrderServices(serviceOrderToUpdate, serviceOrder);
@@ -300,7 +313,7 @@ namespace FIAPOficina.Infrastructure.Repositories
     {
         public static ServiceOrder ToDomain(this ServiceOrders serviceOrder)
         {
-            return new ServiceOrder(serviceOrder.VehicleId, serviceOrder.Id)
+            return new ServiceOrder(serviceOrder.VehicleId, id: serviceOrder.Id)
             {
                 Materials = serviceOrder.Materials.Select(m => m.ToDomain()).ToList(),
                 Services = serviceOrder.Services.Select(s => s.ToDomain()).ToList(),

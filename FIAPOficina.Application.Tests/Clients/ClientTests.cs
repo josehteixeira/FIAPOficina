@@ -5,12 +5,6 @@ using FIAPOficina.Application.Clients.Commands.GetAllClients;
 using FIAPOficina.Application.Clients.Commands.UpdateClient;
 using FIAPOficina.Application.Clients.Services;
 using FIAPOficina.Domain.Clients.Entities;
-using FIAPOficina.Application.Common.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FIAPOficina.Application.Tests.Mocks.Repositories;
 
 namespace FIAPOficina.Application.Tests.Clients

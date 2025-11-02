@@ -2,15 +2,9 @@
 using FIAPOficina.Application.ServiceOrders.Commands.GetAllServiceOrders;
 using FIAPOficina.Application.ServiceOrders.Commands.GetSingleServiceOrder;
 using FIAPOficina.Application.ServiceOrders.Commands.UpdateServiceOrder;
-using FIAPOficina.Application.ServiceOrders.Services;
 using FIAPOficina.Application.Tests.Mocks.Repositories;
 using FIAPOficina.Application.Tests.Mocks.Services;
 using FIAPOficina.Domain.ServiceOrders.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FIAPOficina.Application.Tests.ServiceOrders
 {
@@ -18,6 +12,7 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
     {
         private ServiceOrderRepositoryMock _repository = new ServiceOrderRepositoryMock();
         private ServicesServiceMock _servicesService = new ServicesServiceMock();
+        private ClientServerMock _clientsService = new ClientServerMock();
         private MaterialsServiceMock _materialsService = new MaterialsServiceMock();
         private VehicleServiceMock _vehicleService = new VehicleServiceMock();
 
@@ -52,10 +47,10 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
             else
                 os = service.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>(), new List<ServiceOrderMaterialToCreate>())).GetAwaiter().GetResult();
 
-            var osUpdate = service.UpdateAsync(new UpdateServiceOrderCommand(os.Id, os.VehicleId,ServiceOrderStatus.Running, new List<ServiceOrderServiceToUpdate>(), new List<ServiceOrderMaterialToUpdate>())).GetAwaiter().GetResult();
+            var osUpdate = service.UpdateAsync(new UpdateServiceOrderCommand(os.Id, os.VehicleId, new List<ServiceOrderServiceToUpdate>(), new List<ServiceOrderMaterialToUpdate>())).GetAwaiter().GetResult();
 
             Assert.NotNull(osUpdate);
-            Assert.Equal(ServiceOrderStatus.Running, osUpdate.Status);
+            Assert.Equal(ServiceOrderStatus.Received, osUpdate.Status);
         }
         [Fact]
         public void Should_Delete_All_ServiceOrders()
@@ -72,7 +67,7 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
         }
         private Application.ServiceOrders.Services.ServiceOrderService CreateService()
         {
-            return new Application.ServiceOrders.Services.ServiceOrderService(_repository, _vehicleService, _materialsService, _servicesService);
+            return new Application.ServiceOrders.Services.ServiceOrderService(_repository, _vehicleService, _materialsService, _clientsService, _servicesService);
         }
     }
 }

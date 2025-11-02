@@ -6,11 +6,6 @@ using FIAPOficina.Application.Services.Commands.UpdateService;
 using FIAPOficina.Application.Services.Services;
 using FIAPOficina.Application.Tests.Mocks.Repositories;
 using FIAPOficina.Domain.Services.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FIAPOficina.Application.Tests.Services
 {

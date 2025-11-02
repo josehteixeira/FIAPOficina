@@ -1,6 +1,5 @@
 ﻿using FIAPOficina.Application.Materials.Services;
 using FIAPOficina.Application.Services.Services;
-using FIAPOficina.Application.Vehicles.Services;
 using FIAPOficina.Domain.ServiceOrders.Entities;
 using FIAPOficina.Domain.ServiceOrders.Repositories;
 
@@ -27,16 +26,36 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.UpdateServiceOrder
             var materials = GetServiceOrderMaterials(command.Materials, command.Id);
             var services = GetServiceOrderServices(command.Services, command.Id);
 
-            var serviceOrder = new ServiceOrder(command.VehicleId, command.Id)
+            var oldServiceOrder = await GetOldServiceOrder(command.Id);
+
+            if (oldServiceOrder.Status == ServiceOrderStatus.Received || oldServiceOrder.Status == ServiceOrderStatus.InDiagnosis)
             {
-                Materials = materials,
-                Services = services,
-                Status = command.Status,
-            };
+                var serviceOrder = new ServiceOrder(command.VehicleId, id: command.Id)
+                {
+                    Materials = materials,
+                    Services = services,
+                };
 
-            await _repository.UpdateAsync(serviceOrder).ConfigureAwait(false);
+                await _repository.UpdateAsync(serviceOrder).ConfigureAwait(false);
 
-            return serviceOrder;
+                return serviceOrder;
+            }
+            else
+            {
+                throw new Exception("The status of this service order no longer allows any changes!");
+            }
+        }
+
+        private async Task<ServiceOrder> GetOldServiceOrder(Guid id)
+        {
+            var oldServiceOrder = await _repository.FirstOrDefaultAsync(id).ConfigureAwait(false);
+
+            if (oldServiceOrder is null)
+            {
+                throw new Exception("Service order not found!");
+            }
+
+            return oldServiceOrder;
         }
 
         private List<ServiceOrderService> GetServiceOrderServices(List<ServiceOrderServiceToUpdate> services, Guid serviceOrderId)

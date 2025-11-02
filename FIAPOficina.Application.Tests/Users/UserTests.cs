@@ -2,12 +2,6 @@
 using FIAPOficina.Application.Tests.Mocks.Repositories;
 using FIAPOficina.Application.Users.Commands.CreateUser;
 using FIAPOficina.Application.Users.Services;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FIAPOficina.Application.Tests.Users
 {

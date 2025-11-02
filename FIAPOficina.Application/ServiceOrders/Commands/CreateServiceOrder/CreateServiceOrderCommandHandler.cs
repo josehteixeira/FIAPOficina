@@ -38,11 +38,12 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.CreateServiceOrder
             var materials = GetServiceOrderMaterials(command.Materials, serviceOrderId);
             var services = GetServiceOrderServices(command.Services, serviceOrderId);
 
-            ServiceOrder serviceOrder = new(vehicleId: command.VehicleId, serviceOrderId)
+            ServiceOrder serviceOrder = new(vehicleId: command.VehicleId, id: serviceOrderId)
             {
                 Materials = materials,
                 Services = services,
                 Status = ServiceOrderStatus.Received,
+                CreatedOn = DateTime.Now,
             };
 
             var createdServiceOrder = await _repository.AddAsync(serviceOrder).ConfigureAwait(false);

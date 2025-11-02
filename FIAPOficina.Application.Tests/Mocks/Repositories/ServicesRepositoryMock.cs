@@ -1,11 +1,5 @@
 ﻿using FIAPOficina.Domain.Services.Entities;
 using FIAPOficina.Domain.Services.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FIAPOficina.Application.Tests.Mocks.Repositories
 {

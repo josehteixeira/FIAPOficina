@@ -1,17 +1,11 @@
 ﻿using FIAPOficina.Domain.Users.Entities;
 using FIAPOficina.Domain.Users.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FIAPOficina.Application.Tests.Mocks.Repositories
 {
     internal class UsersRepositoryMock : IUserRepository
     {
         private List<User> _users = new List<User>();
-        
         public async Task<User> AddAsync(User user)
         {
             _users.Add(user);
