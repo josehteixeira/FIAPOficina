@@ -1,4 +1,6 @@
-﻿using FIAPOficina.Domain.ServiceOrders.Entities;
+﻿using FIAPOficina.Application.Materials.Services;
+using FIAPOficina.Domain.Materials.Entities;
+using FIAPOficina.Domain.ServiceOrders.Entities;
 using FIAPOficina.Domain.ServiceOrders.Repositories;
 
 namespace FIAPOficina.Application.ServiceOrders.Commands.StartServiceOrder
@@ -6,10 +8,12 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.StartServiceOrder
     internal class StartServiceOrderCommandHandler
     {
         private readonly IServiceOrderRepository _repository;
+        private readonly IMaterialsService _materialsService;
 
-        public StartServiceOrderCommandHandler(IServiceOrderRepository repository)
+        public StartServiceOrderCommandHandler(IServiceOrderRepository repository, IMaterialsService materialsService)
         {
             _repository = repository;
+            _materialsService = materialsService;
         }
 
         public async Task Handle(StartServiceOrderCommand command)
@@ -21,8 +25,46 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.StartServiceOrder
                 throw new Exception("Only service orders with status \"Approved\" can be set as \"Running\"!");
             }
 
+            var materials = _materialsService.GetAll(new(serviceOrder.Materials.Select(m => m.MaterialId).ToArray()));
+            CheckMaterials(serviceOrder, materials);
+            UpdateMaterials(serviceOrder, materials);
+
             serviceOrder.Status = ServiceOrderStatus.Running;
             await _repository.UpdateAsync(serviceOrder).ConfigureAwait(false);
+        }
+
+        private void UpdateMaterials(ServiceOrder serviceOrder, Material[] materials)
+        {
+            foreach (var material in materials)
+            {
+                var serviceMaterial = serviceOrder.Materials.First(m => m.MaterialId == material.Id);
+
+                _materialsService.UpdateAsync(new(
+                    Id: material.Id,
+                    Name: material.Name,
+                    Description: material.Description,
+                    Brand: material.Brand,
+                    Value: material.Value,
+                    Quantity: material.Quantity - serviceMaterial.Quantity
+                ));
+            }
+        }
+
+        private void CheckMaterials(ServiceOrder serviceOrder, Material[] materials)
+        {
+
+            foreach (var serviceMaterial in serviceOrder.Materials)
+            {
+                var material = materials.FirstOrDefault(m => m.Id == serviceMaterial.MaterialId);
+
+                if (material is null)
+                    throw new Exception("Material not found!");
+
+                if (material.Quantity < serviceMaterial.Quantity)
+                {
+                    throw new Exception($"There is not enough materials of '{material.Name}'!");
+                }
+            }
         }
 
         private async Task<ServiceOrder> GetServiceOrder(Guid id)

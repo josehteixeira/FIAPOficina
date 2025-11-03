@@ -53,7 +53,7 @@ namespace FIAPOficina.Application.ServiceOrders.Services
             _deliverHandler = new(repository);
             _rejectHandler = new(repository, vehiclesService, clientsService);
             _requestApprovalHandler = new(repository, mailService, vehiclesService, clientsService, servicesService, materialsService);
-            _startHandler = new(repository);
+            _startHandler = new(repository, materialsService);
             _startDiagnosisHandler = new(repository);
         }
 
