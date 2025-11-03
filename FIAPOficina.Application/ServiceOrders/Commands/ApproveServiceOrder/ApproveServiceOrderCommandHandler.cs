@@ -43,7 +43,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.ApproveServiceOrder
             }
 
             serviceOrder.Status = ServiceOrderStatus.Approved;
-            serviceOrder.ApprovedOn = DateTime.Now;
+            serviceOrder.ApprovedOn = DateTime.UtcNow;
             await _repository.UpdateAsync(serviceOrder).ConfigureAwait(false);
         }
 
