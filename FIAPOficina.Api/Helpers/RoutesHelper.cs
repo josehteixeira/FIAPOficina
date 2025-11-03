@@ -60,6 +60,13 @@
             public const string Delete = "/api/v1/service-orders/{id}";
             public const string GetSingle = "/api/v1/service-orders/{id}";
             public const string GetAll = "/api/v1/service-orders";
+            public const string StartServiceOrderDiagnosis = "/api/v1/service-orders/{id}/start-diagnosis";
+            public const string RequestServiceOrderApproval = "/api/v1/service-orders/{id}/request-approval";
+            public const string ApproveServiceOrder = "/api/v1/service-orders/{id}/approve";
+            public const string RejectServiceOrder = "/api/v1/service-orders/{id}/reject";
+            public const string StartServiceOrder = "/api/v1/service-orders/{id}/start";
+            public const string CompleteServiceOrder = "/api/v1/service-orders/{id}/complete";
+            public const string DeliverServiceOrder = "/api/v1/service-orders/{id}/deliver";
         }
     }
 }

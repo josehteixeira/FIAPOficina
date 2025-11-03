@@ -4,7 +4,6 @@
     (
         Guid VehicleId,
         ServiceOrderServiceRequest[] Services,
-        ServiceOrderMaterialRequest[] Materials,
-        int Status
+        ServiceOrderMaterialRequest[] Materials
     );
 }

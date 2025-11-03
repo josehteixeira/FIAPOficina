@@ -59,7 +59,6 @@ namespace FIAPOficina.Api.Controllers
             return NoContent();
         }
 
-
         [Authorize]
         [HttpDelete(RoutesHelper.ServiceOrders.Delete)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -103,10 +102,102 @@ namespace FIAPOficina.Api.Controllers
                     Status = (int)serviceOrder.Status,
                     Materials = serviceOrder.Materials.Select(material => material.ToResponse()).ToArray(),
                     Services = serviceOrder.Services.Select(service => service.ToResponse()).ToArray(),
+                    CreatedOn = serviceOrder.CreatedOn,
+                    ApprovedOn = serviceOrder.ApprovedOn,
+                    FinishedOn = serviceOrder.FinishedOn,
                 }).ToArray());
             }
 
             return Ok(Array.Empty<ServiceOrderResponse>());
+        }
+
+        [Authorize]
+        [HttpPost(RoutesHelper.ServiceOrders.StartServiceOrderDiagnosis)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Consumes("application/json")]
+        public async Task<IActionResult> StartServiceOrderDiagnosis([FromRoute] Guid id)
+        {
+            await _serviceOrdersService.StartServiceOrderDiagnosis(new(id));
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost(RoutesHelper.ServiceOrders.RequestServiceOrderApproval)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Consumes("application/json")]
+        public async Task<IActionResult> RequestServiceOrderApproval([FromRoute] Guid id)
+        {
+            await _serviceOrdersService.RequestServiceOrderApproval(new(id));
+
+            return Ok();
+        }
+
+        [HttpPost(RoutesHelper.ServiceOrders.ApproveServiceOrder)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Consumes("application/json")]
+        public async Task<IActionResult> ApproveServiceOrder([FromRoute] Guid id, ApproveServiceOrderRequest request)
+        {
+            await _serviceOrdersService.ApproveServiceOrder(new(id, request.ClientIdentifier, request.VehiclePlate));
+
+            return Ok();
+        }
+
+        [HttpPost(RoutesHelper.ServiceOrders.RejectServiceOrder)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Consumes("application/json")]
+        public async Task<IActionResult> RejectServiceOrder([FromRoute] Guid id, ApproveServiceOrderRequest request)
+        {
+            await _serviceOrdersService.RejectServiceOrder(new(id, request.ClientIdentifier, request.VehiclePlate));
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost(RoutesHelper.ServiceOrders.StartServiceOrder)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Consumes("application/json")]
+        public async Task<IActionResult> StartServiceOrder([FromRoute] Guid id)
+        {
+            await _serviceOrdersService.StartServiceOrder(new(id));
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost(RoutesHelper.ServiceOrders.CompleteServiceOrder)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Consumes("application/json")]
+        public async Task<IActionResult> CompleteServiceOrder([FromRoute] Guid id)
+        {
+            await _serviceOrdersService.CompleteServiceOrder(new(id));
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost(RoutesHelper.ServiceOrders.DeliverServiceOrder)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Consumes("application/json")]
+        public async Task<IActionResult> DeliverServiceOrder([FromRoute] Guid id)
+        {
+            await _serviceOrdersService.DeliverServiceOrder(new(id));
+
+            return Ok();
         }
     }
 }
