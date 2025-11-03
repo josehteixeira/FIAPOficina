@@ -142,7 +142,7 @@ namespace FIAPOficina.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Consumes("application/json")]
-        public async Task<IActionResult> ApproveServiceOrder([FromRoute] Guid id, ApproveServiceOrderRequest request)
+        public async Task<IActionResult> ApproveServiceOrder([FromRoute] Guid id, [FromBody] ApproveServiceOrderRequest request)
         {
             await _serviceOrdersService.ApproveServiceOrder(new(id, request.ClientIdentifier, request.VehiclePlate));
 
@@ -154,7 +154,7 @@ namespace FIAPOficina.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Consumes("application/json")]
-        public async Task<IActionResult> RejectServiceOrder([FromRoute] Guid id, ApproveServiceOrderRequest request)
+        public async Task<IActionResult> RejectServiceOrder([FromRoute] Guid id, [FromBody] ApproveServiceOrderRequest request)
         {
             await _serviceOrdersService.RejectServiceOrder(new(id, request.ClientIdentifier, request.VehiclePlate));
 
