@@ -28,7 +28,9 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.UpdateServiceOrder
 
             var oldServiceOrder = await GetOldServiceOrder(command.Id);
 
-            if (oldServiceOrder.Status == ServiceOrderStatus.Received || oldServiceOrder.Status == ServiceOrderStatus.InDiagnosis)
+            if (oldServiceOrder.Status == ServiceOrderStatus.Received ||
+                oldServiceOrder.Status == ServiceOrderStatus.InDiagnosis ||
+                oldServiceOrder.Status == ServiceOrderStatus.WaitingApproval)
             {
                 var serviceOrder = new ServiceOrder(command.VehicleId, id: command.Id)
                 {
