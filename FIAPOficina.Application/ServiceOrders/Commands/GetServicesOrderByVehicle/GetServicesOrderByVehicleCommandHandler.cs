@@ -20,13 +20,13 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.GetServicesOrderByVehic
 
         public async Task<ServiceOrder[]> Handle(GetServicesOrderByVehicleCommand command)
         {
-            var vehicle = await _vehiclesService.GetSingleAsync(new(command.VehiclePlate));
+            var vehicle = await _vehiclesService.GetSingleAsync(new(command.VehiclePlate)).ConfigureAwait(false);
             if (vehicle is null)
             {
                 return Array.Empty<ServiceOrder>();
             }
 
-            var client = await _clientsService.GetSingleAsync(new(command.ClientIdentifier));
+            var client = await _clientsService.GetSingleAsync(new(command.ClientIdentifier)).ConfigureAwait(false);
             if (client is null || client.Id != vehicle.ClientId)
             {
                 return Array.Empty<ServiceOrder>();

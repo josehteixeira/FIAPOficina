@@ -5,7 +5,7 @@ namespace FIAPOficina.Domain.ServiceOrders.Repositories
     public interface IServiceOrderRepository
     {
         Task<ServiceOrder> AddAsync(ServiceOrder serviceOrder);
-        Task UpdateAsync(ServiceOrder serviceOrder);
+        void Update(ServiceOrder serviceOrder);
         Task DeleteAsync(Guid id);
         Task<ServiceOrder?> FirstOrDefaultAsync(Guid id);
         Task<ServiceOrder?> FirstOrDefaultAsync(string plate);

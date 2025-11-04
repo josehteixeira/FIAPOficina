@@ -52,7 +52,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.RequestServiceOrderAppr
             }
 
             serviceOrder.Status = ServiceOrderStatus.WaitingApproval;
-            await _repository.UpdateAsync(serviceOrder).ConfigureAwait(false);
+            _repository.Update(serviceOrder);
 
             await SendMail(serviceOrder);
         }
@@ -69,7 +69,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.RequestServiceOrderAppr
 
         private async Task<Vehicle> GetVehicle(Guid vehicleId)
         {
-            var vehicle = await _vehiclesService.GetSingleAsync(new(vehicleId));
+            var vehicle = await _vehiclesService.GetSingleAsync(new(vehicleId)).ConfigureAwait(false);
 
             if (vehicle is null)
                 throw new Exception("Vehicle not found!");
@@ -79,7 +79,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.RequestServiceOrderAppr
 
         private async Task<Client> GetClient(Guid clientId)
         {
-            var client = await _clientsService.GetSingleAsync(new(clientId));
+            var client = await _clientsService.GetSingleAsync(new(clientId)).ConfigureAwait(false);
 
             if (client is null)
                 throw new Exception("Client not found!");

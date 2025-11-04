@@ -14,7 +14,7 @@ namespace FIAPOficina.Application.Services.Commands.GetSingleService
 
         public async Task<Service?> Handle(GetSingleServiceCommand command)
         {
-            return await _repository.FirstOrDefaultAsync(command.Id);
+            return await _repository.FirstOrDefaultAsync(command.Id).ConfigureAwait(false);
         }
     }
 }

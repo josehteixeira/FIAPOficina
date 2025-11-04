@@ -13,7 +13,7 @@ namespace FIAPOficina.Application.Users.Services
         Task<User> AddAsync(CreateUserCommand command);
         Task<User> UpdateAsync(UpdateUserCommand command);
         Task DeleteAsync(DeleteUserCommand command);
-        Task<User> GetSingleAsync(GetSingleUserCommand command);
+        Task<User?> GetSingleAsync(GetSingleUserCommand command);
         User[] GetAll(GetAllUsersCommand command);
         Task<bool> ValidateUserPassword(ValidateUserPasswordCommand command);
     }

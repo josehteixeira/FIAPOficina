@@ -13,7 +13,7 @@ namespace FIAPOficina.Application.Materials.Commands.DeleteMaterial
 
         public async Task Handle(DeleteMaterialCommand command)
         {
-            await _repository.DeleteAsync(command.Id);
+            await _repository.DeleteAsync(command.Id).ConfigureAwait(false);
         }
     }
 }

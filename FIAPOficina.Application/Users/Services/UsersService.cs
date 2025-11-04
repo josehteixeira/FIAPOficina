@@ -31,17 +31,17 @@ namespace FIAPOficina.Application.Users.Services
 
         public async Task<User> AddAsync(CreateUserCommand command)
         {
-            return await _createHandler.Handle(command);
+            return await _createHandler.Handle(command).ConfigureAwait(false);
         }
 
         public async Task<User> UpdateAsync(UpdateUserCommand command)
         {
-            return await _updateHandler.Handle(command);
+            return await _updateHandler.Handle(command).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(DeleteUserCommand command)
         {
-            await _deleteHandler.Handle(command);
+            await _deleteHandler.Handle(command).ConfigureAwait(false);
         }
 
         public async Task<User?> GetSingleAsync(GetSingleUserCommand command)

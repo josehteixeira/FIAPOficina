@@ -43,7 +43,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.RejectServiceOrder
             }
 
             serviceOrder.Status = ServiceOrderStatus.Rejected;
-            await _repository.UpdateAsync(serviceOrder).ConfigureAwait(false);
+            _repository.Update(serviceOrder);
         }
 
         private async Task<Client?> GetClient(Guid clientId)

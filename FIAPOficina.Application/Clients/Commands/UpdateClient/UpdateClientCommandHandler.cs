@@ -23,7 +23,7 @@ namespace FIAPOficina.Application.Clients.Commands.UpdateClient
                 id: command.Id
             );
 
-            await _repository.UpdateAsync(client);
+            await _repository.UpdateAsync(client).ConfigureAwait(false);
 
             return client;
         }

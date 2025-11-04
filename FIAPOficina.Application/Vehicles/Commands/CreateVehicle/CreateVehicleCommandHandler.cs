@@ -26,7 +26,7 @@ namespace FIAPOficina.Application.Vehicles.Commands.CreateVehicle
 
             var vehicle = await _repository.AddAsync(
                 new(command.Brand, command.Model, command.Year, command.Plate, command.Color, command.ClientId)
-            );
+            ).ConfigureAwait(false);
 
             return vehicle;
         }

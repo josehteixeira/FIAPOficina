@@ -26,7 +26,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                 Brand = material.Brand,
             };
             _context.Materials.Add(createMaterial);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return new Material(material, createMaterial.Id);
         }
@@ -46,7 +46,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                 _context.Materials.Remove(materialToDelete);
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<Material?> FirstOrDefaultAsync(Guid id)
@@ -95,7 +95,7 @@ namespace FIAPOficina.Infrastructure.Repositories
             {
                 materialToUpdate.Quantity += quantity;
 
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
 
@@ -111,7 +111,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                 materialToUpdate.Value = material.Value;
                 materialToUpdate.Quantity = material.Quantity;
 
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
     }

@@ -25,7 +25,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                 CreatedOn = serviceOrder.CreatedOn,
             };
 
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
             {
                 try
                 {
@@ -33,7 +33,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                     AddAllServices(serviceOrder.Services, createServiceOrder.Id);
 
                     _context.ServiceOrders.Add(createServiceOrder);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
                     transaction.Commit();
                 }
                 catch
@@ -84,14 +84,15 @@ namespace FIAPOficina.Infrastructure.Repositories
 
         public async Task DeleteAsync(Guid id)
         {
-            var serviceOrderToDelete = _context.ServiceOrders
+            var serviceOrderToDelete = await _context.ServiceOrders
                 .Include(s => s.Materials)
                 .Include(s => s.Services)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync(so => so.Id == id)
+                .ConfigureAwait(false);
 
             if (serviceOrderToDelete is not null)
             {
-                using (var transaction = _context.Database.BeginTransaction())
+                using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
                 {
                     try
                     {
@@ -104,7 +105,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                                 _context.ServiceOrderServices.Remove(serviceOrderService);
 
                         _context.ServiceOrders.Remove(serviceOrderToDelete);
-                        await _context.SaveChangesAsync();
+                        await _context.SaveChangesAsync().ConfigureAwait(false);
                         transaction.Commit();
                     }
                     catch
@@ -119,10 +120,11 @@ namespace FIAPOficina.Infrastructure.Repositories
         public async Task<ServiceOrder?> FirstOrDefaultAsync(Guid id)
         {
             var serviceOrder = await _context.ServiceOrders
-                .Include(s => s.Services)
-                .Include(m => m.Materials)
-                .Include(v => v.Vehicle)
-                .FirstOrDefaultAsync(u => u.Id == id).ConfigureAwait(false);
+                .Include(so => so.Services)
+                .Include(so => so.Materials)
+                .Include(so => so.Vehicle)
+                .FirstOrDefaultAsync(so => so.Id == id)
+                .ConfigureAwait(false);
 
             if (serviceOrder is not null)
             {
@@ -146,7 +148,8 @@ namespace FIAPOficina.Infrastructure.Repositories
                .Include(so => so.Services)
                .Include(so => so.Materials)
                .Include(so => so.Vehicle)
-               .FirstOrDefaultAsync(u => u.Vehicle.Plate == plate).ConfigureAwait(false);
+               .FirstOrDefaultAsync(v => v.Vehicle.Plate == plate)
+               .ConfigureAwait(false);
 
             if (serviceOrder is not null)
             {
@@ -185,16 +188,16 @@ namespace FIAPOficina.Infrastructure.Repositories
                 }).ToArray();
         }
 
-        public async Task UpdateAsync(ServiceOrder serviceOrder)
+        public void Update(ServiceOrder serviceOrder)
         {
-            var serviceOrderToUpdate = _context.ServiceOrders
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                var serviceOrderToUpdate = _context.ServiceOrders
                 .Include(so => so.Materials)
                 .Include(so => so.Services)
-                .FirstOrDefault(s => s.Id == serviceOrder.Id);
+                .FirstOrDefault(so => so.Id == serviceOrder.Id);
 
-            if (serviceOrderToUpdate is not null)
-            {
-                using (var transaction = _context.Database.BeginTransaction())
+                if (serviceOrderToUpdate is not null)
                 {
                     try
                     {
@@ -207,7 +210,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                         UpdateServiceOrderMaterials(serviceOrderToUpdate, serviceOrder);
                         UpdateServiceOrderServices(serviceOrderToUpdate, serviceOrder);
 
-                        await _context.SaveChangesAsync();
+                        _context.SaveChanges();
                         transaction.Commit();
                     }
                     catch

@@ -41,7 +41,7 @@ namespace FIAPOficina.Application.Tests.Mocks.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task UpdateAsync(ServiceOrder serviceOrder)
+        public void Update(ServiceOrder serviceOrder)
         {
             var osDb = FirstOrDefaultAsync(serviceOrder.Id).GetAwaiter().GetResult();
             if (osDb is not null)

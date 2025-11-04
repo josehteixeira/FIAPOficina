@@ -26,12 +26,12 @@ namespace FIAPOficina.Application.Materials.Services
         }
         public async Task<Material> AddAsync(CreateMaterialCommand command)
         {
-            return await _createHandler.Handle(command);
+            return await _createHandler.Handle(command).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(DeleteMaterialCommand command)
         {
-            await _deleteHandler.Handle(command);
+            await _deleteHandler.Handle(command).ConfigureAwait(false);
         }
 
         public Material[] GetAll(GetAllMaterialsCommand command)
@@ -44,9 +44,9 @@ namespace FIAPOficina.Application.Materials.Services
             return await _querySingleHandler.Handle(command).ConfigureAwait(false);
         }
 
-        public Task<Material> UpdateAsync(UpdateMaterialCommand command)
+        public async Task<Material> UpdateAsync(UpdateMaterialCommand command)
         {
-            return _updateHandler.Handle(command);
+            return await _updateHandler.Handle(command).ConfigureAwait(false);
         }
     }
 }

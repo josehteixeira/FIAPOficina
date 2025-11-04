@@ -26,7 +26,7 @@ namespace FIAPOficina.Infrastructure.Repositories
             };
 
             _context.Services.Add(createServices);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return new Service(service, createServices.Id);
         }
@@ -41,7 +41,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                 serviceToUpdate.Description = service.Description;
                 serviceToUpdate.Value = service.Value;
 
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
 
@@ -54,7 +54,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                 _context.Services.Remove(serviceToDelete);
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<Service?> FirstOrDefaultAsync(Guid id)

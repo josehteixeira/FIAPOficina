@@ -28,7 +28,7 @@ namespace FIAPOficina.Infrastructure.Repositories
             };
 
             _context.Clients.Add(createClient);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return new Client(client, createClient.Id);
         }
@@ -45,7 +45,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                 clientToUpdate.Identifier = client.Identifier;
                 clientToUpdate.Phone = client.Phone;
 
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
 
@@ -58,7 +58,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                 _context.Clients.Remove(clientToDelete);
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<Client?> FirstOrDefaultAsync(Guid id)

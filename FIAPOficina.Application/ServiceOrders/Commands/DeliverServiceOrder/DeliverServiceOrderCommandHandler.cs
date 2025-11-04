@@ -22,7 +22,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.DeliverServiceOrder
             }
 
             serviceOrder.Status = ServiceOrderStatus.Delivered;
-            await _repository.UpdateAsync(serviceOrder).ConfigureAwait(false);
+            _repository.Update(serviceOrder);
         }
 
         private async Task<ServiceOrder> GetServiceOrder(Guid id)

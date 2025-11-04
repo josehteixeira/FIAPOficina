@@ -14,7 +14,7 @@ namespace FIAPOficina.Application.Materials.Commands.GetSingleMaterial
 
         public async Task<Material?> Handle(GetSingleMaterialCommand command)
         {
-            return await _repository.FirstOrDefaultAsync(command.Id);
+            return await _repository.FirstOrDefaultAsync(command.Id).ConfigureAwait(false);
         }
     }
 }

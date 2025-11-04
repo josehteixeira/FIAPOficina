@@ -38,7 +38,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.UpdateServiceOrder
                     Services = services,
                 };
 
-                await _repository.UpdateAsync(serviceOrder).ConfigureAwait(false);
+                _repository.Update(serviceOrder);
 
                 return serviceOrder;
             }

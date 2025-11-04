@@ -27,17 +27,17 @@ namespace FIAPOficina.Application.Clients.Services
 
         public async Task<Client> AddAsync(CreateClientCommand command)
         {
-            return await _createHandler.Handle(command);
+            return await _createHandler.Handle(command).ConfigureAwait(false);
         }
 
         public async Task<Client> UpdateAsync(UpdateClientCommand command)
         {
-            return await _updateHandler.Handle(command);
+            return await _updateHandler.Handle(command).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(DeleteClientCommand command)
         {
-            await _deleteHandler.Handle(command);
+            await _deleteHandler.Handle(command).ConfigureAwait(false);
         }
 
         public async Task<Client?> GetSingleAsync(GetSingleClientCommand command)

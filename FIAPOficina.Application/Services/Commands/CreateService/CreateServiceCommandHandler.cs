@@ -16,7 +16,7 @@ namespace FIAPOficina.Application.Services.Commands.CreateService
         {
             var service = await _repository.AddAsync(
                 new Service(command.Name, command.Description, command.Value)
-            );
+            ).ConfigureAwait(false);
 
             return service;
         }

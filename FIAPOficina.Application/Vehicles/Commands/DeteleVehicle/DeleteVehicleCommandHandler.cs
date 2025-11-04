@@ -13,7 +13,7 @@ namespace FIAPOficina.Application.Vehicles.Commands.DeleteVehicle
 
         public async Task Handle(DeleteVehicleCommand command)
         {
-            await _repository.DeleteAsync(command.Id);
+            await _repository.DeleteAsync(command.Id).ConfigureAwait(false);
         }
     }
 }

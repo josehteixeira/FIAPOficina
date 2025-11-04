@@ -16,9 +16,9 @@ namespace FIAPOficina.Application.Clients.Commands.GetSingleClient
         {
             if (string.IsNullOrEmpty(command.Identifier))
             {
-                return await _repository.FirstOrDefaultAsync(command.Id);
+                return await _repository.FirstOrDefaultAsync(command.Id).ConfigureAwait(false);
             }
-            return await _repository.FirstOrDefaultAsync(command.Identifier);
+            return await _repository.FirstOrDefaultAsync(command.Identifier).ConfigureAwait(false);
         }
     }
 }

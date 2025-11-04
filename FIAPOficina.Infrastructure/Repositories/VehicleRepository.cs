@@ -29,7 +29,7 @@ namespace FIAPOficina.Infrastructure.Repositories
             };
 
             _context.Vehicles.Add(createVehicle);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return new Vehicle(vehicle, createVehicle.Id);
         }
@@ -46,7 +46,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                 vehicleToUpdate.Plate = vehicle.Plate;
                 vehicleToUpdate.Color = vehicle.Color;
 
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
 
@@ -59,7 +59,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                 _context.Vehicles.Remove(vehicleToDelete);
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<Vehicle?> FirstOrDefaultAsync(Guid id)

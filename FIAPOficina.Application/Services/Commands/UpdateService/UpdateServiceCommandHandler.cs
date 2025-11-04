@@ -16,7 +16,7 @@ namespace FIAPOficina.Application.Services.Commands.UpdateService
         {
             var user = new Service(command.Name, command.Description, command.Value, command.Id);
 
-            await _repository.UpdateAsync(user);
+            await _repository.UpdateAsync(user).ConfigureAwait(false);
 
             return user;
         }

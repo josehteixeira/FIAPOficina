@@ -44,7 +44,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.ApproveServiceOrder
 
             serviceOrder.Status = ServiceOrderStatus.Approved;
             serviceOrder.ApprovedOn = DateTime.UtcNow;
-            await _repository.UpdateAsync(serviceOrder).ConfigureAwait(false);
+            _repository.Update(serviceOrder);
         }
 
         private async Task<Client?> GetClient(Guid clientId)

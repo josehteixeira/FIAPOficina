@@ -16,9 +16,9 @@ namespace FIAPOficina.Application.Users.Commands.GetSingleUser
         {
             if (string.IsNullOrEmpty(command.Username))
             {
-                return await _repository.FirstOrDefaultAsync(command.Id);
+                return await _repository.FirstOrDefaultAsync(command.Id).ConfigureAwait(false);
             }
-            return await _repository.FirstOrDefaultAsync(command.Username);
+            return await _repository.FirstOrDefaultAsync(command.Username).ConfigureAwait(false);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace FIAPOficina.Application.Users.Commands.DeleteUser
 
         public async Task Handle(DeleteUserCommand command)
         {
-            await _repository.DeleteAsync(command.Id);
+            await _repository.DeleteAsync(command.Id).ConfigureAwait(false);
         }
     }
 }

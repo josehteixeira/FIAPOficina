@@ -20,7 +20,7 @@ namespace FIAPOficina.Application.Users.Commands.AuthenticateUser
 
             var user = await _repository.FirstOrDefaultAsync(
                 username: command.Username
-            );
+            ).ConfigureAwait(false);
 
             return user is not null && _hasher.Verify(command.Password, user.PasswordHash ?? "");
         }

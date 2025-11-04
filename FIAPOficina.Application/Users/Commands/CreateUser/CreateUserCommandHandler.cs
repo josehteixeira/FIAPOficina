@@ -21,7 +21,7 @@ namespace FIAPOficina.Application.Users.Commands.CreateUser
 
             var user = await _repository.AddAsync(
                 new(command.Name, command.UserName, passwordHash)
-            );
+            ).ConfigureAwait(false);
 
             return user;
         }

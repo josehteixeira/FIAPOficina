@@ -16,9 +16,9 @@ namespace FIAPOficina.Application.Vehicles.Commands.GetSingleVehicle
         {
             if (string.IsNullOrEmpty(command.Plate))
             {
-                return await _repository.FirstOrDefaultAsync(command.Id);
+                return await _repository.FirstOrDefaultAsync(command.Id).ConfigureAwait(false);
             }
-            return await _repository.FirstOrDefaultAsync(command.Plate);
+            return await _repository.FirstOrDefaultAsync(command.Plate).ConfigureAwait(false);
         }
     }
 }

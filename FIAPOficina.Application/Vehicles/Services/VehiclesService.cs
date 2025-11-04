@@ -28,17 +28,17 @@ namespace FIAPOficina.Application.Vehicles.Services
 
         public async Task<Vehicle> AddAsync(CreateVehicleCommand command)
         {
-            return await _createHandler.Handle(command);
+            return await _createHandler.Handle(command).ConfigureAwait(false);
         }
 
         public async Task<Vehicle> UpdateAsync(UpdateVehicleCommand command)
         {
-            return await _updateHandler.Handle(command);
+            return await _updateHandler.Handle(command).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(DeleteVehicleCommand command)
         {
-            await _deleteHandler.Handle(command);
+            await _deleteHandler.Handle(command).ConfigureAwait(false);
         }
 
         public async Task<Vehicle?> GetSingleAsync(GetSingleVehicleCommand command)

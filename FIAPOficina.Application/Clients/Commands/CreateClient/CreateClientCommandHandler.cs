@@ -21,7 +21,7 @@ namespace FIAPOficina.Application.Clients.Commands.CreateClient
                     email: command.Email,
                     address: command.Address
                 )
-            );
+            ).ConfigureAwait(false);
 
             return client;
         }

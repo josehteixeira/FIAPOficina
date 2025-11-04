@@ -27,32 +27,31 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.StartServiceOrder
 
             var materials = _materialsService.GetAll(new(serviceOrder.Materials.Select(m => m.MaterialId).ToArray()));
             CheckMaterials(serviceOrder, materials);
-            UpdateMaterials(serviceOrder, materials);
+            await UpdateMaterials(serviceOrder, materials);
 
             serviceOrder.Status = ServiceOrderStatus.Running;
-            await _repository.UpdateAsync(serviceOrder).ConfigureAwait(false);
+            _repository.Update(serviceOrder);
         }
 
-        private void UpdateMaterials(ServiceOrder serviceOrder, Material[] materials)
+        private async Task UpdateMaterials(ServiceOrder serviceOrder, Material[] materials)
         {
             foreach (var material in materials)
             {
                 var serviceMaterial = serviceOrder.Materials.First(m => m.MaterialId == material.Id);
 
-                _materialsService.UpdateAsync(new(
+                await _materialsService.UpdateAsync(new(
                     Id: material.Id,
                     Name: material.Name,
                     Description: material.Description,
                     Brand: material.Brand,
                     Value: material.Value,
                     Quantity: material.Quantity - serviceMaterial.Quantity
-                ));
+                )).ConfigureAwait(false);
             }
         }
 
         private void CheckMaterials(ServiceOrder serviceOrder, Material[] materials)
         {
-
             foreach (var serviceMaterial in serviceOrder.Materials)
             {
                 var material = materials.FirstOrDefault(m => m.Id == serviceMaterial.MaterialId);

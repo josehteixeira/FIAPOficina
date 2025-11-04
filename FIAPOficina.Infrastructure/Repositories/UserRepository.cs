@@ -26,7 +26,7 @@ namespace FIAPOficina.Infrastructure.Repositories
             };
 
             _context.Users.Add(createUser);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return new User(user, createUser.Id);
         }
@@ -41,7 +41,7 @@ namespace FIAPOficina.Infrastructure.Repositories
 
                 _context.Users.Update(userToUpdate);
 
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
 
@@ -54,7 +54,7 @@ namespace FIAPOficina.Infrastructure.Repositories
                 _context.Users.Remove(userToDelete);
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<User?> FirstOrDefaultAsync(Guid id)

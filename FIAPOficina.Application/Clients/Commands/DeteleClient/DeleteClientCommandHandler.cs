@@ -13,7 +13,7 @@ namespace FIAPOficina.Application.Clients.Commands.DeleteClient
 
         public async Task Handle(DeleteClientCommand command)
         {
-            await _repository.DeleteAsync(command.Id);
+            await _repository.DeleteAsync(command.Id).ConfigureAwait(false);
         }
     }
 }

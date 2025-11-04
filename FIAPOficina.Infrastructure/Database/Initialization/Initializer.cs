@@ -14,7 +14,7 @@ namespace FIAPOficina.Infrastructure.Database.Initialization
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasherService>();
 
-            if (!await context.Users.AnyAsync(u => u.UserName == "admin"))
+            if (!await context.Users.AnyAsync(u => u.UserName == "admin").ConfigureAwait(false))
             {
                 var admin = new Users
                 {
@@ -25,7 +25,7 @@ namespace FIAPOficina.Infrastructure.Database.Initialization
                 };
 
                 context.Users.Add(admin);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
     }

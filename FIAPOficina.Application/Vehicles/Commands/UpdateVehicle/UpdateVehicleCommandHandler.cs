@@ -27,7 +27,7 @@ namespace FIAPOficina.Application.Vehicles.Commands.UpdateVehicle
             vehicle.Plate = command.Plate;
             vehicle.Color = command.Color;
 
-            await _repository.UpdateAsync(vehicle);
+            await _repository.UpdateAsync(vehicle).ConfigureAwait(false);
 
             return vehicle;
         }

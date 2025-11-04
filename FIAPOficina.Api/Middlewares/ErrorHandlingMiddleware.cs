@@ -28,7 +28,7 @@ namespace FIAPOficina.Api.Middlewares
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
@@ -40,7 +40,7 @@ namespace FIAPOficina.Api.Middlewares
             };
 
             var json = JsonSerializer.Serialize(errorResponse);
-            return context.Response.WriteAsync(json);
+            await context.Response.WriteAsync(json).ConfigureAwait(false);
         }
     }
 
