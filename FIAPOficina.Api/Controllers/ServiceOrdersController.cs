@@ -5,6 +5,7 @@ using FIAPOficina.Application.ServiceOrders.Services;
 using FIAPOficina.Api.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace FIAPOficina.Api.Controllers
 {
@@ -18,6 +19,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Create service order.",
+            Description = "Creates a service order for the vehicle with the provided Materials and Services."
+        )]
         [HttpPost(RoutesHelper.ServiceOrders.Create)]
         [ProducesResponseType(typeof(ServiceOrderResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -42,6 +47,10 @@ namespace FIAPOficina.Api.Controllers
 
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Update service order.",
+            Description = "Updates the service order that matches the provided ID. Materials and Services with no ID will be added to the service order,  items with ID will be updated."
+        )]
         [HttpPut(RoutesHelper.ServiceOrders.Update)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -60,6 +69,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Delete service order.",
+            Description = "Deletes the service order that matches the provided ID."
+        )]
         [HttpDelete(RoutesHelper.ServiceOrders.Delete)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -73,6 +86,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Get service order.",
+            Description = "Returns the service order that matches the provided ID with all of its information and status."
+        )]
         [HttpGet(RoutesHelper.ServiceOrders.GetSingle)]
         [ProducesResponseType(typeof(ServiceOrderResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -85,6 +102,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Get all service orders.",
+            Description = "Returns all of the service orders with all of their information and status."
+        )]
         [HttpGet(RoutesHelper.ServiceOrders.GetAll)]
         [ProducesResponseType(typeof(ServiceOrderResponse[]), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -112,6 +133,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Start diagnosis for this service order.",
+            Description = "Sets the service order status as \"In diagnosis\", only possible if service order status is currently \"Received\"."
+        )]
         [HttpPost(RoutesHelper.ServiceOrders.StartServiceOrderDiagnosis)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -125,6 +150,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Request approval for this service order.",
+            Description = "Sets the service order status as \"Waiting approval\", only possible if service order status is currently \"InDiagnosis\"."
+        )]
         [HttpPost(RoutesHelper.ServiceOrders.RequestServiceOrderApproval)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -137,6 +166,10 @@ namespace FIAPOficina.Api.Controllers
             return Ok();
         }
 
+        [SwaggerOperation(
+            Summary = "Approve service order.",
+            Description = "Sets the service order status as \"Approved\", only possible if service order status is currently \"Waiting approval\"."
+        )]
         [HttpPost(RoutesHelper.ServiceOrders.ApproveServiceOrder)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -149,6 +182,10 @@ namespace FIAPOficina.Api.Controllers
             return Ok();
         }
 
+        [SwaggerOperation(
+            Summary = "Reject service order.",
+            Description = "Sets the service order status as \"Rejected\", only possible if service order status is currently \"Awaiting approval\"."
+        )]
         [HttpPost(RoutesHelper.ServiceOrders.RejectServiceOrder)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -161,6 +198,11 @@ namespace FIAPOficina.Api.Controllers
             return Ok();
         }
 
+        [Authorize]
+        [SwaggerOperation(
+            Summary = "Start service order.",
+            Description = "Sets the service order status as \"Running\", only possible if service order status is currently \"Approved\"."
+        )]
         [Authorize]
         [HttpPost(RoutesHelper.ServiceOrders.StartServiceOrder)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -175,6 +217,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Complete service order",
+            Description = "Sets the service order status as \"Completed\", only possible if service order status is currently \"Running\"."
+        )]
         [HttpPost(RoutesHelper.ServiceOrders.CompleteServiceOrder)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -188,6 +234,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Sets service order as \"Delivered\".",
+            Description = "Sets the service order status as \"Delivered\", only possible if service order status is currently \"Completed\"."
+        )]
         [HttpPost(RoutesHelper.ServiceOrders.DeliverServiceOrder)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -200,6 +250,10 @@ namespace FIAPOficina.Api.Controllers
             return Ok();
         }
 
+        [SwaggerOperation(
+            Summary = "Gets the service orders of the given vehicle.",
+            Description = "Retrieves the service orders status of the provided vehicle, validating the client identifier. 204 if no service order is found."
+        )]
         [HttpGet(RoutesHelper.ServiceOrders.GetClientVehicleServiceOrders)]
         [ProducesResponseType(typeof(ServiceOrderResponse[]), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ServiceOrderResponse[]), StatusCodes.Status204NoContent)]
@@ -228,6 +282,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Get the average service order processing time.",
+            Description = "Retrieves the average processing time of service orders that have been approved and finished. 204 if no service order is found."
+        )]
         [HttpGet(RoutesHelper.ServiceOrders.GetAverage)]
         [ProducesResponseType(typeof(TimeSpan?), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(TimeSpan?), StatusCodes.Status204NoContent)]
