@@ -14,7 +14,7 @@
         public ServiceOrder(Guid vehicleId, DateTime? createdOn = null, DateTime? approvedOn = null, DateTime? finishedOn = null, Guid? id = null)
         {
             Id = id.HasValue ? id.Value : Guid.NewGuid();
-            CreatedOn = createdOn.HasValue ? createdOn.Value : DateTime.Now;
+            CreatedOn = createdOn.HasValue ? createdOn.Value : DateTime.UtcNow;
             ApprovedOn = approvedOn;
             FinishedOn = finishedOn;
             VehicleId = vehicleId;

@@ -7,6 +7,8 @@ using FIAPOficina.Application.ServiceOrders.Commands.CreateServiceOrder;
 using FIAPOficina.Application.ServiceOrders.Commands.DeleteServiceOrder;
 using FIAPOficina.Application.ServiceOrders.Commands.DeliverServiceOrder;
 using FIAPOficina.Application.ServiceOrders.Commands.GetAllServiceOrders;
+using FIAPOficina.Application.ServiceOrders.Commands.GetAverageTime;
+using FIAPOficina.Application.ServiceOrders.Commands.GetServicesOrderByVehicle;
 using FIAPOficina.Application.ServiceOrders.Commands.GetSingleServiceOrder;
 using FIAPOficina.Application.ServiceOrders.Commands.RejectServiceOrder;
 using FIAPOficina.Application.ServiceOrders.Commands.RequestServiceOrderApproval;
@@ -34,6 +36,8 @@ namespace FIAPOficina.Application.ServiceOrders.Services
         private readonly RequestServiceOrderApprovalCommandHandler _requestApprovalHandler;
         private readonly StartServiceOrderCommandHandler _startHandler;
         private readonly StartServiceOrderDiagnosisCommandHandler _startDiagnosisHandler;
+        private readonly GetServicesOrderByVehicleCommandHandler _getServicesByVehicleHandler;
+        private readonly GetAverageTimeCommandHandler _getAverageTimeHandler;
 
         public ServiceOrderService(
             IServiceOrderRepository repository,
@@ -52,9 +56,11 @@ namespace FIAPOficina.Application.ServiceOrders.Services
             _completeHandler = new(repository);
             _deliverHandler = new(repository);
             _rejectHandler = new(repository, vehiclesService, clientsService);
-            _requestApprovalHandler = new(repository,mailService,vehiclesService,clientsService);
-            _startHandler = new(repository);
+            _requestApprovalHandler = new(repository, mailService, vehiclesService, clientsService, servicesService, materialsService);
+            _startHandler = new(repository, materialsService);
             _startDiagnosisHandler = new(repository);
+            _getServicesByVehicleHandler = new(repository, vehiclesService, clientsService);
+            _getAverageTimeHandler = new(repository);
         }
 
         public async Task<ServiceOrder> AddAsync(CreateServiceOrderCommand command)
@@ -85,6 +91,16 @@ namespace FIAPOficina.Application.ServiceOrders.Services
         public ServiceOrder[] GetAll(GetAllServiceOrdersCommand command)
         {
             return _queryAllHandler.Handle(command);
+        }
+
+        public TimeSpan? GetAverageTime(GetAverageTimeCommand command)
+        {
+            return _getAverageTimeHandler.Handle(command);
+        }
+
+        public async Task<ServiceOrder[]> GetServicesOrderByVehicle(GetServicesOrderByVehicleCommand command)
+        {
+            return await _getServicesByVehicleHandler.Handle(command);
         }
 
         public async Task<ServiceOrder?> GetSingleAsync(GetSingleServiceOrderCommand command)

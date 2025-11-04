@@ -1,11 +1,13 @@
 ﻿using FIAPOficina.Application.Authentication.Services;
 using FIAPOficina.Application.Clients.Services;
+using FIAPOficina.Application.Common.Mail;
 using FIAPOficina.Application.Common.Security;
 using FIAPOficina.Application.Materials.Services;
 using FIAPOficina.Application.ServiceOrders.Services;
 using FIAPOficina.Application.Services.Services;
 using FIAPOficina.Application.Users.Services;
 using FIAPOficina.Application.Vehicles.Services;
+using FIAPOficina.Infrastructure.Mail;
 
 namespace FIAPOficina.Api.Extensions
 {
@@ -21,6 +23,7 @@ namespace FIAPOficina.Api.Extensions
             services.AddScoped<IMaterialsService, MaterialsService>();
             services.AddScoped<IServiceOrderService, ServiceOrderService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IMailService, MailService>();
         }
     }
 }

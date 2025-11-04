@@ -4,6 +4,8 @@ using FIAPOficina.Application.ServiceOrders.Commands.CreateServiceOrder;
 using FIAPOficina.Application.ServiceOrders.Commands.DeleteServiceOrder;
 using FIAPOficina.Application.ServiceOrders.Commands.DeliverServiceOrder;
 using FIAPOficina.Application.ServiceOrders.Commands.GetAllServiceOrders;
+using FIAPOficina.Application.ServiceOrders.Commands.GetAverageTime;
+using FIAPOficina.Application.ServiceOrders.Commands.GetServicesOrderByVehicle;
 using FIAPOficina.Application.ServiceOrders.Commands.GetSingleServiceOrder;
 using FIAPOficina.Application.ServiceOrders.Commands.RejectServiceOrder;
 using FIAPOficina.Application.ServiceOrders.Commands.RequestServiceOrderApproval;
@@ -28,5 +30,7 @@ namespace FIAPOficina.Application.ServiceOrders.Services
         Task RequestServiceOrderApproval(RequestServiceOrderApprovalCommand command);
         Task StartServiceOrder(StartServiceOrderCommand command);
         Task StartServiceOrderDiagnosis(StartServiceOrderDiagnosisCommand command);
+        Task<ServiceOrder[]> GetServicesOrderByVehicle(GetServicesOrderByVehicleCommand command);
+        TimeSpan? GetAverageTime(GetAverageTimeCommand command);
     }
 }

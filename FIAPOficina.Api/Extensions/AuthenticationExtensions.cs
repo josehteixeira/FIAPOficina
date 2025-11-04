@@ -32,6 +32,7 @@ namespace FIAPOficina.Api.Extensions
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
+                c.EnableAnnotations();
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "FIAPOficina",

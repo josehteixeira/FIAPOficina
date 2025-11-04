@@ -10,9 +10,14 @@ namespace FIAPOficina.Application.Tests.Mocks.Services
 {
     internal class ServicesServiceMock : IServicesService
     {
+        private List<Service> _services = new List<Service>();
+
         public Task<Service> AddAsync(CreateServiceCommand command)
         {
-            throw new NotImplementedException();
+            Service service = new(command.Name, command.Description, command.Value);
+            _services.Add(service);
+
+            return Task.FromResult(service);
         }
 
         public Task DeleteAsync(DeleteServiceCommand command)
@@ -22,17 +27,26 @@ namespace FIAPOficina.Application.Tests.Mocks.Services
 
         public Service[] GetAll(GetAllServicesCommand command)
         {
-            return [new Service("","",1,Guid.Parse("B66A78BF-A800-4F18-B052-CEADF34558A7"))];
+            return _services.Where(m => command.Ids.Contains(m.Id)).ToArray();
         }
 
         public Task<Service?> GetSingleAsync(GetSingleServiceCommand command)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(_services.Where(m => command.Id == m.Id).FirstOrDefault());
         }
 
         public Task<Service> UpdateAsync(UpdateServiceCommand command)
         {
-            throw new NotImplementedException();
+            Service service = _services.First(m => m.Id == command.Id);
+            _services.Remove(service);
+
+            service.Name = command.Name;
+            service.Description = command.Description;
+            service.Value = command.Value;
+
+            _services.Add(service);
+
+            return Task.FromResult(service);
         }
     }
 }

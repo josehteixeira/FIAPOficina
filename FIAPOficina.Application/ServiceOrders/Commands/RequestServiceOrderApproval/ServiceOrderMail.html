@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Orçamento da Ordem de Serviço</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #333;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #2a7ae4;
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .subtotal, .total {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .total {
+            font-size: 1.1em;
+        }
+
+        .cta {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #2a7ae4;
+            color: white !important;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+        }
+
+        p {
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Orçamento da Ordem de Serviço</h2>
+
+        <p>
+            Prezado(a) <strong>{client.name}</strong>,<br />
+            o orçamento de sua ordem de serviço está pronto e aguardando sua aprovação:
+        </p>
+
+        <h3>Materiais necessários</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Quantidade</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {materials_rows}
+            </tbody>
+        </table>
+        <p class="subtotal">Subtotal: <strong>R$ {materials_subtotal}</strong></p>
+
+        <h3>Serviços necessários</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Quantidade</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {services_rows}
+            </tbody>
+        </table>
+        <p class="subtotal">Subtotal: <strong>R$ {services_subtotal}</strong></p>
+
+        <p class="total">Total: <strong>R$ {total}</strong></p>
+
+        <p>
+            Para aprovar ou rejeitar o orçamento, acesse o link abaixo:
+        </p>
+
+        <p style="text-align: center;">
+            <a href="{link}" class="cta">Acessar Orçamento</a>
+        </p>
+    </div>
+</body>
+</html>

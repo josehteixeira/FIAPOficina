@@ -36,6 +36,11 @@ namespace FIAPOficina.Application.Tests.Mocks.Repositories
             return _serviceOrders.ToArray();
         }
 
+        public ServiceOrder[] GetServicesOrderByVehiclePlate(string vehiclePlate)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task UpdateAsync(ServiceOrder serviceOrder)
         {
             var osDb = FirstOrDefaultAsync(serviceOrder.Id).GetAwaiter().GetResult();

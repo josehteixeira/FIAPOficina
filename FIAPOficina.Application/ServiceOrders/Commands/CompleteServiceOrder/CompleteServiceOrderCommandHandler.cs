@@ -22,7 +22,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.CompleteServiceOrder
             }
 
             serviceOrder.Status = ServiceOrderStatus.Completed;
-            serviceOrder.FinishedOn = DateTime.Now;
+            serviceOrder.FinishedOn = DateTime.UtcNow;
             await _repository.UpdateAsync(serviceOrder).ConfigureAwait(false);
         }
 

@@ -11,7 +11,9 @@ using FIAPOficina.Application.ServiceOrders.Commands.StartServiceOrderDiagnosis;
 using FIAPOficina.Application.ServiceOrders.Commands.UpdateServiceOrder;
 using FIAPOficina.Application.Tests.Mocks.Repositories;
 using FIAPOficina.Application.Tests.Mocks.Services;
+using FIAPOficina.Domain.Materials.Entities;
 using FIAPOficina.Domain.ServiceOrders.Entities;
+using FIAPOficina.Domain.Services.Entities;
 
 namespace FIAPOficina.Application.Tests.ServiceOrders
 {
@@ -27,7 +29,7 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
         [Fact]
         public void Should_Create_ServiceOrder()
         {
-            var service = CreateService();
+            var serviceOrderService = CreateServiceOrderService();
             var vehicleId = Guid.NewGuid();
             var osService =new List<ServiceOrderServiceToCreate>();
             osService.Add(new ServiceOrderServiceToCreate(Guid.Parse("B66A78BF-A800-4F18-B052-CEADF34558A7"), 3));
@@ -42,7 +44,7 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
             Assert.NotEmpty(serviceOrder.Services);
             Assert.Equal(ServiceOrderStatus.Received, serviceOrder.Status);
 
-            var os = service.GetSingleAsync(new GetSingleServiceOrderCommand(serviceOrder.Id)).GetAwaiter().GetResult();
+            var os = serviceOrderService.GetSingleAsync(new GetSingleServiceOrderCommand(serviceOrder.Id)).GetAwaiter().GetResult();
             Assert.NotNull(os);
             Assert.NotNull(os.Materials);
             Assert.NotEmpty(os.Materials);
@@ -54,7 +56,7 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
         [Fact]
         public void Should_Update_ServiceOrder()
         {
-            var service = CreateService();
+            var serviceOrderService = CreateServiceOrderService();
 
             var allOS = service.GetAll(new GetAllServiceOrdersCommand());
             var osService = new List<ServiceOrderServiceToCreate>();
@@ -80,56 +82,62 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
         [Fact]
         public void Should_Change_ServiceOrderStatus_To_StartDiagnosis()
         {
-            var service = CreateService();
+            var serviceOrderService = CreateServiceOrderService();
 
-            var allOS = service.GetAll(new GetAllServiceOrdersCommand());
+            var allOS = serviceOrderService.GetAll(new GetAllServiceOrdersCommand());
             ServiceOrder os;
             if (allOS is not null && allOS.Any())
                 os = allOS[0];
             else
-                os = service.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>(), new List<ServiceOrderMaterialToCreate>())).GetAwaiter().GetResult();
+                os = serviceOrderService.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>(), new List<ServiceOrderMaterialToCreate>())).GetAwaiter().GetResult();
 
-            service.StartServiceOrderDiagnosis(new StartServiceOrderDiagnosisCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.StartServiceOrderDiagnosis(new StartServiceOrderDiagnosisCommand(os.Id)).GetAwaiter().GetResult();
 
-            var osUpdate = service.GetSingleAsync(new GetSingleServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
+            var osUpdate = serviceOrderService.GetSingleAsync(new GetSingleServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
             Assert.NotNull(osUpdate);
             Assert.Equal(ServiceOrderStatus.InDiagnosis, osUpdate.Status);
         }
         [Fact]
         public void Should_Change_ServiceOrderStatus_To_WatingApproval()
         {
+            var serviceOrderService = CreateServiceOrderService();
+            var material = CreateMaterial();
             var service = CreateService();
 
-            var allOS = service.GetAll(new GetAllServiceOrdersCommand());
+            Guid osId = Guid.NewGuid();
+            var allOS = serviceOrderService.GetAll(new GetAllServiceOrdersCommand());
             ServiceOrder os;
+
             if (allOS is not null && allOS.Any())
                 os = allOS[0];
             else
-                os = service.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>(), new List<ServiceOrderMaterialToCreate>())).GetAwaiter().GetResult();
-            service.StartServiceOrderDiagnosis(new StartServiceOrderDiagnosisCommand(os.Id)).GetAwaiter().GetResult();
-            service.RequestServiceOrderApproval(new RequestServiceOrderApprovalCommand(os.Id)).GetAwaiter().GetResult();
+                os = serviceOrderService.AddAsync(new CreateServiceOrderCommand(osId, new List<ServiceOrderServiceToCreate>() { new ServiceOrderServiceToCreate(service.Id, 1) }, new List<ServiceOrderMaterialToCreate>() { new ServiceOrderMaterialToCreate(material.Id, 1) })).GetAwaiter().GetResult();
+            serviceOrderService.StartServiceOrderDiagnosis(new StartServiceOrderDiagnosisCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.RequestServiceOrderApproval(new RequestServiceOrderApprovalCommand(os.Id)).GetAwaiter().GetResult();
 
-            var osUpdate = service.GetSingleAsync(new GetSingleServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
+            var osUpdate = serviceOrderService.GetSingleAsync(new GetSingleServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
             Assert.NotNull(osUpdate);
             Assert.Equal(ServiceOrderStatus.WaitingApproval, osUpdate.Status);
         }
         [Fact]
         public void Should_Change_ServiceOrderStatus_To_Aproved()
         {
+            var serviceOrderService = CreateServiceOrderService();
+            var material = CreateMaterial();
             var service = CreateService();
 
-            var allOS = service.GetAll(new GetAllServiceOrdersCommand());
+            var allOS = serviceOrderService.GetAll(new GetAllServiceOrdersCommand());
             ServiceOrder os;
             if (allOS is not null && allOS.Any())
                 os = allOS[0];
             else
-                os = service.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>(), new List<ServiceOrderMaterialToCreate>())).GetAwaiter().GetResult();
+                os = serviceOrderService.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>() { new ServiceOrderServiceToCreate(service.Id, 1) }, new List<ServiceOrderMaterialToCreate>() { new ServiceOrderMaterialToCreate(material.Id, 1) })).GetAwaiter().GetResult();
 
-            service.StartServiceOrderDiagnosis(new StartServiceOrderDiagnosisCommand(os.Id)).GetAwaiter().GetResult();
-            service.RequestServiceOrderApproval(new RequestServiceOrderApprovalCommand(os.Id)).GetAwaiter().GetResult();
-            service.ApproveServiceOrder(new ApproveServiceOrderCommand(os.Id, "96202913010", "QHH8H99")).GetAwaiter().GetResult();
+            serviceOrderService.StartServiceOrderDiagnosis(new StartServiceOrderDiagnosisCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.RequestServiceOrderApproval(new RequestServiceOrderApprovalCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.ApproveServiceOrder(new ApproveServiceOrderCommand(os.Id, "96202913010", "QHH8H99")).GetAwaiter().GetResult();
 
-            var osUpdate = service.GetSingleAsync(new GetSingleServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
+            var osUpdate = serviceOrderService.GetSingleAsync(new GetSingleServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
             Assert.NotNull(osUpdate);
             Assert.Equal(ServiceOrderStatus.Approved, osUpdate.Status);
         }
@@ -137,20 +145,22 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
         [Fact]
         public void Should_Change_ServiceOrderStatus_To_Rejected()
         {
+            var serviceOrderService = CreateServiceOrderService();
+            var material = CreateMaterial();
             var service = CreateService();
 
-            var allOS = service.GetAll(new GetAllServiceOrdersCommand());
+            var allOS = serviceOrderService.GetAll(new GetAllServiceOrdersCommand());
             ServiceOrder os;
             if (allOS is not null && allOS.Any())
                 os = allOS[0];
             else
-                os = service.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>(), new List<ServiceOrderMaterialToCreate>())).GetAwaiter().GetResult();
+                os = serviceOrderService.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>() { new ServiceOrderServiceToCreate(service.Id, 1) }, new List<ServiceOrderMaterialToCreate>() { new ServiceOrderMaterialToCreate(material.Id, 1) })).GetAwaiter().GetResult();
 
-            service.StartServiceOrderDiagnosis(new StartServiceOrderDiagnosisCommand(os.Id)).GetAwaiter().GetResult();
-            service.RequestServiceOrderApproval(new RequestServiceOrderApprovalCommand(os.Id)).GetAwaiter().GetResult();
-            service.RejectServiceOrder(new RejectServiceOrderCommand(os.Id, "96202913010", "QHH8H99")).GetAwaiter().GetResult();
+            serviceOrderService.StartServiceOrderDiagnosis(new StartServiceOrderDiagnosisCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.RequestServiceOrderApproval(new RequestServiceOrderApprovalCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.RejectServiceOrder(new RejectServiceOrderCommand(os.Id, "96202913010", "QHH8H99")).GetAwaiter().GetResult();
 
-            var osUpdate = service.GetSingleAsync(new GetSingleServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
+            var osUpdate = serviceOrderService.GetSingleAsync(new GetSingleServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
             Assert.NotNull(osUpdate);
             Assert.Equal(ServiceOrderStatus.Rejected, osUpdate.Status);
         }
@@ -158,21 +168,23 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
         [Fact]
         public void Should_Change_ServiceOrderStatus_To_Running()
         {
+            var serviceOrderService = CreateServiceOrderService();
+            var material = CreateMaterial();
             var service = CreateService();
 
-            var allOS = service.GetAll(new GetAllServiceOrdersCommand());
+            var allOS = serviceOrderService.GetAll(new GetAllServiceOrdersCommand());
             ServiceOrder os;
             if (allOS is not null && allOS.Any())
                 os = allOS[0];
             else
-                os = service.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>(), new List<ServiceOrderMaterialToCreate>())).GetAwaiter().GetResult();
+                os = serviceOrderService.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>() { new ServiceOrderServiceToCreate(service.Id, 1) }, new List<ServiceOrderMaterialToCreate>() { new ServiceOrderMaterialToCreate(material.Id, 1) })).GetAwaiter().GetResult();
 
-            service.StartServiceOrderDiagnosis(new StartServiceOrderDiagnosisCommand(os.Id)).GetAwaiter().GetResult();
-            service.RequestServiceOrderApproval(new RequestServiceOrderApprovalCommand(os.Id)).GetAwaiter().GetResult();
-            service.ApproveServiceOrder(new ApproveServiceOrderCommand(os.Id, "96202913010", "QHH8H99")).GetAwaiter().GetResult();
-            service.StartServiceOrder(new StartServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.StartServiceOrderDiagnosis(new StartServiceOrderDiagnosisCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.RequestServiceOrderApproval(new RequestServiceOrderApprovalCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.ApproveServiceOrder(new ApproveServiceOrderCommand(os.Id, "96202913010", "QHH8H99")).GetAwaiter().GetResult();
+            serviceOrderService.StartServiceOrder(new StartServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
 
-            var osUpdate = service.GetSingleAsync(new GetSingleServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
+            var osUpdate = serviceOrderService.GetSingleAsync(new GetSingleServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
             Assert.NotNull(osUpdate);
             Assert.Equal(ServiceOrderStatus.Running, osUpdate.Status);
         }
@@ -180,45 +192,49 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
         [Fact]
         public void Should_Change_ServiceOrderStatus_To_Completed()
         {
+            var serviceOrderService = CreateServiceOrderService();
+            var material = CreateMaterial();
             var service = CreateService();
 
-            var allOS = service.GetAll(new GetAllServiceOrdersCommand());
+            var allOS = serviceOrderService.GetAll(new GetAllServiceOrdersCommand());
             ServiceOrder os;
             if (allOS is not null && allOS.Any())
                 os = allOS[0];
             else
-                os = service.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>(), new List<ServiceOrderMaterialToCreate>())).GetAwaiter().GetResult();
+                os = serviceOrderService.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>() { new ServiceOrderServiceToCreate(service.Id, 1) }, new List<ServiceOrderMaterialToCreate>() { new ServiceOrderMaterialToCreate(material.Id, 1) })).GetAwaiter().GetResult();
 
-            service.StartServiceOrderDiagnosis(new StartServiceOrderDiagnosisCommand(os.Id)).GetAwaiter().GetResult();
-            service.RequestServiceOrderApproval(new RequestServiceOrderApprovalCommand(os.Id)).GetAwaiter().GetResult();
-            service.ApproveServiceOrder(new ApproveServiceOrderCommand(os.Id, "96202913010", "QHH8H99")).GetAwaiter().GetResult();
-            service.StartServiceOrder(new StartServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
-            service.CompleteServiceOrder(new CompleteServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.StartServiceOrderDiagnosis(new StartServiceOrderDiagnosisCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.RequestServiceOrderApproval(new RequestServiceOrderApprovalCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.ApproveServiceOrder(new ApproveServiceOrderCommand(os.Id, "96202913010", "QHH8H99")).GetAwaiter().GetResult();
+            serviceOrderService.StartServiceOrder(new StartServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.CompleteServiceOrder(new CompleteServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
 
-            var osUpdate = service.GetSingleAsync(new GetSingleServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
+            var osUpdate = serviceOrderService.GetSingleAsync(new GetSingleServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
             Assert.NotNull(osUpdate);
             Assert.Equal(ServiceOrderStatus.Completed, osUpdate.Status);
         }
         [Fact]
         public void Should_Change_ServiceOrderStatus_To_Delivered()
         {
+            var serviceOrderService = CreateServiceOrderService();
+            var material = CreateMaterial();
             var service = CreateService();
 
-            var allOS = service.GetAll(new GetAllServiceOrdersCommand());
+            var allOS = serviceOrderService.GetAll(new GetAllServiceOrdersCommand());
             ServiceOrder os;
             if (allOS is not null && allOS.Any())
                 os = allOS[0];
             else
-                os = service.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>(), new List<ServiceOrderMaterialToCreate>())).GetAwaiter().GetResult();
+                os = serviceOrderService.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>() { new ServiceOrderServiceToCreate(service.Id, 1) }, new List<ServiceOrderMaterialToCreate>() { new ServiceOrderMaterialToCreate(material.Id, 1) })).GetAwaiter().GetResult();
 
-            service.StartServiceOrderDiagnosis(new StartServiceOrderDiagnosisCommand(os.Id)).GetAwaiter().GetResult();
-            service.RequestServiceOrderApproval(new RequestServiceOrderApprovalCommand(os.Id)).GetAwaiter().GetResult();
-            service.ApproveServiceOrder(new ApproveServiceOrderCommand(os.Id, "96202913010", "QHH8H99")).GetAwaiter().GetResult();
-            service.StartServiceOrder(new StartServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
-            service.CompleteServiceOrder(new CompleteServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
-            service.DeliverServiceOrder(new DeliverServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.StartServiceOrderDiagnosis(new StartServiceOrderDiagnosisCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.RequestServiceOrderApproval(new RequestServiceOrderApprovalCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.ApproveServiceOrder(new ApproveServiceOrderCommand(os.Id, "96202913010", "QHH8H99")).GetAwaiter().GetResult();
+            serviceOrderService.StartServiceOrder(new StartServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.CompleteServiceOrder(new CompleteServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
+            serviceOrderService.DeliverServiceOrder(new DeliverServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
 
-            var osUpdate = service.GetSingleAsync(new GetSingleServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
+            var osUpdate = serviceOrderService.GetSingleAsync(new GetSingleServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
             Assert.NotNull(osUpdate);
             Assert.Equal(ServiceOrderStatus.Delivered, osUpdate.Status);
         }
@@ -232,15 +248,25 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
             var allServiceOrders = service.GetAll(new GetAllServiceOrdersCommand());
 
             foreach (var os in allServiceOrders)
-                service.DeleteAsync(new Application.ServiceOrders.Commands.DeleteServiceOrder.DeleteServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
+                serviceOrderService.DeleteAsync(new Application.ServiceOrders.Commands.DeleteServiceOrder.DeleteServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
             allServiceOrders = null;
-            allServiceOrders = service.GetAll(new GetAllServiceOrdersCommand());
+            allServiceOrders = serviceOrderService.GetAll(new GetAllServiceOrdersCommand());
             Assert.Empty(allServiceOrders);
         }
 
-        private Application.ServiceOrders.Services.ServiceOrderService CreateService()
+        private Application.ServiceOrders.Services.ServiceOrderService CreateServiceOrderService()
         {
             return new Application.ServiceOrders.Services.ServiceOrderService(_repository, _vehicleService, _materialsService, _clientsService, _servicesService, _mailService);
+        }
+
+        private Material CreateMaterial()
+        {
+            return _materialsService.AddAsync(new("Name", "Description", "Brand", 10, 10)).GetAwaiter().GetResult();
+        }
+
+        private Service CreateService()
+        {
+            return _servicesService.AddAsync(new("Name", "Description", 10)).GetAwaiter().GetResult();
         }
     }
 }
