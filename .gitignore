@@ -29,3 +29,4 @@ project.lock.json
 /.sonarqube/conf
 /FIAPOficina.Api/.sonarqube/conf
 /FIAPOficina.Api/appsettings.Development.json
+/.env
