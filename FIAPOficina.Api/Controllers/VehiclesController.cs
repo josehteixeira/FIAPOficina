@@ -4,6 +4,7 @@ using FIAPOficina.Api.Models.Vehicles.Responses;
 using FIAPOficina.Application.Vehicles.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace FIAPOficina.Api.Controllers
 {
@@ -19,6 +20,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Create vehicle.",
+            Description = "Creates a vehicle with the provided info."
+        )]
         [HttpPost(RoutesHelper.Vehicles.Create)]
         [ProducesResponseType(typeof(VehicleResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -47,6 +52,10 @@ namespace FIAPOficina.Api.Controllers
 
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Update vehicle.",
+            Description = "Upates a vehicle with the provided info."
+        )]
         [HttpPut(RoutesHelper.Vehicles.Update)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -68,6 +77,10 @@ namespace FIAPOficina.Api.Controllers
 
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Delete vehicle.",
+            Description = "Deletes the vehicle with the provided ID."
+        )]
         [HttpDelete(RoutesHelper.Vehicles.Delete)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -81,21 +94,40 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Get vehicle.",
+            Description = "Returns the vehicle that matches the provided ID."
+        )]
         [HttpGet(RoutesHelper.Vehicles.GetSingle)]
         [ProducesResponseType(typeof(VehicleResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Consumes("application/json")]
         public async Task<ActionResult<VehicleResponse>> GetSingle([FromRoute] Guid id)
         {
             var vehicle = await _vehiclesService.GetSingleAsync(new(id));
 
-            return Ok(vehicle);
+            if (vehicle is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new VehicleResponse(
+                    Id: vehicle.Id,
+                    Brand: vehicle.Brand,
+                    Model: vehicle.Model,
+                    Year: vehicle.Year,
+                    Plate: vehicle.Plate,
+                    Color: vehicle.Color,
+                    ClientId: vehicle.ClientId));
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Get vehicles.",
+            Description = "Returns all vehicles."
+        )]
         [HttpGet(RoutesHelper.Vehicles.GetAll)]
         [ProducesResponseType(typeof(VehicleResponse[]), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Consumes("application/json")]
         public ActionResult<VehicleResponse[]> GetAll()
         {
