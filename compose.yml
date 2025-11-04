@@ -1,6 +1,5 @@
-version: '3.8'
 services:
-    db:
+    postgres:
         image: postgres:latest
         container_name: postgres
         restart: always
@@ -26,11 +25,15 @@ services:
         networks:
             - FIAPOficina
         depends_on:
-            - db
+            - postgres
+        volumes:
+            - pgadmin_data:/var/lib/pgadmin
+
     sonarqube:
+        container_name: sonarqube
         image: sonarqube:lts-community
         depends_on:
-            - db
+            - postgres
         environment:
             - SONARQUBE_JDBC_USERNAME=root
             - SONARQUBE_JDBC_PASSWORD=root
@@ -42,11 +45,36 @@ services:
             - sonarqube_data:/opt/sonarqube/data
             - sonarqube_extensions:/opt/sonarqube/extensions
             - sonarqube_logs:/opt/sonarqube/logs
+
+    fiapoficina-api:
+        container_name: fiapoficina
+        image: fiapoficina-api
+        ports:
+            - "8080:8080"
+        environment:
+            - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=FIAPOficina;Username=root;Password=root
+            - ASPNETCORE_ENVIRONMENT=Development
+            - SMTP__Server=${SMTP_Server}
+            - SMTP__Port=${SMTP_Port}
+            - SMTP__User=${SMTP_User}
+            - SMTP__Password=${SMTP_Password}
+            - Jwt__Key=${JWT_KEY}
+            - Jwt__Issuer={JWT_Issuer}
+            - Jwt__Audience={JWT_Audience}
+        networks:
+            - FIAPOficina
+        depends_on:
+            - postgres
+        env_file:
+        - .env
+
 networks:
     FIAPOficina:
         driver: "bridge"
+
 volumes:
     db_data:
+    pgadmin_data:
     sonarqube_conf:
     sonarqube_data:
     sonarqube_extensions:

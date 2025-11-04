@@ -1,4 +1,5 @@
 ﻿using FIAPOficina.Application.Common.Mail;
+using Microsoft.Extensions.Configuration;
 using MimeKit;
 
 namespace FIAPOficina.Infrastructure.Mail
@@ -9,18 +10,15 @@ namespace FIAPOficina.Infrastructure.Mail
         private readonly int _smtpPort;
         private readonly string _smtpUser;
         private readonly string _smtpPassword;
-        private readonly bool _smtpSsl;
         private string _sourceMail;
         private string _subject;
 
-        public MailService()
+        public MailService(IConfiguration configuration)
         {
-            _smtpServer = Environment.GetEnvironmentVariable("SMTPSERVER") ?? throw new ArgumentNullException("Invalid SMTP Server");
-            Int32.TryParse(Environment.GetEnvironmentVariable("SMTPPORT"), out _smtpPort);
-            _smtpUser = Environment.GetEnvironmentVariable("SMTPUSER") ?? throw new ArgumentNullException("Invalid SMTP User");
-            _smtpPassword = Environment.GetEnvironmentVariable("SMTPPASSWORD") ?? throw new ArgumentNullException("Invalid SMTP Password");
-            _smtpSsl = bool.Parse(Environment.GetEnvironmentVariable("SMTPSSL") ?? throw new ArgumentNullException("Invalid SMTP Password"));
-            
+            _smtpServer = configuration["SMTP:Server"] ?? throw new ArgumentNullException("Invalid SMTP Server");
+            Int32.TryParse(configuration["SMTP:Port"] ?? throw new ArgumentNullException("Invalid SMTP Port"), out _smtpPort);
+            _smtpUser = configuration["SMTP:User"] ?? throw new ArgumentNullException("Invalid SMTP User");
+            _smtpPassword = configuration["SMTP:Password"] ?? throw new ArgumentNullException("Invalid SMTP Password");
         }
 
         private MimeMessage CreateMailMessage(string destinationMail, string body)
@@ -65,7 +63,7 @@ namespace FIAPOficina.Infrastructure.Mail
         {
             _sourceMail = sourceMail;
             _subject = subject;
-           var mail = CreateMailMessage(destinationMail, body);
+            var mail = CreateMailMessage(destinationMail, body);
             return SendMail(mail);
         }
     }
