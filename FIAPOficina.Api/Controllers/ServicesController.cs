@@ -4,6 +4,7 @@ using FIAPOficina.Api.Models.Services.Responses;
 using FIAPOficina.Application.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace FIAPOficina.Api.Controllers
 {
@@ -19,6 +20,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Create service.",
+            Description = "Creates a service with the provided info."
+        )]
         [HttpPost(RoutesHelper.Services.Create)]
         [ProducesResponseType(typeof(ServiceResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -41,6 +46,10 @@ namespace FIAPOficina.Api.Controllers
 
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Update service.",
+            Description = "Upates a service with the provided info."
+        )]
         [HttpPut(RoutesHelper.Services.Update)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -60,6 +69,10 @@ namespace FIAPOficina.Api.Controllers
 
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Delete service.",
+            Description = "Deletes the service with the provided ID."
+        )]
         [HttpDelete(RoutesHelper.Services.Delete)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -73,21 +86,37 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Get service.",
+            Description = "Returns the service that matches the provided ID."
+        )]
         [HttpGet(RoutesHelper.Services.GetSingle)]
         [ProducesResponseType(typeof(ServiceResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Consumes("application/json")]
         public async Task<ActionResult<ServiceResponse>> GetSingle([FromRoute] Guid id)
         {
             var service = await _servicesService.GetSingleAsync(new(id));
 
-            return Ok(service);
+            if (service is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new ServiceResponse(
+                    Id: service.Id,
+                    Name: service.Name,
+                    Description: service.Description,
+                    Value: service.Value));
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Get services.",
+            Description = "Returns all services."
+        )]
         [HttpGet(RoutesHelper.Services.GetAll)]
         [ProducesResponseType(typeof(ServiceResponse[]), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Consumes("application/json")]
         public ActionResult<ServiceResponse[]> GetAll()
         {
