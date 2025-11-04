@@ -27,6 +27,9 @@ namespace FIAPOficina.Application.Tests.Mocks.Services
 
         public Material[] GetAll(GetAllMaterialsCommand command)
         {
+
+            _materials.Add(new Material("", "", "", 1, 10, Guid.Parse("CE91D1FC-DBF1-4AB1-9D10-F69C25E10C5B")));
+
             return _materials.Where(m => command.Ids.Contains(m.Id)).ToArray();
         }
 
