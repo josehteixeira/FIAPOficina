@@ -22,7 +22,7 @@ namespace FIAPOficina.Api.Controllers
         [Authorize]
         [SwaggerOperation(
             Summary = "Create client.",
-            Description = "Creates a cliente with the provided info."
+            Description = "Creates a client with the provided info."
         )]
         [HttpPost(RoutesHelper.Clients.Create)]
         [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status201Created)]
@@ -52,7 +52,7 @@ namespace FIAPOficina.Api.Controllers
         [Authorize]
         [SwaggerOperation(
             Summary = "Update client.",
-            Description = "Upates a cliente with the provided info."
+            Description = "Upates a client with the provided info."
         )]
         [HttpPut(RoutesHelper.Clients.Update)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -77,7 +77,7 @@ namespace FIAPOficina.Api.Controllers
         [Authorize]
         [SwaggerOperation(
             Summary = "Delete client.",
-            Description = "Deletes the cliente with the provided ID."
+            Description = "Deletes the client with the provided ID."
         )]
         [HttpDelete(RoutesHelper.Clients.Delete)]
         [ProducesResponseType(StatusCodes.Status200OK)]

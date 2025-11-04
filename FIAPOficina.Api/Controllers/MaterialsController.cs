@@ -4,9 +4,12 @@ using FIAPOficina.Api.Models.Materials.Responses;
 using FIAPOficina.Application.Materials.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace FIAPOficina.Api.Controllers
 {
+    [ApiController]
+    [Route(RoutesHelper.Materials.Controller)]
     public class MaterialsController : ControllerBase
     {
         private readonly IMaterialsService _materialsService;
@@ -17,6 +20,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Create material.",
+            Description = "Creates a material with the provided info."
+        )]
         [HttpPost(RoutesHelper.Materials.Create)]
         [ProducesResponseType(typeof(MaterialResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -43,6 +50,10 @@ namespace FIAPOficina.Api.Controllers
 
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Update material.",
+            Description = "Upates a material with the provided info."
+        )]
         [HttpPut(RoutesHelper.Materials.Update)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -64,6 +75,10 @@ namespace FIAPOficina.Api.Controllers
 
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Delete material.",
+            Description = "Deletes the material with the provided ID."
+        )]
         [HttpDelete(RoutesHelper.Materials.Delete)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -77,6 +92,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Get material.",
+            Description = "Returns the material that matches the provided ID."
+        )]
         [HttpGet(RoutesHelper.Materials.GetSingle)]
         [ProducesResponseType(typeof(MaterialResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -89,6 +108,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Get materials.",
+            Description = "Returns all materials."
+        )]
         [HttpGet(RoutesHelper.Materials.GetAll)]
         [ProducesResponseType(typeof(MaterialResponse[]), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
