@@ -31,17 +31,25 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
         {
             var serviceOrderService = CreateServiceOrderService();
             var vehicleId = Guid.NewGuid();
-            var serviceOrder = serviceOrderService.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>(), new List<ServiceOrderMaterialToCreate>())).GetAwaiter().GetResult();
+            var osService =new List<ServiceOrderServiceToCreate>();
+            osService.Add(new ServiceOrderServiceToCreate(Guid.Parse("B66A78BF-A800-4F18-B052-CEADF34558A7"), 3));
+            var osMaterial = new List<ServiceOrderMaterialToCreate>();
+            osMaterial.Add(new ServiceOrderMaterialToCreate(Guid.Parse("CE91D1FC-DBF1-4AB1-9D10-F69C25E10C5B"), 3));
+            var serviceOrder = serviceOrderService.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), osService, osMaterial)).GetAwaiter().GetResult();
 
             Assert.NotNull(serviceOrder);
             Assert.NotNull(serviceOrder.Materials);
+            Assert.NotEmpty(serviceOrder.Materials);
             Assert.NotNull(serviceOrder.Services);
+            Assert.NotEmpty(serviceOrder.Services);
             Assert.Equal(ServiceOrderStatus.Received, serviceOrder.Status);
 
             var os = serviceOrderService.GetSingleAsync(new GetSingleServiceOrderCommand(serviceOrder.Id)).GetAwaiter().GetResult();
             Assert.NotNull(os);
             Assert.NotNull(os.Materials);
+            Assert.NotEmpty(os.Materials);
             Assert.NotNull(os.Services);
+            Assert.NotEmpty(os.Services);
             Assert.Equal(ServiceOrderStatus.Received, os.Status);
         }
 
@@ -51,13 +59,22 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
             var serviceOrderService = CreateServiceOrderService();
 
             var allOS = serviceOrderService.GetAll(new GetAllServiceOrdersCommand());
+            var osService = new List<ServiceOrderServiceToCreate>();
+            osService.Add(new ServiceOrderServiceToCreate(Guid.Parse("B66A78BF-A800-4F18-B052-CEADF34558A7"), 3));
+            var osMaterial = new List<ServiceOrderMaterialToCreate>();
+            osMaterial.Add(new ServiceOrderMaterialToCreate(Guid.Parse("CE91D1FC-DBF1-4AB1-9D10-F69C25E10C5B"), 3));
             ServiceOrder os;
             if (allOS is not null && allOS.Any())
                 os = allOS[0];
             else
-                os = serviceOrderService.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>(), new List<ServiceOrderMaterialToCreate>())).GetAwaiter().GetResult();
+                os = serviceOrderService.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), osService, osMaterial)).GetAwaiter().GetResult();
 
-            var osUpdate = serviceOrderService.UpdateAsync(new UpdateServiceOrderCommand(os.Id, os.VehicleId, new List<ServiceOrderServiceToUpdate>(), new List<ServiceOrderMaterialToUpdate>())).GetAwaiter().GetResult();
+            var osServiceUP = new List<ServiceOrderServiceToUpdate>();
+            osServiceUP.Add(new ServiceOrderServiceToUpdate(os.Services.FirstOrDefault().Id, Guid.Parse("B66A78BF-A800-4F18-B052-CEADF34558A7"), 3));
+            var osMaterialUP = new List<ServiceOrderMaterialToUpdate>();
+            osMaterialUP.Add(new ServiceOrderMaterialToUpdate(os.Materials.FirstOrDefault().Id,Guid.Parse("CE91D1FC-DBF1-4AB1-9D10-F69C25E10C5B"), 3));
+
+            var osUpdate = serviceOrderService.UpdateAsync(new UpdateServiceOrderCommand(os.Id, os.VehicleId, osServiceUP, osMaterialUP)).GetAwaiter().GetResult();
 
             Assert.NotNull(osUpdate);
             Assert.Equal(ServiceOrderStatus.Received, osUpdate.Status);
@@ -227,11 +244,8 @@ namespace FIAPOficina.Application.Tests.ServiceOrders
         public void Should_Delete_All_ServiceOrders()
         {
             var serviceOrderService = CreateServiceOrderService();
-
+            var os1 = serviceOrderService.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>(), new List<ServiceOrderMaterialToCreate>())).GetAwaiter().GetResult();
             var allServiceOrders = serviceOrderService.GetAll(new GetAllServiceOrdersCommand());
-
-            if (allServiceOrders is null || allServiceOrders.Any())
-                serviceOrderService.AddAsync(new CreateServiceOrderCommand(Guid.NewGuid(), new List<ServiceOrderServiceToCreate>(), new List<ServiceOrderMaterialToCreate>())).GetAwaiter().GetResult();
 
             foreach (var os in allServiceOrders)
                 serviceOrderService.DeleteAsync(new Application.ServiceOrders.Commands.DeleteServiceOrder.DeleteServiceOrderCommand(os.Id)).GetAwaiter().GetResult();
