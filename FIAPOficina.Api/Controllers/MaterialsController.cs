@@ -98,13 +98,24 @@ namespace FIAPOficina.Api.Controllers
         )]
         [HttpGet(RoutesHelper.Materials.GetSingle)]
         [ProducesResponseType(typeof(MaterialResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Consumes("application/json")]
         public async Task<ActionResult<MaterialResponse>> GetSingle([FromRoute] Guid id)
         {
             var material = await _materialsService.GetSingleAsync(new(id));
 
-            return Ok(material);
+            if (material is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new MaterialResponse(
+                    Id: material.Id,
+                    Name: material.Name,
+                    Description: material.Description,
+                    Brand: material.Brand,
+                    Value: material.Value,
+                    Quantity: material.Quantity));
         }
 
         [Authorize]
@@ -114,7 +125,6 @@ namespace FIAPOficina.Api.Controllers
         )]
         [HttpGet(RoutesHelper.Materials.GetAll)]
         [ProducesResponseType(typeof(MaterialResponse[]), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Consumes("application/json")]
         public ActionResult<MaterialResponse[]> GetAll()
         {

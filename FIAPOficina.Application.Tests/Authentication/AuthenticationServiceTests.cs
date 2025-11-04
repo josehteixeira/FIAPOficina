@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FIAPOficina.Application.Tests.Authentication
+﻿namespace FIAPOficina.Application.Tests.Authentication
 {
     internal class AuthenticationServiceTests
     {

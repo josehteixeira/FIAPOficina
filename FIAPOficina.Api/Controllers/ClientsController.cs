@@ -98,13 +98,24 @@ namespace FIAPOficina.Api.Controllers
         )]
         [HttpGet(RoutesHelper.Clients.GetSingle)]
         [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Consumes("application/json")]
         public async Task<ActionResult<ClientResponse>> GetSingle([FromRoute] Guid id)
         {
             var client = await _clientsService.GetSingleAsync(new(id));
 
-            return Ok(client);
+            if (client is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new ClientResponse(
+                    Id: client.Id,
+                    Name: client.Name,
+                    Identifier: client.Identifier,
+                    Phone: client.Phone,
+                    Email: client.Email,
+                    Address: client.Address));
         }
 
         [Authorize]
@@ -114,7 +125,6 @@ namespace FIAPOficina.Api.Controllers
         )]
         [HttpGet(RoutesHelper.Clients.GetAll)]
         [ProducesResponseType(typeof(ClientResponse[]), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Consumes("application/json")]
         public ActionResult<ClientResponse[]> GetAll()
         {

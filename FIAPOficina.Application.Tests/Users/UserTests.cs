@@ -3,9 +3,7 @@ using FIAPOficina.Application.Tests.Mocks.Repositories;
 using FIAPOficina.Application.Users.Commands.CreateUser;
 using FIAPOficina.Application.Users.Commands.DeleteUser;
 using FIAPOficina.Application.Users.Commands.GetAllUsers;
-using FIAPOficina.Application.Users.Commands.UpdateUser;
 using FIAPOficina.Application.Users.Services;
-using System.Collections.Immutable;
 
 namespace FIAPOficina.Application.Tests.Users
 {

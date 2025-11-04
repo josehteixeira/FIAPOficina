@@ -1,14 +1,16 @@
-﻿using FIAPOficina.Api.Helpers;
+﻿using FIAPOficina.Api.Extensions;
+using FIAPOficina.Api.Helpers;
 using FIAPOficina.Api.Models.ServiceOrders.Requests;
 using FIAPOficina.Api.Models.ServiceOrders.Responses;
 using FIAPOficina.Application.ServiceOrders.Services;
-using FIAPOficina.Api.Extensions;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace FIAPOficina.Api.Controllers
 {
+    [ApiController]
+    [Route(RoutesHelper.ServiceOrders.Controller)]
     public class ServiceOrdersController : ControllerBase
     {
         private readonly IServiceOrderService _serviceOrdersService;
@@ -92,13 +94,28 @@ namespace FIAPOficina.Api.Controllers
         )]
         [HttpGet(RoutesHelper.ServiceOrders.GetSingle)]
         [ProducesResponseType(typeof(ServiceOrderResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Consumes("application/json")]
         public async Task<ActionResult<ServiceOrderResponse>> GetSingle([FromRoute] Guid id)
         {
-            var material = await _serviceOrdersService.GetSingleAsync(new(id));
+            var serviceOrder = await _serviceOrdersService.GetSingleAsync(new(id));
 
-            return Ok(material);
+            if (serviceOrder is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new ServiceOrderResponse()
+            {
+                Id = serviceOrder.Id,
+                VehicleId = serviceOrder.VehicleId,
+                Status = (int)serviceOrder.Status,
+                Materials = serviceOrder.Materials.Select(material => material.ToResponse()).ToArray(),
+                Services = serviceOrder.Services.Select(service => service.ToResponse()).ToArray(),
+                CreatedOn = serviceOrder.CreatedOn,
+                ApprovedOn = serviceOrder.ApprovedOn,
+                FinishedOn = serviceOrder.FinishedOn,
+            });
         }
 
         [Authorize]
@@ -108,7 +125,6 @@ namespace FIAPOficina.Api.Controllers
         )]
         [HttpGet(RoutesHelper.ServiceOrders.GetAll)]
         [ProducesResponseType(typeof(ServiceOrderResponse[]), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Consumes("application/json")]
         public ActionResult<ServiceOrderResponse[]> GetAll()
         {
