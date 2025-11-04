@@ -22,7 +22,7 @@ namespace FIAPOficina.Application.Tests.Mocks.Services
 
         public Service[] GetAll(GetAllServicesCommand command)
         {
-            return new Service[2];
+            return [new Service("","",1,Guid.Parse("B66A78BF-A800-4F18-B052-CEADF34558A7"))];
         }
 
         public Task<Service?> GetSingleAsync(GetSingleServiceCommand command)

@@ -22,7 +22,10 @@ namespace FIAPOficina.Application.Tests.Mocks.Services
 
         public Material[] GetAll(GetAllMaterialsCommand command)
         {
-            return new Material[2];
+            var materials = new Material[1];
+            materials[0] = new Material("", "", "", 1, 10,Guid.Parse("CE91D1FC-DBF1-4AB1-9D10-F69C25E10C5B"));
+
+            return materials;
         }
 
         public Task<Material?> GetSingleAsync(GetSingleMaterialCommand command)

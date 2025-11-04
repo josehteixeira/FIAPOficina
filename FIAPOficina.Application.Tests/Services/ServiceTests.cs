@@ -62,8 +62,8 @@ namespace FIAPOficina.Application.Tests.Services
         public void Should_Delete_Service()
         {
             var services = new ServicesService(_mock);
-
-            var allServices = services.GetAll(new GetAllServicesCommand());
+            var service1 = services.AddAsync(new CreateServiceCommand("Calibrar Pneu", "Calibrar um Pneu", 6.00m)).GetAwaiter().GetResult();
+            var allServices = services.GetAll(new GetAllServicesCommand([service1.Id]));
 
             foreach (var service in allServices)
                 services.DeleteAsync(new DeleteServiceCommand(service.Id)).GetAwaiter();

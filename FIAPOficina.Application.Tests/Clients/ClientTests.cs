@@ -67,6 +67,7 @@ namespace FIAPOficina.Application.Tests.Clients
         public void Should_Delete_All_Client()
         {
             ClientsService clientsService = new ClientsService(_mock);
+            var client1 = clientsService.AddAsync(new CreateClientCommand("Emanuel Fontes", "96202913010", "47 999828521", "teste@teste.com", "Rua das couves")).GetAwaiter().GetResult();
             var clientsDb = clientsService.GetAll(new GetAllClientsCommand());
 
             foreach (var client in clientsDb)

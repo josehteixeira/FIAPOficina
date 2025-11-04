@@ -66,8 +66,8 @@ namespace FIAPOficina.Application.Tests.Vehicles
         [Fact]
         public void Should_Delete_Vehicle()
         {
-            var services = new VehiclesService(_vehicleRepositoryMock, _clientServerMock); 
-
+            var services = new VehiclesService(_vehicleRepositoryMock, _clientServerMock);
+            services.AddAsync(new CreateVehicleCommand("Jeep", "Renegade", 2024, "QHG1J20", "Branco", Guid.NewGuid())).GetAwaiter().GetResult();
             var allVehicles = services.GetAll(new GetAllVehiclesCommand());
 
             foreach (var vehicles in allVehicles)

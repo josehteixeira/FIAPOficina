@@ -69,7 +69,8 @@ namespace FIAPOficina.Application.Tests.Materials
             var mock = new MaterialRepositoryMock();
 
             MaterialsService materialsService = new MaterialsService(mock);
-            var materialsDb = materialsService.GetAll(new GetAllMaterialsCommand());
+            var material1 = materialsService.AddAsync(new CreateMaterialCommand("Pastilha de Freio", "Pastilha de freio", "Freia Mais", 20m, 4)).GetAwaiter().GetResult();
+            var materialsDb = materialsService.GetAll(new GetAllMaterialsCommand([material1.Id]));
 
             foreach (var material in materialsDb)
                 materialsService.DeleteAsync(new DeleteMaterialCommand(material.Id)).GetAwaiter();
