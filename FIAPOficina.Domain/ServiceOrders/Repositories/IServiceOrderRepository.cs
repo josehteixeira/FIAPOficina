@@ -10,5 +10,6 @@ namespace FIAPOficina.Domain.ServiceOrders.Repositories
         Task<ServiceOrder?> FirstOrDefaultAsync(Guid id);
         Task<ServiceOrder?> FirstOrDefaultAsync(string plate);
         ServiceOrder[] GetAll(Guid? vehicle, Guid? clientId);
+        ServiceOrder[] GetServicesOrderByVehiclePlate(string vehiclePlate);
     }
 }

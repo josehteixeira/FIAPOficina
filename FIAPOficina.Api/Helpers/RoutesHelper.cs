@@ -67,6 +67,8 @@
             public const string StartServiceOrder = "/api/v1/service-orders/{id}/start";
             public const string CompleteServiceOrder = "/api/v1/service-orders/{id}/complete";
             public const string DeliverServiceOrder = "/api/v1/service-orders/{id}/deliver";
+            public const string GetClientVehicleServiceOrders = "/api/v1/service-orders/client{clientIdentifier}/vehicle{vehiclePlate}";
+            public const string GetAverage = "/api/v1/service-orders/average";            
         }
     }
 }

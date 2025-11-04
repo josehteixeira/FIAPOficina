@@ -307,6 +307,27 @@ namespace FIAPOficina.Infrastructure.Repositories
             }
         }
 
+        public ServiceOrder[] GetServicesOrderByVehiclePlate(string vehiclePlate)
+        {
+            var serviceOrders = _context.ServiceOrders
+                .Include(so => so.Materials)
+                .Include(so => so.Services)
+                .Include(so => so.Vehicle)
+                .Where(so => so.Vehicle.Plate == vehiclePlate)
+                .ToArray();
+
+            return serviceOrders.Select(serviceOrder =>
+                new ServiceOrder(serviceOrder.VehicleId)
+                {
+                    Id = serviceOrder.Id,
+                    CreatedOn = serviceOrder.CreatedOn,
+                    ApprovedOn = serviceOrder.ApprovedOn,
+                    FinishedOn = serviceOrder.FinishedOn,
+                    Materials = serviceOrder.Materials.Select(m => new ServiceOrderMaterial(m.MaterialId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
+                    Services = serviceOrder.Services.Select(m => new ServiceOrderService(m.ServiceId, serviceOrder.Id, m.Quantity, m.Value, m.Id)).ToList(),
+                    Status = (ServiceOrderStatus)serviceOrder.Status
+                }).ToArray();
+        }
     }
 
     static class Extensions

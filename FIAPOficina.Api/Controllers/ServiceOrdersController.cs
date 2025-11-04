@@ -199,5 +199,45 @@ namespace FIAPOficina.Api.Controllers
 
             return Ok();
         }
+
+        [HttpGet(RoutesHelper.ServiceOrders.GetClientVehicleServiceOrders)]
+        [ProducesResponseType(typeof(ServiceOrderResponse[]), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ServiceOrderResponse[]), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes("application/json")]
+        public async Task<ActionResult<ServiceOrderResponse[]>> GetClientVehicleServiceOrders([FromRoute] string clientIdentifier, [FromRoute] string vehiclePlate)
+        {
+            var orders = await _serviceOrdersService.GetServicesOrderByVehicle(new(clientIdentifier, vehiclePlate));
+
+            if (orders is not null && orders.Length > 0)
+            {
+                return Ok(orders.Select(serviceOrder => new ServiceOrderResponse()
+                {
+                    Id = serviceOrder.Id,
+                    VehicleId = serviceOrder.VehicleId,
+                    Status = (int)serviceOrder.Status,
+                    Materials = serviceOrder.Materials.Select(material => material.ToResponse()).ToArray(),
+                    Services = serviceOrder.Services.Select(service => service.ToResponse()).ToArray(),
+                    CreatedOn = serviceOrder.CreatedOn,
+                    ApprovedOn = serviceOrder.ApprovedOn,
+                    FinishedOn = serviceOrder.FinishedOn,
+                }).ToArray());
+            }
+
+            return Ok(Array.Empty<ServiceOrderResponse>());
+        }
+
+        [Authorize]
+        [HttpGet(RoutesHelper.ServiceOrders.GetAverage)]
+        [ProducesResponseType(typeof(TimeSpan?), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TimeSpan?), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes("application/json")]
+        public ActionResult<TimeSpan> GetAverage()
+        {
+            TimeSpan? time = _serviceOrdersService.GetAverageTime(new());
+
+            return Ok(time);
+        }
     }
 }
