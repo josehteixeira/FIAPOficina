@@ -1,11 +1,13 @@
-﻿using FIAPOficina.Api.Models.Auth.Requests;
+﻿using FIAPOficina.Api.Helpers;
+using FIAPOficina.Api.Models.Auth.Requests;
 using FIAPOficina.Application.Authentication.Services;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace FIAPOficina.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route(RoutesHelper.Auth.Controller)]
     public class AuthController : ControllerBase
     {
         private readonly IAuthenticationService _authService;
@@ -15,7 +17,14 @@ namespace FIAPOficina.Api.Controllers
             _authService = authService;
         }
 
-        [HttpPost("login")]
+        [HttpPost(RoutesHelper.Auth.Login)]
+        [SwaggerOperation(
+            Summary = "Login.",
+            Description = "Logins in to the system with the provided credentials."
+        )]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Consumes("application/json")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var loginResult = await _authService.AuthenticateUser(request.Username, request.Password);

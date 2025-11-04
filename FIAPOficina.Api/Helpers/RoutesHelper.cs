@@ -2,6 +2,12 @@
 {
     public static class RoutesHelper
     {
+        public static class Auth
+        {
+            public const string Controller = "/api/v1/auth";
+            public const string Login = "/api/v1/auth/login";
+        }
+
         public static class Users
         {
             public const string Controller = "/api/v1/users";
