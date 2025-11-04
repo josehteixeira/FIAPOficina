@@ -4,6 +4,7 @@ using FIAPOficina.Api.Models.Clients.Responses;
 using FIAPOficina.Application.Clients.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace FIAPOficina.Api.Controllers
 {
@@ -19,6 +20,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Create client.",
+            Description = "Creates a cliente with the provided info."
+        )]
         [HttpPost(RoutesHelper.Clients.Create)]
         [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -45,6 +50,10 @@ namespace FIAPOficina.Api.Controllers
 
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Update client.",
+            Description = "Upates a cliente with the provided info."
+        )]
         [HttpPut(RoutesHelper.Clients.Update)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -66,6 +75,10 @@ namespace FIAPOficina.Api.Controllers
 
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Delete client.",
+            Description = "Deletes the cliente with the provided ID."
+        )]
         [HttpDelete(RoutesHelper.Clients.Delete)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -79,6 +92,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Get client.",
+            Description = "Returns the client that matches the provided ID."
+        )]
         [HttpGet(RoutesHelper.Clients.GetSingle)]
         [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -91,6 +108,10 @@ namespace FIAPOficina.Api.Controllers
         }
 
         [Authorize]
+        [SwaggerOperation(
+            Summary = "Get clients.",
+            Description = "Returns all clients."
+        )]
         [HttpGet(RoutesHelper.Clients.GetAll)]
         [ProducesResponseType(typeof(ClientResponse[]), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
