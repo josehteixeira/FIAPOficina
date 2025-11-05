@@ -11,7 +11,6 @@ namespace FIAPOficina.Infrastructure.Mail
         private readonly int _smtpPort;
         private readonly string _smtpUser;
         private readonly string _smtpPassword;
-        private string _sourceMail;
         private string _subject;
         private readonly ILogger<MailService> _logger;
 
@@ -35,7 +34,7 @@ namespace FIAPOficina.Infrastructure.Mail
         private MimeMessage CreateMailMessage(string destinationMail, string body)
         {
             var mailMessage = new MimeMessage();
-            mailMessage.From.Add(new MailboxAddress(_sourceMail, _sourceMail));
+            mailMessage.From.Add(new MailboxAddress(_smtpUser, _smtpUser));
             mailMessage.To.Add(new MailboxAddress(destinationMail, destinationMail));
             mailMessage.Subject = _subject;
 
@@ -69,9 +68,8 @@ namespace FIAPOficina.Infrastructure.Mail
             }
         }
 
-        public bool SendMail(string sourceMail, string subject, string destinationMail, string body)
+        public bool SendMail(string subject, string destinationMail, string body)
         {
-            _sourceMail = sourceMail;
             _subject = subject;
             var mail = CreateMailMessage(destinationMail, body);
             return SendMail(mail);

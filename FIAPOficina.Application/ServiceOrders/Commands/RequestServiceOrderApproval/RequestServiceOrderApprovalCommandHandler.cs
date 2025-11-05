@@ -64,7 +64,7 @@ namespace FIAPOficina.Application.ServiceOrders.Commands.RequestServiceOrderAppr
 
             string mailHtmlBody = CreateMailHtmlBody(serviceOrder, client, vehicle);
 
-            _mailService.SendMail("", "Orçamento do seu veiculo", client.Email, mailHtmlBody);
+            _mailService.SendMail("Orçamento do seu veiculo", client.Email, mailHtmlBody);
         }
 
         private async Task<Vehicle> GetVehicle(Guid vehicleId)
