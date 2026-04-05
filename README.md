@@ -1,52 +1,51 @@
-# Projeto FIAP Oficina 🔧🧰🚗
+# FIAP Oficina Project 🔧🧰🚗
 
-## Início rápido 🚀
+## Quick Start 🚀
 
-Para rodar o projeto rapidamente execute os passos abaixo:
+To run the project quickly, follow the steps below:
 
-- Clone o repositório
+- Clone the repository
   > git clone https://github.com/josehteixeira/FIAPOficina.git
-- Crie um arquivo .env no diretorio raiz do projeto para definir as configurações necessárias para subir o sistema, utilize o modelo abaixo:
+- Create a .env file in the root directory of the project to define the settings required to bring up the system, using the template below:
 
 ```
-SMTP_Server=ENDERECO DO SERVIDOR SMTP
-SMTP_Port=PORTA DO SERVIDOR SMTP
-SMTP_User=USUARIO PARA ENVIO DE EMAIL
-SMTP_Password=SENHA DO USUARIO
-JWT_KEY=CHAVE PARA GERACAO DO TOKEN JWT (EX: xNCuW3nX1QKfGc5B6lH+GpuzYH3X7OZj+o1pAdyLfV4=)
+SMTP_Server=SMTP SERVER ADDRESS
+SMTP_Port=SMTP SERVER PORT
+SMTP_User=EMAIL SENDING USER
+SMTP_Password=USER PASSWORD
+JWT_KEY=KEY FOR JWT TOKEN GENERATION (EX: xNCuW3nX1QKfGc5B6lH+GpuzYH3X7OZj+o1pAdyLfV4=)
 JWT_Issuer=FIAPOficina
 JWT_Audience=FIAPOficina-clients
 ```
 
-- No diretório principal, faça o build da imagem do docker
+- In the root directory, build the Docker image
   > docker build -t fiapoficina-api .
-- Execute o docker compose, subindo a aplicação e banco de dados
+- Run Docker Compose to start the application and database
   > docker compose up -d
 
-Se tudo der certo, você poderá acessar a documentação da API no swagger no endereço http://localhost:8080/swagger/index.html
+If everything goes well, you can access the API documentation via Swagger at http://localhost:8080/swagger/index.html
 
-## Sobre o Projeto 💡
+## About the Project 💡
 
-O projeto **FIAP Oficina** é uma API desenvolvida em .NET, com o objetivo de gerenciar ordens de serviço de uma oficina mecânica, permitindo o controle de clientes, veículos, serviços e materiais utilizados.
+The **FIAP Oficina** project is an API developed in .NET, designed to manage service orders for an auto repair shop, enabling control over clients, vehicles, services, and materials used.
 
-Permite gerenciar todo o fluxo de uma ordem de serviço, recebendo a demanda do cliente, passando por diagnóstico, enviando um orçamento por email para o cliente aprovar ou rejeitar, por fim executando, finalizando e entregando a ordem de serviço.
+It manages the full workflow of a service order: receiving the customer's request, going through diagnosis, sending a quote by email for the customer to approve or reject, and finally executing, completing, and delivering the service order.
 
-Também faz controle do estoque dos materiais usados nos serviços, atualizando a quantidade disponível conforme os materiais são utilizados nos serviços.
+It also handles inventory control for materials used in services, updating available quantities as materials are consumed.
 
-## Tecnologias Utilizadas 💻
+## Technologies Used 💻
 
-O projeto utiliza as seguintes tecnologias:
-
-| Categoria       | Tecnologias                                                  |
+The project uses the following technologies:
+| Category        | Technologies                                                 |
 | --------------- | ------------------------------------------------------------ |
 | Backend         | .NET 8, Entity Framework Core, ASP.NET Core Web API, Swagger |
-| Banco de Dados  | PostgreSQL                                                   |
-| Containerização | Docker, Docker Compose                                       |
-| Outras          | MailKit                                                      |
+| Database        | PostgreSQL                                                   |
+| Containerization| Docker, Docker Compose                                       |
+| Other           | MailKit                                                      |
 
-## Arquitetura 📐
+## Architecture 📐
 
-O projeto está organizado em camadas seguindo os princípios de Clean Architecture, portanto possui os projetos principais _Domain_, _Application_, _Infrastructure_ e _Api_.
+The project is organized in layers following Clean Architecture principles, with the main projects being _Domain_, _Application_, _Infrastructure_, and _Api_.
 
 FIAPOficina/<br>
 ├── FIAPOficina.Api/<br>
@@ -54,20 +53,20 @@ FIAPOficina/<br>
 ├── FIAPOficina.Domain/<br>
 └── FIAPOficina.Infrastructure/<br>
 
-A API do projeto está documentada usando o Swagger e existem projetos de testes unitários.
+The project's API is documented using Swagger, and unit test projects are also included.
 
 ### Domain
 
-A camada de domínio define as principais entidades do sistema, como _Clients_, _Vehicles_, _ServiceOrders_, centralizando as regras para manter a consistência desses dados. Também define interfaces _IRepository_, onde são mapeados os métodos que podem ser aplicados a essas entidades, no que tange a manipulação delas em um banco de dados.
+The domain layer defines the core entities of the system, such as _Clients_, _Vehicles_, and _ServiceOrders_, centralizing the rules for maintaining data consistency. It also defines _IRepository_ interfaces, which map the methods that can be applied to these entities with regard to their manipulation in a database.
 
 ### Infrastructure
 
-Neste projeto ficam as interações com partes externas ao sistema, como banco de dados e envio de email. Aqui são definidas conexões com banco de dados e são implementadas as interfaces _IRepositories_ definidas nos projetos _Domain_ ou _Application_. Também fica a definição do banco de dados, com os _mappings_ das entidades e as _migrations_ com os comandos que definem a base de dados.
+This project handles interactions with components external to the system, such as the database and email sending. Database connections are defined here, and the _IRepository_ interfaces defined in the _Domain_ or _Application_ projects are implemented. It also contains the database definition, with entity _mappings_ and _migrations_ holding the commands that set up the database.
 
 ### Application
 
-Toda a regra do negócio fica centralizada neste projeto, bem organizada em _Commands_ que definem os parâmetros para execução das lógicas que são implementadas em _Handlers_ e que são expostos através de _Services_.
+All business logic is centralized in this project, neatly organized into _Commands_ that define the parameters for executing logic implemented in _Handlers_, which are then exposed through _Services_.
 
 ### API
 
-Este é o projeto de inicialização da aplicação, contendo todas as configurações do sistema, inicializações e injeções de dependências. Também contém as _Controllers_ que disponibilizam as rotas que expõe os meios para utilização do sistema.
+This is the application's startup project, containing all system configurations, initializations, and dependency injections. It also contains the _Controllers_ that provide the routes exposing the endpoints for interacting with the system.
